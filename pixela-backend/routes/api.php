@@ -1,9 +1,14 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\SeriesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Rutas de autenticación
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -26,5 +31,3 @@ Route::group(['controller' => SeriesController::class], function () {
     Route::get('/series/on-the-air', 'getSeriesOnTheAir'); #http GET http://localhost/api/series/on-the-air
     Route::get('/series/top-rated', 'getTopRatedSeries'); #http GET http://localhost/api/series/top-rated
 });
-
-// Rutas de usuarios
