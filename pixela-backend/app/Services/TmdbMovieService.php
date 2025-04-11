@@ -76,9 +76,9 @@ class TmdbMovieService
      * @return array
      * @throws Exception
      */
-    public function getAllPopularMovies(): array
+    public function getTrendingMovies(): array
     {
-        return $this->makeRequest("/movie/popular");
+        return $this->makeRequest("/trending/movie/week");
     }
 
     /**

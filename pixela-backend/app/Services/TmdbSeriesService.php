@@ -76,9 +76,9 @@ class TmdbSeriesService
      * @return array
      * @throws Exception
      */
-    public function getAllPopularSeries(): array
+    public function getTrendingSeries(): array
     {
-        return $this->makeRequest("/tv/popular");
+        return $this->makeRequest("/trending/tv/week");
     } 
 
     /**
