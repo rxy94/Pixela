@@ -9,14 +9,6 @@ const nextConfig = {
         ];
     },
     images: {
-        remotePatterns: [
-            {
-                protocol: 'http',
-                hostname: 'laravel.test',
-                port: '',
-                pathname: '/**',
-            },
-        ],
         domains: ['image.tmdb.org'],
     },
 };
