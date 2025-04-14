@@ -29,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${roboto.variable} ${inter.variable}`}>
-      <body>
+      <body className="bg-pixela-dark">
         <Navbar />
         <main className="flex-grow">{children}</main>
       </body>

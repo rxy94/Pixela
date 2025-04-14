@@ -1,0 +1,121 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { FiChevronDown } from "react-icons/fi";
+import clsx from 'clsx';
+
+interface HeroSectionProps {
+  title: string;
+  accentTitle: string;
+  description: string;
+  secondaryButtonText: string;
+  images?: string[];
+}
+
+export const HeroSection = ({
+  title,
+  accentTitle,
+  description,
+  secondaryButtonText,
+  images = []
+}: HeroSectionProps) => {
+  // Estado para controlar la imagen actual
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFadeIn(false);
+      setTimeout(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+        setFadeIn(true);
+      }, 500);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+  
+  return (
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Imagen de fondo con transición suave */}
+      <div className="absolute inset-0 w-full h-full">
+        {/* Imagen hero en blanco y negro */}
+        <div 
+          className={clsx(
+            "absolute inset-0 w-full h-full transition-opacity duration-500 ease-in-out", 
+            fadeIn ? "opacity-100" : "opacity-0"
+          )}
+        >
+          <Image 
+            src={images[currentImageIndex]} 
+            alt="Hero Pixela" 
+            className="w-full h-full object-cover brightness-90 contrast-100 grayscale"
+            width={1920}
+            height={1080}
+            priority
+          />
+        </div>
+        
+        {/* Capas para efecto visual */}
+        <div className="absolute inset-0 bg-pixela-dark/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-pixela-accent/15 via-pixela-dark/70 to-pixela-dark/90"></div>
+        {/* Degradado superior para navbar */}
+        <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-pixela-dark via-pixela-dark/70 to-transparent"></div>
+        {/* Degradado inferior para reforzar el efecto accent desde abajo (más sutil) */}
+        <div className="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-pixela-accent/10 to-transparent"></div>
+        {/* Capa de ruido */}
+        <div className="noise-effect"></div>
+      </div>
+      
+      {/* Indicador de slides (pequeños puntos) */}
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="flex space-x-2">
+          {images.map(( _, index) => (
+            <div 
+              key={index} 
+              className={clsx(
+                "h-2 rounded-full transition-all duration-300",
+                index === currentImageIndex ? "bg-pixela-accent w-6" : "bg-pixela-light/50 w-2"
+              )}
+            />
+          ))}
+        </div>
+      </div>
+      
+      {/* Contenido hero limpio y minimalista */}
+      <div className="absolute inset-x-0 bottom-0 z-10">
+        <div className="max-w-[83.333%] mx-auto pb-36">
+          {/* Línea de acento superior */}
+          <div className="w-24 h-1 bg-pixela-accent mb-8"></div>
+          
+          {/* Título grande y audaz */}
+          <h1 className="text-7xl font-bold text-pixela-light mb-6 tracking-tight leading-[1.1]">
+            {title}<br />
+            <span className="text-pixela-accent">{accentTitle}</span>
+          </h1>
+          
+          {/* Descripción */}
+          <p className="text-xl text-pixela-light/80 max-w-lg mb-12">
+            {description}
+          </p>
+          
+          {/* Botones - Diseño mejorado */}
+          <div className="flex items-center gap-8">
+            
+            {/* Botón secundario con icono al lado */}
+            <Link 
+              href="#features"
+              className="group flex items-center transition-all duration-300"
+            >
+              <span className="font-medium text-pixela-light group-hover:text-white group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] transition-all duration-300 mr-2">
+                {secondaryButtonText}
+              </span>
+              <FiChevronDown className="h-6 w-6 animate-bounce text-pixela-light group-hover:text-pixela-accent opacity-80 group-hover:opacity-100" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}; 

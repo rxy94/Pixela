@@ -22,6 +22,10 @@ export const mainNavLinks: NavLink[] = [
     href: "/discovered",
     label: "Discovered",
   },
+  {
+    href: "/profile",
+    label: "Perfil",
+  },
 ];
 
 
