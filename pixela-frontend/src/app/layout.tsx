@@ -1,10 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit, Roboto, Inter } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "./components/ui/navbar";
 
+/* Fuentes para el texto */
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight:  ["400"],
+  variable: "--font-roboto",
+});
+
+/* Fuente sans para la interfaz */
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "500", "700"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -14,13 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
-        {children}
+    <html lang="en" className={`${roboto.variable} ${inter.variable}`}>
+      <body>
+        <Navbar />
+        <main className="flex-grow">{children}</main>
       </body>
     </html>
   );
