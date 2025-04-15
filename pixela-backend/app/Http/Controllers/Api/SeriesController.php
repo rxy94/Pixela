@@ -50,14 +50,14 @@ class SeriesController extends Controller
     }
 
     /**
-     * Obtiene todas las series populares
+     * Obtiene todas las series trending
      *
      * @return JsonResponse
      */
-    public function getAllPopularSeries(): JsonResponse
+    public function getTrendingSeries(): JsonResponse
     {
         try {
-            $series = $this->tmdbSeriesService->getAllPopularSeries();
+            $series = $this->tmdbSeriesService->getTrendingSeries();
             $series = $series['results'];   
             $series = SeriesTransformer::transformCollection($series);
         

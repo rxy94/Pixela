@@ -4,12 +4,13 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Users;
+use App\Models\User;
 
-class AdminUserSeeder extends Seeder
+class UserTableSeeder extends Seeder
 {
     public function run(): void
     {
+        # Poblamos la tabla users con los usuarios que son admin
         $admins = [
             [
                 'user_name' => 'Pablo',
@@ -26,7 +27,7 @@ class AdminUserSeeder extends Seeder
         ];
 
         foreach ($admins as $admin) {
-            Users::create($admin);
+            User::create($admin);
         }
     }
 } 

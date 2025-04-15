@@ -51,14 +51,14 @@ class MovieController extends Controller
     }
 
     /**
-     * Obtiene todas las películas populares
+     * Obtiene todas las películas trending
      *
      * @return JsonResponse
      */
-    public function getAllPopularMovies(): JsonResponse
+    public function getTrendingMovies(): JsonResponse
     {
         try {
-            $movies = $this->tmdbMovieService->getAllPopularMovies();
+            $movies = $this->tmdbMovieService->getTrendingMovies();
             $movies = $movies['results'];
             $movies = MovieTransformer::transformCollection($movies);
             
