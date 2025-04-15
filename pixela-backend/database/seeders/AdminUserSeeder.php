@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Users;
+use App\Models\User;
 
 class AdminUserSeeder extends Seeder
 {
@@ -26,7 +26,7 @@ class AdminUserSeeder extends Seeder
         ];
 
         foreach ($admins as $admin) {
-            Users::create($admin);
+            User::create($admin);
         }
     }
 } 
