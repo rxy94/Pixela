@@ -2,46 +2,63 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="py-4 space-y-6 max-w-md">
         @csrf
 
+        <!-- Titulo del Login -->
+        <h2 class="text-[24px] font-['Outfit'] text-white font-bold mb-8">Bienvenido a Pixela | <span class="text-gray-500">Iniciar sesión</span></h2>
+
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="relative mb-5">
+            <x-text-input 
+                id="email" 
+                icon="carbon-email"
+                class="block w-full bg-[#181818] text-white/90 text-[16px] font-['Outfit'] pl-10" 
+                type="email" 
+                name="email" 
+                placeholder="Email"
+                :value="old('email')" 
+                required 
+                autofocus 
+                autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2 text-[14px] font-['Outfit']" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="relative mb-8">
+            <x-text-input 
+                id="password"
+                icon="carbon-password" 
+                class="block w-full bg-[#181818] text-white/90 text-[16px] font-['Outfit'] pl-10" 
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required 
+                autocomplete="current-password" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2 text-[14px] font-['Outfit']" />
         </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
+        <!-- Iniciar button -->
+        <div class="mb-6">
+            <x-rounded-button class="w-full h-11 text-base">
+                Iniciar
+            </x-rounded-button>
         </div>
-
-        <div class="flex items-center justify-end mt-4">
+        
+        <!-- Enlaces de ayuda -->
+        <div class="flex flex-col gap-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a class="text-[15px] font-['Outfit'] text-gray-400 hover:text-[#ec1b69] transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-[#181818] rounded-md px-2 -ml-2" href="{{ route('password.request') }}">
+                    {{ __('¿Olvidaste tu contraseña?') }}
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            
+            <div class="text-[15px] font-['Outfit'] text-gray-400">
+                {{ __('¿No tienes cuenta?') }}
+                <a class="ml-1 text-[#ec1b69] hover:text-[#ec1b69]/80 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ec1b69] focus:ring-offset-[#181818] rounded-md px-2 py-1" href="{{ route('register') }}">
+                    {{ __('Regístrate') }}
+                </a>
+            </div>
         </div>
     </form>
 </x-guest-layout>
