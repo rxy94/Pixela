@@ -31,7 +31,7 @@
                     </div>
                     <div class="w-1/2 flex justify-center">
                         <div class="relative group">
-                            <img src="{{ asset('storage/img/Logo-login.svg') }}" alt="Pixela.io" 
+                            <img src="{{ asset('img/Logo-login.svg') }}" alt="Pixela.io" 
                                 class="w-48 h-auto transform transition-all duration-500 ease-in-out 
                                        group-hover:scale-110
                                        filter group-hover:brightness-110">
