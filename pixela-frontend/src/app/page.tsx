@@ -16,6 +16,8 @@ export default function Home() {
             "/source/images/MovieDestacada_uno.avif", 
             "/source/images/MovieDestacada_dos.avif"
           ]}
+          ctaLink="/discover"
+          ctaText="Comenzar ahora"
         />
       </div>
     </>
