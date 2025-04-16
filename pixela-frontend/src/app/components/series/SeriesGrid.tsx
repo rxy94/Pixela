@@ -1,7 +1,9 @@
 'use client';
 
-import { Series } from "@/lib/interface/series/trending-series";
+import { useEffect } from "react";
 import Image from "next/image";
+import { Series } from "@/lib/interface/series/trending-series";
+import { useSeriesStore } from "@/store/seriesStore";
 
 interface Props {
     series: Series[];
@@ -9,10 +11,20 @@ interface Props {
 
 // TODO Mejorar responsive para que se pueda ver en cualquier dispositivo
 export const SeriesGrid = ({ series }: Props) => { 
+    const { setSeries, series: storeSeries } = useSeriesStore();
+    
+    useEffect(() => {
+        // Actualizamos el store con las series recibidas por props
+        setSeries(series);
+    }, [series, setSeries]);
+    
+    // Usamos las series del store para renderizar
+    const displaySeries = storeSeries.length > 0 ? storeSeries : series;
+    
     return (
         <div className="flex justify-center items-center min-h-screen bg-[#1E1E1E]">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-6 gap-3 p-4">
-                {series.map((serie) => (
+                {displaySeries.map((serie) => (
                     <div 
                         key={serie.id} 
                         className="relative overflow-hidden rounded-lg shadow-2xl mx-auto"

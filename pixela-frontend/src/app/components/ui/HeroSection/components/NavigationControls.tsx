@@ -1,16 +1,19 @@
+import { useHeroStore } from "@/store/heroStore";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 interface NavigationControlsProps {
-  prevImage: () => void;
-  nextImage: () => void;
+  imagesLength: number;
 }
 
-export const NavigationControls = ({ prevImage, nextImage }: NavigationControlsProps) => {
+export const NavigationControls = ({ imagesLength }: NavigationControlsProps) => {
+
+  const { prevImage, nextImage } = useHeroStore();
+
   return (
     <>
       <div className="absolute top-1/2 left-4 transform -translate-y-1/2 z-20">
         <button 
-          onClick={prevImage}
+          onClick={() => prevImage(imagesLength)}
           className="p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300"
           aria-label="Imagen anterior"
         >
@@ -20,7 +23,7 @@ export const NavigationControls = ({ prevImage, nextImage }: NavigationControlsP
       
       <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
         <button 
-          onClick={nextImage}
+          onClick={() => nextImage(imagesLength)}
           className="p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300"
           aria-label="Imagen siguiente"
         >
