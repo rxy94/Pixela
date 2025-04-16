@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useCallback } from "react";
-import { ImageCarousel, NavigationControls, ProgressIndicator, ContentSection} from "./components";
-import { useHeroStore } from "@/store/heroStore";
+import { ImageCarousel, NavigationControls, ProgressIndicator, ContentSection} from "../components";
+import { useHeroStore } from "../store";
 
 interface HeroSectionProps {
   title: string;
@@ -81,6 +81,7 @@ export const HeroSection = ({
         secondaryButtonText={secondaryButtonText}
         ctaText={ctaText}
         ctaLink={ctaLink}
+        images={images}
       />
     </div>
   );

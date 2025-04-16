@@ -1,4 +1,4 @@
-import { useHeroStore } from "@/store/heroStore";
+import { useHeroStore } from "../store";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 interface NavigationControlsProps {

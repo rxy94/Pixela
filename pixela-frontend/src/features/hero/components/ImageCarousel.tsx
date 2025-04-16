@@ -1,6 +1,6 @@
 import Image from "next/image";
 import clsx from 'clsx';
-import { useHeroStore } from "@/store/heroStore";
+import { useHeroStore } from "../store";
 
 interface ImageCarouselProps {
   images: string[];
