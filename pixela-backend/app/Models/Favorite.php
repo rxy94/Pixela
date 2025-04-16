@@ -9,15 +9,17 @@ class Favorite extends Model
 {
     use HasFactory;
 
-    protected $table = 'favorites';
     protected $primaryKey = 'favorite_id';
-
     public $timestamps = false;
 
     protected $fillable = [
         'user_id',
         'item_type',
-        'tmdb_id'
+        'tmdb_id',
+    ];
+
+    protected $casts = [
+        'tmdb_id' => 'integer',
     ];
 
     // Relación con usuario

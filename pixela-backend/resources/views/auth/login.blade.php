@@ -25,7 +25,7 @@
         </div>
 
         <!-- Password -->
-        <div class="relative mb-8">
+        <div class="relative mb-5">
             <x-text-input 
                 id="password"
                 icon="carbon-password" 
@@ -36,6 +36,17 @@
                 required 
                 autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-[14px] font-['Outfit']" />
+        </div>
+
+        <!-- Remember Me -->
+        <div class="flex items-center mb-6">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer">
+                <input id="remember_me" type="checkbox" name="remember" 
+                    class="w-4 h-4 rounded border-gray-600 bg-[#181818] text-[#ec1b69] focus:ring-0 focus:ring-offset-0 focus:outline-none">
+                <span class="ml-2 text-[15px] font-['Outfit'] text-gray-400 hover:text-gray-300 transition-colors duration-300">
+                    {{ __('Recuérdame') }}
+                </span>
+            </label>
         </div>
 
         <!-- Iniciar button -->

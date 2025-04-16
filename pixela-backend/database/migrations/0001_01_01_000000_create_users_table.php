@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->timestamp('registration_date')->useCurrent();
+            $table->timestamp('last_login_date')->nullable();
             $table->rememberToken();
-            $table->timestamps();
         });
     }
 

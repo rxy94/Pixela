@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id('favorite_id');
             $table->enum('item_type', ['movie', 'series']);
             $table->unsignedBigInteger('tmdb_id');
-            $table->timestamps();
             
             $table->index('tmdb_id');
             $table->index('item_type');
