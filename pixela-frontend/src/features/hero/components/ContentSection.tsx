@@ -1,14 +1,6 @@
 import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
-
-interface ContentSectionProps {
-  title: string;
-  accentTitle: string;
-  description: string;
-  secondaryButtonText: string;
-  ctaText: string;
-  ctaLink: string;
-}
+import { HeroContent } from "../type";
 
 export const ContentSection = ({
   title,
@@ -17,7 +9,7 @@ export const ContentSection = ({
   secondaryButtonText,
   ctaText,
   ctaLink
-}: ContentSectionProps) => {
+}: HeroContent) => {
   return (
     <div className="absolute inset-x-0 bottom-0 z-10">
       <div className="max-w-[83.333%] mx-auto pb-36">

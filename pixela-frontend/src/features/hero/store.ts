@@ -1,19 +1,5 @@
 import { create } from 'zustand';
-
-interface HeroState {
-  currentImageIndex: number;
-  fadeIn: boolean;
-  isPlaying: boolean;
-  progress: number;
-  setCurrentImageIndex: (index: number) => void;
-  setFadeIn: (state: boolean) => void;
-  setIsPlaying: (state: boolean) => void;
-  setProgress: (progress: number | ((prev: number) => number)) => void;
-  resetProgress: () => void;
-  prevImage: (imagesLength: number) => void;
-  nextImage: (imagesLength: number) => void;
-  handleSlideChange: (index: number) => void;
-}
+import { HeroState } from './type';
 
 export const useHeroStore = create<HeroState>((set) => ({
   currentImageIndex: 0,
