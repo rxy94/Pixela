@@ -1,23 +1,15 @@
 import { FiPlay, FiPause } from "react-icons/fi";
 import clsx from 'clsx';
+import { useHeroStore } from "@/store/heroStore";
 
 interface ProgressIndicatorProps {
-  progress: number;
-  isPlaying: boolean;
-  setIsPlaying: (isPlaying: boolean) => void;
   images: string[];
-  currentImageIndex: number;
-  onSlideChange: (index: number) => void;
 }
 
-export const ProgressIndicator = ({ 
-  progress, 
-  isPlaying, 
-  setIsPlaying, 
-  images, 
-  currentImageIndex,
-  onSlideChange
-}: ProgressIndicatorProps) => {
+export const ProgressIndicator = ({ images }: ProgressIndicatorProps) => {
+
+  const { setIsPlaying, handleSlideChange, currentImageIndex, isPlaying, progress } = useHeroStore();
+
   return (
     <div className="absolute bottom-28 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-xl">
       <div className="flex flex-col items-center gap-4">
@@ -44,7 +36,7 @@ export const ProgressIndicator = ({
             {images.map((_, index) => (
               <button
                 key={index}
-                onClick={() => onSlideChange(index)}
+                onClick={() => handleSlideChange(index)}
                 className={clsx(
                   "h-2 rounded-full transition-all duration-300",
                   index === currentImageIndex ? "bg-pixela-accent w-6" : "bg-pixela-light/50 w-2 hover:bg-pixela-light/70"

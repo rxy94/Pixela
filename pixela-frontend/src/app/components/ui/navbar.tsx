@@ -20,7 +20,9 @@ export const Navbar = () => {
             ))}
           </div>
         </div>
-        <div className="mx-10 w-[85px]"></div>  {/* Espacio reservado para equilibrar el diseño */}
+        <div className="mx-10 w-[85px]">
+          {/* Espacio reservado para equilibrar el diseño */}
+        </div>
       </div>
     </div>
   )

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import clsx from 'clsx';
+import { useHeroStore } from "@/store/heroStore";
 
 interface ImageCarouselProps {
   images: string[];
-  currentImageIndex: number;
-  fadeIn: boolean;
 }
 
-export const ImageCarousel = ({ images, currentImageIndex, fadeIn }: ImageCarouselProps) => {
+export const ImageCarousel = ({ images }: ImageCarouselProps) => {
+  
+  const { currentImageIndex, fadeIn } = useHeroStore();
+
   return (
     <div className="absolute inset-0 w-full h-full">
       {/* Imagen hero en blanco y negro */}
