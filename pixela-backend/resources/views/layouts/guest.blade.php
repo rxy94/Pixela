@@ -17,13 +17,6 @@
     </head>
     <body class="font-['Roboto'] text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-tr from-[#111111] to-[#181818]">
-            <!-- Logo de la aplicación -->
-            <!-- <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div> -->
-
             <div class="w-full max-w-[960px] mt-6 px-6 py-8 overflow-hidden min-h-[400px] flex items-center bg-[#111111] bg-opacity-95 backdrop-blur-sm rounded-[25px]">
                 <div class="flex items-center justify-between w-full">
                     <div class="w-1/2 flex items-center justify-center">
@@ -31,7 +24,7 @@
                     </div>
                     <div class="w-1/2 flex justify-center">
                         <div class="relative group">
-                            <img src="{{ asset('img/Logo-login.svg') }}" alt="Pixela.io" 
+                            <img src="{{ asset('storage/img/Logo-login.svg') }}" alt="Pixela.io" 
                                 class="w-48 h-auto transform transition-all duration-500 ease-in-out 
                                        group-hover:scale-110
                                        filter group-hover:brightness-110">

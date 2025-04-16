@@ -9,9 +9,7 @@ class Review extends Model
 {
     use HasFactory;
 
-    protected $table = 'reviews';
     protected $primaryKey = 'review_id';
-
     public $timestamps = false;
 
     protected $fillable = [
@@ -19,11 +17,14 @@ class Review extends Model
         'item_type',
         'tmdb_id',
         'rating',
-        'review'
+        'review',
+        'review_date',
     ];
 
     protected $casts = [
+        'tmdb_id' => 'integer',
         'rating' => 'integer',
+        'review_date' => 'datetime',
     ];
 
     public function user()

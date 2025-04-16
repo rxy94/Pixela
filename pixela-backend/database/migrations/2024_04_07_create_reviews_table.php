@@ -15,7 +15,6 @@ return new class extends Migration
             $table->integer('rating')->unsigned();
             $table->text('review')->nullable();
             $table->timestamp('review_date')->useCurrent();
-            $table->timestamps();
 
             $table->index('tmdb_id');
             $table->index('item_type');
