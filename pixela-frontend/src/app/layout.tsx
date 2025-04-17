@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Roboto, Inter } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "./components/ui/navbar";
+import { Navbar } from "../shared/components/navbar";
 
 /* Fuentes para el texto */
 const roboto = Roboto({

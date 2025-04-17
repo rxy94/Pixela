@@ -1,6 +1,6 @@
-import { FiPlay, FiPause } from "react-icons/fi";
 import clsx from 'clsx';
-import { useHeroStore } from "@/store/heroStore";
+import { useHeroStore } from "../store";
+import { FiPlay, FiPause } from "react-icons/fi";
 
 interface ProgressIndicatorProps {
   images: string[];
