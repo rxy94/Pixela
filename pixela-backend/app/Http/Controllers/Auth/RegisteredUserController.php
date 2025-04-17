@@ -47,6 +47,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        // Redirigir al frontend usando FRONTEND_URL
+        return redirect()->away(env('FRONTEND_URL'));
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Http\JsonResponse;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,20 +23,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse|JsonResponse
+    public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        if ($request->wantsJson()) {
-            return response()->json([
-                'message' => 'Login successful',
-                'user' => Auth::user()
-            ]);
-        }
-
-        return redirect()->route('dashboard');
+        // Redirigir al frontend usando FRONTEND_URL
+        return redirect()->away(env('FRONTEND_URL'));
     }
 
     /**
@@ -47,9 +41,8 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect()->away(env('FRONTEND_URL'));
     }
 }
