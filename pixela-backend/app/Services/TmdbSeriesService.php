@@ -78,7 +78,7 @@ class TmdbSeriesService
      */
     public function getTrendingSeries(): array
     {
-        return $this->makeRequest("/trending/tv/week");
+        return $this->makeRequest("/trending/tv/week?with_watch_providers=8|384|119|9|337&watch_region=ES");
     } 
 
     /**
