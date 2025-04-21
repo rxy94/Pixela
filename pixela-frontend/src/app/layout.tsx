@@ -16,7 +16,7 @@ const roboto = Roboto({
 /* Fuente sans para la interfaz */
 const outfit = Outfit({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "700", "900"],
   variable: "--font-sans",
 });
 
