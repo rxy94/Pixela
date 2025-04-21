@@ -79,8 +79,6 @@ export const HeroSection = ({
         accentTitle={accentTitle}
         description={description}
         secondaryButtonText={secondaryButtonText}
-        ctaText={ctaText}
-        ctaLink={ctaLink}
         images={images}
       />
     </div>

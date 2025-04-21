@@ -32,7 +32,7 @@ export const TrendingHeader = () => {
   );
 
   const renderContent = () => (
-    <div className="relative w-full h-screen bg-pixela-dark flex flex-col">
+    <div id="tendencias" className="relative w-full h-screen bg-pixela-dark flex flex-col">
       <div className="flex-grow flex flex-col justify-end relative z-10">
         <div className="w-[80%] mx-auto mb-4 flex items-end justify-between">
           <h2 className="text-[128px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none">Tendencias</h2>
