@@ -1,32 +1,33 @@
 'use client';
 import Image from "next/image";
-import { TrendingSerie } from "@/features/trending/type";
+import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
 import { useState } from "react";
 import { Badge } from "@/shared/components/Badge";
 import { ActionButtons } from "@/shared/components/ActionButtons";
 import { MediaInfoDetails } from "./MediaInfoDetails";
 
 interface TrendingMediaCardProps {
-  serie: TrendingSerie;
+  media: TrendingSerie | TrendingMovie;
+  type: 'series' | 'movies';
 }
 
-export const TrendingMediaCard = ({ serie }: TrendingMediaCardProps) => {
+export const TrendingMediaCard = ({ media, type }: TrendingMediaCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // Determinar si hay una puntuación alta (más de 7.5)
-  const isHighRated = serie.vote_average && serie.vote_average >= 7.5;
+  const isHighRated = media.vote_average && media.vote_average >= 7.5;
 
   //TODO: Implementar la funcionalidad de los botones
   const handleDetailsClick = () => {
-    console.log("Ver detalles de", serie.title);
+    console.log("Ver detalles de", media.title);
   };
 
   const handleFollowClick = () => {
-    console.log("Seguir serie", serie.title);
+    console.log("Seguir", type === 'series' ? 'serie' : 'película', media.title);
   };
 
   const handleReviewsClick = () => {
-    console.log("Ver reseñas de", serie.title);
+    console.log("Ver reseñas de", media.title);
   };
   
   return (
@@ -38,8 +39,8 @@ export const TrendingMediaCard = ({ serie }: TrendingMediaCardProps) => {
       {/* Poster principal */}
       <div className="relative w-full h-[528px] overflow-hidden">
         <Image
-          src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
-          alt={serie.title}
+          src={`https://image.tmdb.org/t/p/w500${media.poster_path}`}
+          alt={media.title}
           fill
           className="object-cover"
           priority
@@ -55,8 +56,8 @@ export const TrendingMediaCard = ({ serie }: TrendingMediaCardProps) => {
                      ${isHovered ? 'opacity-100' : 'opacity-0'}`}
         >
 
-          {/* Información sobre la serie */}
-          <MediaInfoDetails serie={serie} />
+          {/* Información sobre el contenido */}
+          <MediaInfoDetails media={media} type={type} />
 
           {/* Botones de acción para información y seguimiento */}
           <ActionButtons 
