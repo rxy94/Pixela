@@ -20,25 +20,44 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+            if ($request->expectsJson()) {
+                throw ValidationException::withMessages([
+                    'email' => ['The provided credentials are incorrect.'],
+                ]);
+            }
+            return back()->withErrors([
+                'email' => 'Las credenciales proporcionadas son incorrectas.',
             ]);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-            'is_admin' => $user->is_admin,
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'token' => $token,
+                'user' => $user,
+                'is_admin' => $user->is_admin,
+            ]);
+        }
+
+        // Para solicitudes de formulario HTML
+        session(['auth_token' => $token]);
+        return redirect()->away(env('FRONTEND_URL'));
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        if ($request->user()) {
+            $request->user()->currentAccessToken()->delete();
+        }
 
-        return response()->json(['message' => 'Logged out successfully']);
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Logged out successfully']);
+        }
+
+        // Para solicitudes de formulario HTML
+        session()->forget('auth_token');
+        return redirect()->away(env('FRONTEND_URL'));
     }
 
     public function isAdmin(Request $request)

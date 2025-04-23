@@ -2,7 +2,6 @@
 import { useEffect, useCallback } from "react";
 import { ImageCarousel, NavigationControls, ProgressIndicator, ContentSection} from "../components";
 import { useHeroStore } from "../store";
-import { VerticalIcons } from "@/shared/components/VerticalIcons";
 
 interface HeroSectionProps {
   title: string;
@@ -73,7 +72,6 @@ export const HeroSection = ({
       <ImageCarousel images={images} />
       <NavigationControls imagesLength={images.length}/>
       <ProgressIndicator images={images}/>
-      <VerticalIcons />
   
       <ContentSection 
         title={title} 

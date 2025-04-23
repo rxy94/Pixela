@@ -20,30 +20,51 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
 
   checkAuth: async () => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
+      set({ isAuthenticated: false, user: null });
+      return;
+    }
+
     try {
-      const response = await fetch('http://localhost:8000/api/user', {
-        credentials: 'include',
+      const response = await fetch('http://127.0.0.1:8000/api/user', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
       });
       
       if (response.ok) {
         const user = await response.json();
         set({ isAuthenticated: true, user });
       } else {
+        localStorage.removeItem('auth_token');
         set({ isAuthenticated: false, user: null });
       }
     } catch (error) {
+      localStorage.removeItem('auth_token');
       set({ isAuthenticated: false, user: null });
     }
   },
 
   logout: async () => {
-    try {
-      await fetch('http://localhost:8000/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
+    const token = localStorage.getItem('auth_token');
+    if (!token) {
       set({ isAuthenticated: false, user: null });
-      window.location.href = '/';
+      return;
+    }
+
+    try {
+      await fetch('http://127.0.0.1:8000/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
+      localStorage.removeItem('auth_token');
+      set({ isAuthenticated: false, user: null });
+      
     } catch (error) {
       console.error('Error during logout:', error);
     }
