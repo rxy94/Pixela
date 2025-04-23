@@ -13,13 +13,6 @@ Route::prefix('auth')->group(function(){
     Route::get('user',     [AuthController::class,'user'])->middleware('auth:sanctum');
   });
   
-/* Route::post('/auth/login', [AuthController::class, 'login']);
-Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
- */
 // Rutas de películas
 Route::group([
     'controller' => MovieController::class, 

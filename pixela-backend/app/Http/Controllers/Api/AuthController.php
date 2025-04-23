@@ -31,39 +31,57 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        // Autenticar al usuario usando el sistema de sesiones de Laravel
+        Auth::login($user);
 
         if ($request->expectsJson()) {
             return response()->json([
-                'token' => $token,
                 'user' => $user,
                 'is_admin' => $user->is_admin,
             ]);
         }
 
-        // Para solicitudes de formulario HTML
-        session(['auth_token' => $token]);
+        // Para solicitudes de formulario HTML, redireccionar al frontend
         return redirect()->away(env('FRONTEND_URL'));
     }
 
     public function logout(Request $request)
     {
-        if ($request->user()) {
-            $request->user()->currentAccessToken()->delete();
-        }
+        // Cerrar la sesión
+        Auth::logout();
+        
+        // Invalidar la sesión y regenerar el token CSRF
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         if ($request->expectsJson()) {
             return response()->json(['message' => 'Logged out successfully']);
         }
 
         // Para solicitudes de formulario HTML
-        session()->forget('auth_token');
         return redirect()->away(env('FRONTEND_URL'));
+    }
+
+    public function user(Request $request)
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            return response()->json([
+                'user' => $user,
+                'is_admin' => $user->is_admin
+            ]);
+        }
+        
+        return response()->json(['message' => 'Unauthenticated'], 401);
     }
 
     public function isAdmin(Request $request)
     {
-        return response()->json(['is_admin' => $request->user()->is_admin]);
+        if (Auth::check()) {
+            return response()->json(['is_admin' => Auth::user()->is_admin]);
+        }
+        
+        return response()->json(['message' => 'Unauthenticated'], 401);
     }
 
     /**

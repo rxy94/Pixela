@@ -7,16 +7,12 @@ import { MdLogout } from "react-icons/md"
 import { FiUser } from "react-icons/fi"
 import { useAuthStore } from "@/store/auth.store"
 
-// URL del backend
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost';
-
 export const Navbar = () => {
   const router = useRouter();
   const { logout } = useAuthStore();
 
   const handleLogout = () => {
-    // Usar la nueva ruta específica que usa AuthController para el logout
-    window.location.replace(`${API_URL}/frontend-logout`);
+    logout();
   };
 
   return (
