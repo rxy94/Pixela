@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Método para autenticar al usuario
+     *
+     * @param Request $request
+     * @return void
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -45,6 +51,12 @@ class AuthController extends Controller
         return redirect()->away(env('FRONTEND_URL'));
     }
 
+    /**
+     * Método para cerrar la sesión del usuario
+     *
+     * @param Request $request
+     * @return void
+     */
     public function logout(Request $request)
     {
         // Cerrar la sesión
@@ -62,6 +74,12 @@ class AuthController extends Controller
         return redirect()->away(env('FRONTEND_URL'));
     }
 
+    /**
+     * Método para obtener el usuario autenticado
+     *
+     * @param Request $request
+     * @return void
+     */
     public function user(Request $request)
     {
         if (Auth::check()) {
@@ -75,6 +93,12 @@ class AuthController extends Controller
         return response()->json(['message' => 'Unauthenticated'], 401);
     }
 
+    /**
+     * Método para verificar si el usuario es administrador
+     *
+     * @param Request $request
+     * @return void
+     */
     public function isAdmin(Request $request)
     {
         if (Auth::check()) {
@@ -86,6 +110,9 @@ class AuthController extends Controller
 
     /**
      * Método específico para manejar logout desde el frontend con redirección web
+     *
+     * @param Request $request
+     * @return void
      */
     public function webLogout(Request $request)
     {

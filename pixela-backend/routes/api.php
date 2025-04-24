@@ -3,10 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\SeriesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// Rutas de autenticación
+// Rutas de autenticación del usuario
 Route::prefix('auth')->group(function(){
     Route::post('login',   [AuthController::class,'login']);
     Route::post('logout',  [AuthController::class,'logout'])->middleware('auth:sanctum');
