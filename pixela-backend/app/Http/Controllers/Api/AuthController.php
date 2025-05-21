@@ -3,130 +3,96 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
+/**
+ * @OA\Tag(
+ *     name="Auth",
+ *     description="Authentication and session management endpoints"
+ * )
+ */
 class AuthController extends Controller
 {
     /**
-     * Método para autenticar al usuario
-     *
-     * @param Request $request
-     * @return void
+     * @OA\Get(
+     *     path="/api/user",
+     *     summary="Get authenticated user",
+     *     description="Returns information about the currently authenticated user",
+     *     operationId="getAuthUser",
+     *     tags={"Auth"},
+     *     security={{ "sanctum": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User information retrieved successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/UserResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
      */
-    public function login(Request $request)
+    public function user(Request $request): JsonResponse
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            if ($request->expectsJson()) {
-                throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect.'],
-                ]);
-            }
-            return back()->withErrors([
-                'email' => 'Las credenciales proporcionadas son incorrectas.',
-            ]);
-        }
-
-        // Autenticar al usuario usando el sistema de sesiones de Laravel
-        Auth::login($user);
-
-        if ($request->expectsJson()) {
-            return response()->json([
-                'user' => $user,
-                'is_admin' => $user->is_admin,
-            ]);
-        }
-
-        // Para solicitudes de formulario HTML, redireccionar al frontend
-        return redirect()->away(env('FRONTEND_URL'));
+        return response()->json($request->user());
     }
 
     /**
-     * Método para cerrar la sesión del usuario
-     *
-     * @param Request $request
-     * @return void
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout",
+     *     description="Logs out the current user, revokes all tokens and clears cookies",
+     *     operationId="logout",
+     *     tags={"Auth"},
+     *     security={{ "sanctum": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully logged out",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="message", type="string", example="Successfully logged out")
+     *             ),
+     *             @OA\Property(
+     *                 property="meta",
+     *                 type="object",
+     *                 @OA\Property(property="timestamp", type="string", format="datetime")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
-        // Cerrar la sesión
-        Auth::logout();
-        
-        // Invalidar la sesión y regenerar el token CSRF
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        if ($request->expectsJson()) {
-            return response()->json(['message' => 'Logged out successfully']);
+        // Revokes all API tokens
+        if ($user = $request->user()) {
+            $user->tokens()->delete();
         }
 
-        // Para solicitudes de formulario HTML
-        return redirect()->away(env('FRONTEND_URL'));
-    }
-
-    /**
-     * Método para obtener el usuario autenticado
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function user(Request $request)
-    {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return response()->json([
-                'user' => $user,
-                'is_admin' => $user->is_admin
-            ]);
-        }
-        
-        return response()->json(['message' => 'Unauthenticated'], 401);
-    }
-
-    /**
-     * Método para verificar si el usuario es administrador
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function isAdmin(Request $request)
-    {
-        if (Auth::check()) {
-            return response()->json(['is_admin' => Auth::user()->is_admin]);
-        }
-        
-        return response()->json(['message' => 'Unauthenticated'], 401);
-    }
-
-    /**
-     * Método específico para manejar logout desde el frontend con redirección web
-     *
-     * @param Request $request
-     * @return void
-     */
-    public function webLogout(Request $request)
-    {
-        // Cerrar la sesión
+        // Invalidates the current session
         Auth::guard('web')->logout();
-        
-        // Invalidar la sesión y regenerar el token CSRF
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        // Redirigir al login de Laravel con cabeceras para evitar caché
-        return redirect('/login')
-            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
-            ->header('Pragma', 'no-cache')
-            ->header('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
+
+        // Clears the session cookie
+        Cookie::queue(Cookie::forget('pixela_session'));
+
+        return response()
+            ->json([
+                'data' => ['message' => 'Sesión cerrada.'],
+                'meta' => ['timestamp' => now()],
+            ], 200);
     }
-} 
+}

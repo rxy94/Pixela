@@ -1,81 +1,125 @@
 'use client';
 
-import { useCallback, useEffect, useState, ReactNode } from 'react';
+import { useCallback, useEffect, useState, ReactNode, useMemo } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { SliderNavButton } from '@/shared/components/SliderNavButton';
 import clsx from 'clsx';
 
+const STYLES = {
+  container: 'relative',
+  carousel: {
+    base: 'embla overflow-hidden w-full cursor-grab',
+    dragging: 'cursor-grabbing'
+  },
+  slides: 'embla__container',
+  navButton: 'top-[50%]',
+  icon: 'h-6 w-6'
+} as const;
+
+const CAROUSEL_OPTIONS = {
+  loop: true,
+  align: 'start' as const,
+  skipSnaps: false,
+  dragFree: true,
+  containScroll: 'trimSnaps' as const,
+  slidesToScroll: 1,
+  duration: 50
+} as const;
+
 interface MediaCarouselProps {
+  /** Contenido del carrusel */
   children: ReactNode;
+  /** Habilita el autoplay del carrusel */
   autoplay?: boolean;
+  /** Intervalo de tiempo entre slides en milisegundos */
   autoplayInterval?: number;
+  /** Clases CSS adicionales para los slides */
   slidesClassName?: string;
+  /** Clases CSS adicionales para el contenedor */
   className?: string;
+  /** Índice inicial del carrusel */
+  initialIndex?: number;
 }
 
+/**
+ * Componente de carrusel de medios con soporte para autoplay y navegación
+ * @param {MediaCarouselProps} props - Propiedades del componente
+ * @returns {JSX.Element} Componente de carrusel
+ */
 export const MediaCarousel = ({ 
   children, 
   autoplay = true, 
   autoplayInterval = 6000,
   slidesClassName = '',
-  className = ''
+  className = '',
+  initialIndex = 0
 }: MediaCarouselProps) => {
   const [isDragging, setIsDragging] = useState(false);
   
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    align: 'start',
-    skipSnaps: false,
-    dragFree: true,
-    containScroll: 'trimSnaps',
-    slidesToScroll: 1,
-    duration: 50
-  });
+  const carouselOptions = useMemo(() => ({
+    ...CAROUSEL_OPTIONS,
+    startIndex: initialIndex
+  }), [initialIndex]);
+  
+  const [emblaRef, emblaApi] = useEmblaCarousel(carouselOptions);
   
   useEffect(() => {
-    if (emblaApi) {
-      const onDragStart = () => setIsDragging(true);
-      const onDragEnd = () => setIsDragging(false);
-      
-      emblaApi.on('pointerDown', onDragStart);
-      emblaApi.on('pointerUp', onDragEnd);
-      
-      return () => {
-        emblaApi.off('pointerDown', onDragStart);
-        emblaApi.off('pointerUp', onDragEnd);
-      };
-    }
+    if (!emblaApi) return;
+    
+    const onDragStart = () => setIsDragging(true);
+    const onDragEnd = () => setIsDragging(false);
+    
+    emblaApi.on('pointerDown', onDragStart);
+    emblaApi.on('pointerUp', onDragEnd);
+    
+    return () => {
+      emblaApi.off('pointerDown', onDragStart);
+      emblaApi.off('pointerUp', onDragEnd);
+    };
   }, [emblaApi]);
   
   useEffect(() => {
-    if (emblaApi && autoplay) {
-      const intervalId = setInterval(() => {
-        emblaApi.scrollNext();
+    if (!emblaApi || !autoplay) return;
+    
+    let intervalId: NodeJS.Timeout;
+    
+    const startAutoplay = () => {
+      clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        if (!document.hidden) {
+          emblaApi.scrollNext();
+        }
       }, autoplayInterval);
-      
-      return () => clearInterval(intervalId);
-    }
+    };
+    
+    startAutoplay();
+    emblaApi.on('pointerUp', startAutoplay);
+    document.addEventListener('visibilitychange', startAutoplay);
+    
+    return () => {
+      clearInterval(intervalId);
+      emblaApi.off('pointerUp', startAutoplay);
+      document.removeEventListener('visibilitychange', startAutoplay);
+    };
   }, [emblaApi, autoplay, autoplayInterval]);
   
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
+  const scrollPrev = useCallback(() => 
+    emblaApi?.scrollPrev(), [emblaApi]);
   
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
+  const scrollNext = useCallback(() => 
+    emblaApi?.scrollNext(), [emblaApi]);
 
   return (
-    <div className={clsx("relative", className)}>
+    <div className={clsx(STYLES.container, className)}>
       <div 
         className={clsx(
-          "embla overflow-hidden w-full cursor-grab",
-          { "cursor-grabbing": isDragging }
+          STYLES.carousel.base,
+          { [STYLES.carousel.dragging]: isDragging }
         )}
         ref={emblaRef}
       >
-        <div className={clsx("embla__container", slidesClassName)}>
+        <div className={clsx(STYLES.slides, slidesClassName)}>
           {children}
         </div>
       </div>
@@ -84,16 +128,18 @@ export const MediaCarousel = ({
         direction="prev"
         onClick={scrollPrev}
         ariaLabel="Anterior"
-        icon={<FiChevronLeft className="h-6 w-6" />}
-        className="top-[50%]"
+        icon={<FiChevronLeft className={STYLES.icon} />}
+        className={STYLES.navButton}
       />
       <SliderNavButton 
         direction="next"
         onClick={scrollNext}
         ariaLabel="Siguiente"
-        icon={<FiChevronRight className="h-6 w-6" />}
-        className="top-[50%]"
+        icon={<FiChevronRight className={STYLES.icon} />}
+        className={STYLES.navButton}
       />
     </div>
   );
-}; 
+};
+
+export default MediaCarousel; 

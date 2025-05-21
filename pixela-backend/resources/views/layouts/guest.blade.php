@@ -22,6 +22,7 @@
                     <div class="w-1/2 flex items-center justify-center">
                         {{ $slot }}
                     </div>
+                    <!-- Logo -->
                     <div class="w-1/2 flex justify-center">
                         <div class="relative group">
                             <img src="{{ asset('storage/img/Logo-login.svg') }}" alt="Pixela.io" 

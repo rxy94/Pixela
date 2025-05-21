@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,18 +37,14 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::create([
-            'user_name' => $request->name,
+            'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_admin' => false,
-            'registration_date' => now(),
+            'created_at' => now(),
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        // Redirigir al frontend usando FRONTEND_URL
-        return redirect()->away(env('FRONTEND_URL'));
+        return redirect()->route('register')->with('status', __('auth.register'));
     }
 }

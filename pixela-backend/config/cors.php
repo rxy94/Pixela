@@ -14,19 +14,25 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', 'frontend-logout'],
+    'paths' => [
 
-    'allowed_methods' => ['*'],
+        'api/*',
+        'sanctum/csrf-cookie',
+        'login',        // POST /login
+        'logout',       // POST /logout
+        'register',     // POST /register
 
-    'allowed_origins' => ['http://localhost:3000'],
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_methods'   => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
-    'allowed_headers' => ['*'],
+    'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test'],
+
+    'allowed_headers'   => ['*'],
 
     'exposed_headers' => [],
 
     'max_age' => 0,
 
-    'supports_credentials' => true,
+    'supports_credentials' => true
 ]; 
