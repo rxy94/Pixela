@@ -31,12 +31,11 @@ const STYLES = {
   mobileCloseButton: 'absolute top-8 right-8 text-pixela-light hover:text-pixela-accent p-2',
   mobileNavLink: 'font-outfit font-black text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-8 transition-colors duration-300 text-left w-full',
   mobileNavContainer: 'flex flex-col items-start w-full space-y-8 pl-6',
-  mobileUserSection: 'mt-16 flex flex-col items-start w-full space-y-8',
+  mobileUserSection: 'mt-12 flex flex-col items-start w-full space-y-6',
   mobileUserContainer: 'flex flex-col items-start gap-5 w-full pl-6',
   mobileUserName: 'text-2xl font-outfit font-bold text-pixela-light mb-2 pl-8',
-  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light/80 hover:text-pixela-accent transition-colors duration-300 py-3 pl-8 rounded-full hover:bg-transparent w-full',
+  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-3 pl-8 rounded-full hover:bg-transparent w-full',
   mobileActionText: 'text-xl font-outfit',
-  mobileDivider: 'w-48 h-0.5 bg-pixela-light/20 mt-8 mb-8 ml-6'
 } as const;
 
 /**
@@ -80,7 +79,7 @@ const MobileActionButton = ({
     className={STYLES.mobileActionButton}
     aria-label={label}
   >
-    <Icon className="h-7 w-7" />
+    <Icon className="h-6 w-6" />
     <span className={STYLES.mobileActionText}>{label}</span>
   </button>
 );
@@ -233,8 +232,6 @@ export const Navbar = () => {
 
         {/* Sección de usuario para móvil */}
         <div className={STYLES.mobileUserSection}>
-          <div className={STYLES.mobileDivider} />
-          
           <div className={STYLES.mobileUserContainer}>
             {isAuthenticated && user && (
               <>
