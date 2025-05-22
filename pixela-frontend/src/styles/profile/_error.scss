@@ -1,4 +1,6 @@
+@use 'variables' as *;
 // Estilos para el componente de error
+@use "sass:color";
 
 .profile-error {
   display: flex;
@@ -44,7 +46,7 @@
     font-family: $font-primary;
     
     &:hover {
-      background-color: darken($pixela-primary, 10%);
+      background-color: color.adjust($pixela-primary, $lightness: -10%);
     }
   }
   

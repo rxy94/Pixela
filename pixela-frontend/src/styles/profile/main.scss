@@ -1,17 +1,17 @@
 // Importar variables primero
-@import './variables';
+@use './variables' as *;
 
 // Importar estilos base
-@import './layout';
-@import './avatar';
-@import './tabs';
-@import './panel';
-@import './form';
-@import './input';
-@import './update-profile';
-@import './animations';
+@use './layout' as *;
+@use './avatar' as *;
+@use './tabs' as *;
+@use './panel' as *;
+@use './form' as *;
+@use './input' as *;
+@use './update-profile' as *;
+@use './animations' as *;
 
 // Importaciones de archivos parciales
-@import 'info';
-@import 'loader';
-@import 'error'; 
+@use 'info' as *;
+@use 'loader' as *;
+@use 'error' as *; 

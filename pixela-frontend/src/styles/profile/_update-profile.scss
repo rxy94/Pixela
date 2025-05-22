@@ -1,3 +1,6 @@
+@use 'variables' as *;
+@use "sass:color";
+
 .profile-edit {
   display: flex;
   flex-direction: column;
@@ -134,7 +137,7 @@
     transition: background-color 0.2s ease;
     
     &:hover {
-      background-color: darken(#ec1b69, 5%);
+      background-color: color.adjust(#ec1b69, $lightness: -5%);
     }
   }
 
@@ -179,7 +182,7 @@
       border: none;
 
       &:hover {
-        background: darken(#ec1b69, 5%);
+        background: color.adjust(#ec1b69, $lightness: -5%);
       }
 
       &:disabled {
