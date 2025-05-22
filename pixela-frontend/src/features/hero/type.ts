@@ -8,6 +8,7 @@ export interface HeroContent {
     description: string;
     secondaryButtonText: string;
     images: string[];
+    currentImageIndex?: number;
   }
   
 /**
