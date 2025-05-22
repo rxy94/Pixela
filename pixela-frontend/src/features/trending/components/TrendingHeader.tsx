@@ -9,15 +9,15 @@ import clsx from 'clsx';
 
 // Constantes
 const STYLES = {
-  title: 'text-[128px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none',
-  container: 'relative w-full min-h-screen bg-pixela-dark flex flex-col',
-  content: 'flex-grow flex flex-col justify-center relative z-10',
-  contentWrapper: 'w-[80%] mx-auto mb-4',
-  contentWrapperWithToggle: 'w-[80%] mx-auto mb-4 flex items-end justify-between',
-  toggleContainer: 'mb-10',
-  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative',
+  title: 'text-[48px] sm:text-[64px] md:text-[96px] lg:text-[128px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-center md:text-left',
+  container: 'relative w-full min-h-screen bg-pixela-dark flex flex-col pt-8 md:pt-20',
+  content: 'flex-grow flex flex-col justify-center md:justify-start relative z-10 pb-16 md:pb-0',
+  contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] mx-auto',
+  contentWrapperWithToggle: 'w-full md:w-[85%] lg:w-[80%] mx-auto flex flex-col items-center gap-8 lg:gap-0 lg:flex-row lg:items-end lg:justify-between',
+  toggleContainer: 'mb-12 md:mb-10 w-[90%] md:w-auto',
+  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative justify-center lg:justify-start',
   loadingContainer: 'relative w-full h-screen bg-pixela-dark flex flex-col justify-center',
-  loadingCard: 'w-[375px] h-[528px] bg-gray-800 flex items-center justify-center',
+  loadingCard: 'w-[280px] md:w-[375px] h-[395px] md:h-[528px] bg-gray-800 flex items-center justify-center',
   loadingText: 'text-pixela-light'
 } as const;
 
