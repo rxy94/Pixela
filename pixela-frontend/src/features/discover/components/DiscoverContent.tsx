@@ -7,9 +7,9 @@ import { IoIosArrowForward } from 'react-icons/io';
 
 const STYLES = {
   container: "relative w-full min-h-screen bg-pixela-dark flex flex-col",
-  gradientContainer: "absolute inset-0 w-full h-full z-0 pointer-events-none",
-  mainGradient: "absolute top-1/2 left-[65%] -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[1100px] rounded-full bg-gradient-to-r from-pixela-accent/50 via-pixela-accent/20 to-transparent blur-[300px] opacity-70 lg:w-[1100px] lg:h-[1100px] md:w-[800px] md:h-[800px] sm:w-[600px] sm:h-[600px] w-[400px] h-[400px]",
-  secondaryGradient: "absolute top-1/2 left-[65%] -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-gradient-to-l from-pixela-accent/60 via-pixela-accent/30 to-transparent blur-[250px] opacity-60 lg:w-[900px] lg:h-[900px] md:w-[600px] md:h-[600px] sm:w-[400px] sm:h-[400px] w-[300px] h-[300px]",
+  gradientContainer: "absolute inset-0 w-full h-full z-0 pointer-events-none overflow-hidden",
+  mainGradient: "absolute top-1/2 left-[65%] -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-r from-pixela-accent/50 via-pixela-accent/20 to-transparent blur-[300px] opacity-70",
+  secondaryGradient: "absolute top-1/2 left-[65%] -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-l from-pixela-accent/60 via-pixela-accent/30 to-transparent blur-[250px] opacity-60",
   contentContainer: "flex-grow flex flex-col justify-center relative z-10",
   mainContent: "w-[90%] md:w-[85%] lg:w-[80%] mx-auto flex flex-col lg:flex-row items-center gap-8",
   leftSection: "w-full lg:w-[50%] lg:pr-8",

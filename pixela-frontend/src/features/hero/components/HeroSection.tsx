@@ -5,7 +5,7 @@ import { useHeroStore } from "../store";
 
 const STYLES = {
   hero: {
-    base: "relative w-full min-h-[80vh] sm:min-h-[85vh] md:min-h-screen lg:h-screen overflow-hidden sm:p-6 md:p-8 lg:p-0",
+    base: "relative w-full min-h-[80vh] sm:min-h-[85vh] md:min-h-screen lg:h-screen overflow-hidden px-4 sm:px-6 md:px-8 lg:px-0",
     ipadFix: "sm:[min-height:1180px]:min-h-screen sm:[min-width:820px]:min-h-screen"
   }
 } as const;

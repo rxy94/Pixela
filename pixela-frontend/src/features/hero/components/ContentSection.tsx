@@ -18,8 +18,8 @@ const STYLES = {
     icon: "h-5 w-5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 animate-bounce text-pixela-light group-hover:text-pixela-accent opacity-80 group-hover:opacity-100"
   },
   contentSection: {
-    base: "absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 md:p-6 lg:p-0",
-    container: "max-w-full sm:max-w-xl md:max-w-2xl lg:max-w-[83.333%] mx-auto pb-20 sm:pb-24 md:pb-28 lg:pb-36",
+    base: "absolute inset-x-0 bottom-0 z-10 px-4 sm:px-5 md:px-6 lg:px-0",
+    container: "w-full max-w-[95%] sm:max-w-xl md:max-w-2xl lg:max-w-[83.333%] mx-auto pb-20 sm:pb-24 md:pb-28 lg:pb-36",
     description: "text-base sm:text-lg md:text-lg lg:text-xl text-pixela-light/80 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-lg mb-6 md:mb-8 lg:mb-12 drop-shadow-sm backdrop-blur-[2px] sm:backdrop-blur-0",
     buttonsContainer: "flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8"
   }

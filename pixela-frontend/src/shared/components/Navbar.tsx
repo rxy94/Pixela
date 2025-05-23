@@ -9,9 +9,9 @@ import { mainNavLinks } from '@/data/links/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 const STYLES = {
-  nav: 'w-full fixed top-0 left-0 z-50 mt-5',
-  container: 'max-w-[83.333%] mx-auto flex items-center p-4 bg-dark-opacity backdrop-blur-sm rounded-[36px]',
-  logo: 'mx-10 sm:mx-4 md:mx-6 lg:mx-10',
+  nav: 'w-full fixed top-0 left-0 z-50 mt-5 px-4',
+  container: 'w-full max-w-[83.333%] mx-auto flex items-center p-4 max-sm:px-3 max-sm:w-full bg-dark-opacity backdrop-blur-sm rounded-[36px]',
+  logo: 'mx-10 sm:mx-2 md:mx-6 lg:mx-10',
   logoText: 'text-3xl font-bold font-outfit text-pixela-accent',
   navLinks: 'hidden md:flex flex-1 justify-center', 
   navLinksContainer: 'flex space-x-8',
@@ -25,17 +25,17 @@ const STYLES = {
 
   // Estilos para el menú hamburguesa
   mobileMenuButton: 'md:hidden text-pixela-light hover:text-pixela-accent p-2 ml-auto',
-  mobileMenu: 'fixed inset-0 bg-pixela-dark/95 backdrop-blur-lg z-50 flex flex-col justify-center items-start p-10 sm:p-12 md:p-16 transform transition-transform duration-300',
+  mobileMenu: 'fixed inset-0 bg-pixela-dark/95 backdrop-blur-lg z-50 flex flex-col justify-center items-start p-6 sm:p-8 md:p-16 transform transition-transform duration-300',
   mobileMenuVisible: 'translate-y-0',
   mobileMenuHidden: 'translate-y-full',
-  mobileCloseButton: 'absolute top-8 right-8 text-pixela-light hover:text-pixela-accent p-2',
-  mobileNavLink: 'font-outfit font-black text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-8 transition-colors duration-300 text-left w-full',
-  mobileNavContainer: 'flex flex-col items-start w-full space-y-8 pl-6',
-  mobileUserSection: 'mt-12 flex flex-col items-start w-full space-y-6',
-  mobileUserContainer: 'flex flex-col items-start gap-5 w-full pl-6',
-  mobileUserName: 'text-2xl font-outfit font-bold text-pixela-light mb-2 pl-8',
-  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-3 pl-8 rounded-full hover:bg-transparent w-full',
-  mobileActionText: 'text-xl font-outfit',
+  mobileCloseButton: 'absolute top-6 right-6 text-pixela-light hover:text-pixela-accent p-2',
+  mobileNavLink: 'font-outfit font-black text-3xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
+  mobileNavContainer: 'flex flex-col items-start w-full space-y-6 sm:space-y-8 pl-2 sm:pl-6',
+  mobileUserSection: 'mt-8 sm:mt-12 flex flex-col items-start w-full space-y-4 sm:space-y-6',
+  mobileUserContainer: 'flex flex-col items-start gap-4 sm:gap-5 w-full pl-2 sm:pl-6',
+  mobileUserName: 'text-xl sm:text-2xl font-outfit font-bold text-pixela-light mb-2 pl-4 sm:pl-8',
+  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-2 sm:py-3 pl-4 sm:pl-8 rounded-full hover:bg-transparent w-full',
+  mobileActionText: 'text-lg sm:text-xl font-outfit',
 } as const;
 
 /**
