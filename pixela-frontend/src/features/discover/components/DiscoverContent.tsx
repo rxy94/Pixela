@@ -14,6 +14,8 @@ const STYLES = {
   mainContent: "w-[90%] md:w-[85%] lg:w-[80%] mx-auto flex flex-col lg:flex-row items-center gap-8",
   leftSection: "w-full lg:w-[50%] lg:pr-8",
   title: "w-[90%] mx-auto text-[48px] sm:text-[64px] md:text-[96px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none mb-8 text-center lg:w-full lg:mx-0 lg:text-left lg:text-[128px]",
+  titleMobile: "block sm:hidden text-[64px] leading-[0.95] text-pixela-accent font-black font-outfit uppercase text-left w-full pl-0 ml-[-1rem] break-words",
+  titleDesktop: "hidden sm:block text-[48px] sm:text-[64px] md:text-[96px] lg:text-[128px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none mb-8 text-center lg:w-full lg:mx-0 lg:text-left lg:text-[128px]",
   description: "text-pixela-light text-base md:text-lg lg:text-xl mb-10 max-w-full lg:max-w-[90%] leading-relaxed",
   descriptionHighlight: "block mt-2 text-pixela-light/80",
   actionsContainer: "flex flex-col sm:flex-row items-center gap-6",
@@ -44,7 +46,8 @@ export const DiscoverContent = () => {
                 <div className={STYLES.mainContent}>
                     <div className={STYLES.leftSection}>
                         <h2 className={STYLES.title}>
-                            Descubre
+                            <span className={STYLES.titleMobile}>DES-<br/>CUBRE</span>
+                            <span className={STYLES.titleDesktop}>Descubre</span>
                         </h2>
                         <p className={STYLES.description}>
                             <span className={STYLES.mainTitle}>

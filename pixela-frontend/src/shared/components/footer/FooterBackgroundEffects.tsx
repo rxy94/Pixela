@@ -159,7 +159,7 @@ export const FooterBackgroundEffects: React.FC<BackgroundEffectProps> = ({ isAni
       
       {/* Fondo decorativo: PIXELA gigante */}
       <span
-        className={`pointer-events-none select-none absolute inset-0 w-full h-full flex items-center justify-center font-black uppercase tracking-tighter z-0 leading-none text-transparent transition-opacity duration-1000 ${isAnimated ? 'opacity-40' : 'opacity-0'}`}
+        className={`pointer-events-none select-none absolute inset-0 w-full h-full hidden md:flex items-center justify-center font-black uppercase tracking-tighter z-0 leading-none text-transparent transition-opacity duration-1000 ${isAnimated ? 'opacity-40' : 'opacity-0'}`}
         style={{
           lineHeight: 1,
           fontSize: "clamp(200px, 30vw, 500px)",

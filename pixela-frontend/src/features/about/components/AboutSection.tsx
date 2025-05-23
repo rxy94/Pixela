@@ -11,8 +11,8 @@ import type { TeamMember, FeatureCard } from '../data/aboutData';
  */
 const STYLES = {
   section: "py-36 px-4 max-sm:px-2 bg-pixela-dark",
-  container: "max-w-7xl mx-auto max-sm:w-full",
-  title: "text-6xl max-sm:text-4xl font-black mb-8 text-pixela-accent font-outfit relative inline-block",
+  container: "max-w-7xl mx-auto max-sm:w-5/6",
+  title: "text-6xl max-sm:text-4xl font-black mb-8 text-pixela-accent font-outfit relative inline-block max-sm:text-[64px] max-sm:leading-[0.95] max-sm:break-words",
   titleUnderline: "absolute -bottom-2 left-0 w-0 h-1 bg-pixela-accent group-hover:w-full transition-all duration-500",
   subtitle: "text-xl max-sm:text-base text-white/80",
   card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float-smooth hover:-translate-y-2",
@@ -33,7 +33,7 @@ const STYLES = {
   teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16",
   teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16",
   teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8",
-  teamTextContainer: "mt-8",
+  teamTextContainer: "mt-8 max-sm:mt-2",
   teamDescription: "text-xl max-sm:text-base text-white/90 leading-relaxed mb-4",
   teamRole: "text-pixela-accent/80 text-sm mb-3",
   teamInfoContainer: "space-y-1.5 mb-3",
@@ -136,7 +136,8 @@ const AboutSection = () => {
         {/* Título y Subtítulo */}
         <div className={STYLES.teamHeader}>
           <h1 className={STYLES.title}>
-            Quiénes Somos
+            <span className="block sm:hidden">QUIÉ-<br/>NES SOMOS</span>
+            <span className="hidden sm:block">Quiénes Somos</span>
             <span className={STYLES.titleUnderline}></span>
           </h1>
           <div className={STYLES.teamHeaderText}>
@@ -159,7 +160,8 @@ const AboutSection = () => {
             {/* Columna de texto */}
             <div className={STYLES.teamTextColumn}>
               <h2 className={STYLES.title}>
-                Nuestro Equipo
+                <span className="block sm:hidden">NUES-<br/>TRO EQUIPO</span>
+                <span className="hidden sm:block">Nuestro Equipo</span>
                 <span className={STYLES.titleUnderline}></span>
               </h2>
               <div className={STYLES.teamTextContainer}>

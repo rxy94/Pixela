@@ -9,7 +9,9 @@ import clsx from 'clsx';
 
 // Constantes
 const STYLES = {
-  title: 'text-[48px] sm:text-[64px] md:text-[96px] lg:text-[128px] font-[900] text-pixela-accent font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-center md:text-left',
+  title: 'font-black font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-left break-words pl-4 sm:pl-0',
+  titleMobile: 'block sm:hidden text-[64px] leading-[0.95] text-pixela-accent text-left pl-4 sm:pl-0',
+  titleDesktop: 'hidden sm:block text-[64px] md:text-[96px] lg:text-[128px] text-pixela-accent text-left pl-4 sm:pl-0',
   container: 'relative w-full min-h-screen bg-pixela-dark flex flex-col pt-8 md:pt-20',
   content: 'flex-grow flex flex-col justify-center md:justify-start relative z-10 pb-16 md:pb-0',
   contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] mx-auto',
@@ -21,7 +23,6 @@ const STYLES = {
   loadingText: 'text-pixela-light'
 } as const;
 
-const TITLE_TEXT = 'Tendencias';
 const BUTTON_OPTIONS = [
   { id: 'series', label: 'Series' },
   { id: 'movies', label: 'Películas' }
@@ -38,7 +39,8 @@ type MediaType = 'series' | 'movies';
  */
 const TrendingTitle = memo(() => (
   <h2 className={STYLES.title}>
-    {TITLE_TEXT}
+    <span className={STYLES.titleMobile}>TEN-<br/>DENCIAS</span>
+    <span className={STYLES.titleDesktop}>TENDENCIAS</span>
   </h2>
 ));
 

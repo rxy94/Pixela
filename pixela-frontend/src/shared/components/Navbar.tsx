@@ -10,7 +10,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 
 const STYLES = {
   nav: 'w-full fixed top-0 left-0 z-50 mt-5 px-4',
-  container: 'w-full max-w-[83.333%] mx-auto flex items-center p-4 max-sm:px-3 max-sm:w-full bg-dark-opacity backdrop-blur-sm rounded-[36px]',
+  container: 'w-full max-w-[83.333%] mx-auto flex items-center p-4 max-sm:px-3 max-sm:w-[calc(100%-2rem)] bg-dark-opacity backdrop-blur-sm rounded-[36px]',
   logo: 'mx-10 sm:mx-2 md:mx-6 lg:mx-10',
   logoText: 'text-3xl font-bold font-outfit text-pixela-accent',
   navLinks: 'hidden md:flex flex-1 justify-center', 
