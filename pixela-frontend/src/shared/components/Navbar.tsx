@@ -29,12 +29,12 @@ const STYLES = {
   mobileMenuVisible: 'translate-y-0',
   mobileMenuHidden: 'translate-y-full',
   mobileCloseButton: 'absolute top-6 right-6 text-pixela-light hover:text-pixela-accent p-2',
-  mobileNavLink: 'font-outfit font-black text-3xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
-  mobileNavContainer: 'flex flex-col items-start w-full space-y-6 sm:space-y-8 pl-2 sm:pl-6',
+  mobileNavLink: 'font-outfit font-black text-5xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
+  mobileNavContainer: 'flex flex-col items-start w-full space-y-2 sm:space-y-8 pl-2 sm:pl-6',
   mobileUserSection: 'mt-8 sm:mt-12 flex flex-col items-start w-full space-y-4 sm:space-y-6',
   mobileUserContainer: 'flex flex-col items-start gap-4 sm:gap-5 w-full pl-2 sm:pl-6',
   mobileUserName: 'text-xl sm:text-2xl font-outfit font-bold text-pixela-light mb-2 pl-4 sm:pl-8',
-  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-2 sm:py-3 pl-4 sm:pl-8 rounded-full hover:bg-transparent w-full',
+  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-2 sm:py-3 pl-4 sm:pl-8 rounded-full hover:bg-transparent w-full bg-gradient-to-r from-pixela-accent/10 to-pixela-accent/5 shadow-sm shadow-pixela-accent/5 border border-pixela-accent/20',
   mobileActionText: 'text-lg sm:text-xl font-outfit',
 } as const;
 
