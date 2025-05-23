@@ -17,7 +17,7 @@ const STYLES = {
   contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] mx-auto',
   contentWrapperWithToggle: 'w-full md:w-[85%] lg:w-[80%] mx-auto flex flex-col items-center gap-8 lg:gap-0 lg:flex-row lg:items-end lg:justify-between',
   toggleContainer: 'mb-12 md:mb-10 w-[90%] md:w-auto',
-  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative justify-center lg:justify-start',
+  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 justify-center lg:justify-start w-full sm:w-auto',
   loadingContainer: 'relative w-full h-screen bg-pixela-dark flex flex-col justify-center',
   loadingCard: 'w-[280px] md:w-[375px] h-[395px] md:h-[528px] bg-gray-800 flex items-center justify-center',
   loadingText: 'text-pixela-light'

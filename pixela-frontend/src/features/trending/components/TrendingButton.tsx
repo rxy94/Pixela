@@ -5,7 +5,7 @@ import clsx from 'clsx';
  * Constantes de estilo para los botones de tendencias
  */
 const STYLES = {
-  base: 'relative z-10 px-6 py-2 text-sm font-medium rounded-full transition-colors duration-300',
+  base: 'relative z-10 px-6 py-2 text-sm font-medium rounded-full transition-colors duration-300 min-w-[120px] flex-1',
   active: 'text-pixela-dark bg-pixela-accent shadow-lg shadow-pixela-accent/20',
   inactive: 'text-white/80 hover:text-white'
 } as const;
