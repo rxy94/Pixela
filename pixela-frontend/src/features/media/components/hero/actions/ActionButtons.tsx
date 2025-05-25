@@ -2,7 +2,6 @@
 
 import { FaBookmark, FaPen } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { favoritesAPI } from '@/api/favorites/favorites';
 import { ReviewModal } from '../../review/ReviewModal';
@@ -19,7 +18,6 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const router = useRouter();
   const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
@@ -106,7 +104,8 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
         </button>
         <button 
           onClick={handleReview}
-          className="bg-[#1A1A1A] hover:bg-[#252525] text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 border border-white/10"
+          className="bg-[#1A1A1A] hover:bg-[#252525] text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 border border-white/10 relative z-50"
+          type="button"
         >
           <FaPen className="w-5 h-5" />
           Hacer Reseña

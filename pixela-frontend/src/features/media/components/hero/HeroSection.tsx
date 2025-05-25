@@ -22,37 +22,67 @@ export function HeroSection({ media, onPosterClick, title, refreshReviews }: Her
     tipo === 'pelicula' ? 'movie' : 'series';
 
   return (
-    <div className="relative h-[80vh] w-full">
+    <div className="relative min-h-[80vh] w-full">
       {/* Backdrop con degradado */}
       <BackdropImage backdropUrl={media.backdrop} />
       
       {/* Content */}
-      <div className="relative h-full container mx-auto px-4 flex items-end pb-20">
-        <div className="flex flex-col md:flex-row gap-8">
-          {/* Poster */}
-          <MediaPoster 
-            posterUrl={media.poster} 
-            title={media.titulo} 
-            onClick={onPosterClick} 
-          />
-          
-          {/* Info */}
-          <div className="flex-grow">
-            <MediaTitle title={media.titulo} score={media.puntuacion} />
-            <GenresList genres={media.generos} />
-            <MediaMetadata media={media} />
-            <CreatorInfo media={media} />
-            
-            <p className="text-gray-300 text-lg max-w-3xl leading-relaxed mb-8">
-              {media.sinopsis}
-            </p>
-
-            <ActionButtons 
-              tmdbId={Number(media.id)} 
-              itemType={getItemType(media.tipo)}
-              title={title}
-              refreshReviews={refreshReviews}
+      <div className="relative container mx-auto px-4">
+        {/* Mobile Layout */}
+        <div className="md:hidden pt-24 pb-8">
+          <div className="flex flex-col items-center gap-6">
+            <MediaPoster 
+              posterUrl={media.poster} 
+              title={media.titulo} 
+              onClick={onPosterClick}
+              className="w-48" 
             />
+            <div className="w-full">
+              <MediaTitle title={media.titulo} score={media.puntuacion} />
+              <GenresList genres={media.generos} />
+              <MediaMetadata media={media} />
+              <CreatorInfo media={media} />
+              
+              <p className="text-gray-300 text-base leading-relaxed mt-4 mb-6">
+                {media.sinopsis}
+              </p>
+
+              <ActionButtons 
+                tmdbId={Number(media.id)} 
+                itemType={getItemType(media.tipo)}
+                title={title}
+                refreshReviews={refreshReviews}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:flex h-[80vh] items-end pb-20">
+          <div className="flex flex-row gap-8">
+            <MediaPoster 
+              posterUrl={media.poster} 
+              title={media.titulo} 
+              onClick={onPosterClick} 
+            />
+            
+            <div className="flex-grow">
+              <MediaTitle title={media.titulo} score={media.puntuacion} />
+              <GenresList genres={media.generos} />
+              <MediaMetadata media={media} />
+              <CreatorInfo media={media} />
+              
+              <p className="text-gray-300 text-lg max-w-3xl leading-relaxed mb-8">
+                {media.sinopsis}
+              </p>
+
+              <ActionButtons 
+                tmdbId={Number(media.id)} 
+                itemType={getItemType(media.tipo)}
+                title={title}
+                refreshReviews={refreshReviews}
+              />
+            </div>
           </div>
         </div>
       </div>

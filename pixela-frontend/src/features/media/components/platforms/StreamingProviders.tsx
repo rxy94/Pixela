@@ -17,7 +17,7 @@ export function StreamingProviders({ providers }: StreamingProvidersProps) {
   }
   
   return (
-    <section className="mb-12">
+    <section className="mb-12 mt-8 md:mt-0">
       <h2 className="text-2xl font-bold text-white mb-6">Disponible en</h2>
       <div className="flex flex-wrap gap-4">
         {providers.map((provider) => (

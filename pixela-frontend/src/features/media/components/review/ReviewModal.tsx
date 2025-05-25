@@ -56,11 +56,11 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
       onClose();
       if (refreshReviews) refreshReviews();
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       let errorMsg = 'No se pudo guardar la reseña. Por favor, inténtalo de nuevo.';
       console.log(error);
 
-      if (typeof error?.message === 'string' && error.message.includes('Review already exists')) {
+      if (error instanceof Error && error.message.includes('Review already exists')) {
         errorMsg = 'El usuario ya tiene una reseña para esta ficha.';
       }
       setError(errorMsg);
@@ -71,14 +71,23 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#1A1A1A] rounded-xl w-full max-w-2xl border border-white/10 shadow-2xl">
+    <div 
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div 
+        className="bg-[#1A1A1A] rounded-xl w-full max-w-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <div className="sticky top-0 bg-[#1A1A1A] flex items-center justify-between p-6 border-b border-white/10 z-10">
           <h2 className="text-xl font-semibold text-white">Escribir Reseña</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-white transition-colors"
+            type="button"
           >
             <FiX className="w-6 h-6" />
           </button>

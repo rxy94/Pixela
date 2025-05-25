@@ -12,10 +12,8 @@ interface CastSectionProps {
 }
 
 export function CastSection({ actors }: CastSectionProps) {
-  if (!actors || actors.length === 0) return null;
-  
-  // Determinar si usamos grid o slider basado en número de actores
-  const useGrid = actors.length <= 6;
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -23,10 +21,19 @@ export function CastSection({ actors }: CastSectionProps) {
     containScroll: 'trimSnaps',
   });
   
-  const [isDragging, setIsDragging] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px es el breakpoint md de Tailwind
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   useEffect(() => {
-    if (!emblaApi || useGrid) return;
+    if (!emblaApi || (!isMobile && actors.length <= 6)) return;
     
     const onPointerDown = () => setIsDragging(true);
     const onPointerUp = () => setIsDragging(false);
@@ -38,10 +45,14 @@ export function CastSection({ actors }: CastSectionProps) {
       emblaApi.off('pointerDown', onPointerDown);
       emblaApi.off('pointerUp', onPointerUp);
     };
-  }, [emblaApi, useGrid]);
+  }, [emblaApi, isMobile, actors.length]);
   
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  
+  if (!actors || actors.length === 0) return null;
+  
+  const useGrid = !isMobile && actors.length <= 6;
   
   return (
     <div className="mb-12">
@@ -76,7 +87,7 @@ export function CastSection({ actors }: CastSectionProps) {
                 <ActorCard 
                   key={actor.id} 
                   actor={actor} 
-                  className="flex-none w-[140px] sm:w-[160px] md:w-[180px] mx-2" 
+                  className="flex-none w-[120px] sm:w-[140px] md:w-[160px] lg:w-[180px] mx-2" 
                 />
               ))}
             </div>
