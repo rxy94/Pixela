@@ -55,9 +55,9 @@ export function CastSection({ actors }: CastSectionProps) {
   const useGrid = !isMobile && actors.length <= 6;
   
   return (
-    <div className="mb-12">
+    <div className="mb-12 pt-8">
       <div className="flex items-center justify-between mb-6">
-        <div>
+        <div className="pt-4">
           <h2 className="text-2xl font-bold text-white">Reparto Principal</h2>
           <span className="inline-block mt-1 px-2 py-1 text-xs rounded-full bg-pixela-dark/60 text-gray-400">{actors.length} {actors.length === 1 ? 'actor' : 'actores'}</span>
         </div>
