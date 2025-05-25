@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    <form method="POST" action="{{ route('login') }}" class="py-4 space-y-6 max-w-md">
+    <form method="POST" action="{{ route('login') }}" class="py-4 space-y-6 w-full max-w-xs mx-auto px-4">
         @csrf
 
         <!-- Title -->
