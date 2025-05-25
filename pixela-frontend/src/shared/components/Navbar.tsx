@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { MdLogout } from 'react-icons/md';
-import { FiUser, FiMenu, FiX } from 'react-icons/fi';
+import { FiUser, FiX } from 'react-icons/fi';
+import { RxHamburgerMenu } from 'react-icons/rx';
 import { useState, useEffect } from 'react';
 import { mainNavLinks } from '@/data/links/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
@@ -24,7 +25,7 @@ const STYLES = {
   divider: 'mx-2 h-6 w-0.5 bg-pixela-light/20',
 
   // Estilos para el menú hamburguesa
-  mobileMenuButton: 'md:hidden text-pixela-light hover:text-pixela-accent p-2 ml-auto',
+  mobileMenuButton: 'md:hidden text-pixela-light hover:text-pixela-accent p-2 rounded-full bg-[#18181b]/80 shadow-lg transition-all duration-300 mr-3 ml-auto',
   mobileMenu: 'fixed inset-0 bg-pixela-dark/95 backdrop-blur-lg z-50 flex flex-col justify-center items-start p-6 sm:p-8 md:p-16 transform transition-transform duration-300',
   mobileMenuVisible: 'translate-y-0',
   mobileMenuHidden: 'translate-y-full',
@@ -201,7 +202,7 @@ export const Navbar = () => {
             onClick={toggleMobileMenu}
             aria-label="Abrir menú"
           >
-            <FiMenu className="h-7 w-7" />
+            <RxHamburgerMenu className="h-8 w-8" />
           </button>
         </div>
       </nav>
