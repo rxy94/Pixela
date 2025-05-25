@@ -29,7 +29,7 @@ export function HeroSection({ media, onPosterClick, title, refreshReviews }: Her
       {/* Content */}
       <div className="relative container mx-auto px-4">
         {/* Mobile Layout */}
-        <div className="md:hidden pt-24 pb-8">
+        <div className="md:hidden pt-36 pb-8">
           <div className="flex flex-col items-center gap-6">
             <MediaPoster 
               posterUrl={media.poster} 
