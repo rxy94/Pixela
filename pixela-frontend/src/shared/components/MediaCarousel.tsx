@@ -28,17 +28,11 @@ const CAROUSEL_OPTIONS = {
 } as const;
 
 interface MediaCarouselProps {
-  /** Contenido del carrusel */
   children: ReactNode;
-  /** Habilita el autoplay del carrusel */
   autoplay?: boolean;
-  /** Intervalo de tiempo entre slides en milisegundos */
   autoplayInterval?: number;
-  /** Clases CSS adicionales para los slides */
   slidesClassName?: string;
-  /** Clases CSS adicionales para el contenedor */
   className?: string;
-  /** Índice inicial del carrusel */
   initialIndex?: number;
 }
 
