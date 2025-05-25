@@ -55,7 +55,7 @@ const STYLES = {
   ratingIcon: 'w-4 h-4 mr-1',
   reviewText: 'text-gray-300 text-sm mt-1',
   date: 'text-xs text-gray-400 mt-1',
-  actionsContainer: 'flex items-center gap-2 ml-6',
+  actionsContainer: 'flex items-center -ml-2',
   actionButton: clsx(
     'p-3 text-gray-400 hover:text-[#ec1b69]',
     'transition-colors duration-200'
@@ -331,29 +331,29 @@ export const ProfileReviews: FC = () => {
               <span className={STYLES.date}>
                 {review.created_at ? new Date(review.created_at).toLocaleDateString() : ''}
               </span>
-            </div>
-            <div className={STYLES.actionsContainer}>
-              {editingId !== review.id && (
+              <div className={STYLES.actionsContainer}>
+                {editingId !== review.id && (
+                  <button
+                    className={STYLES.actionButton}
+                    title="Editar reseña"
+                    onClick={() => handleEdit(review)}
+                  >
+                    <FiEdit className={STYLES.actionIcon} />
+                  </button>
+                )}
                 <button
                   className={STYLES.actionButton}
-                  title="Editar reseña"
-                  onClick={() => handleEdit(review)}
+                  title="Eliminar reseña"
+                  disabled={deletingId === review.id}
+                  onClick={() => handleDelete(review.id)}
                 >
-                  <FiEdit className={STYLES.actionIcon} />
+                  {deletingId === review.id ? (
+                    <FiLoader className={STYLES.actionIcon} />
+                  ) : (
+                    <FaTrash className={STYLES.actionIcon} />
+                  )}
                 </button>
-              )}
-              <button
-                className={STYLES.actionButton}
-                title="Eliminar reseña"
-                disabled={deletingId === review.id}
-                onClick={() => handleDelete(review.id)}
-              >
-                {deletingId === review.id ? (
-                  <FiLoader className={STYLES.actionIcon} />
-                ) : (
-                  <FaTrash className={STYLES.actionIcon} />
-                )}
-              </button>
+              </div>
             </div>
           </div>
         </div>
