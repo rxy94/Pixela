@@ -130,7 +130,7 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
                 key={review.id}
                 className="bg-[#18181b]/80 border border-white/10 rounded-2xl shadow-lg px-6 py-5 flex flex-col gap-3 transition-all duration-300 hover:shadow-2xl"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-pixela-accent/20 text-pixela-accent font-bold text-lg overflow-hidden">
@@ -151,12 +151,10 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
                       <span className="font-semibold text-white text-base">{review.user_name || 'Usuario'}</span>
                     </div>
                     {!isEditing && (
-                      <span className="ml-4 flex items-center">
+                      <span className="flex items-center">
                         <StarDisplay value={Number(review.rating)} />
                       </span>
                     )}
-                  </div>
-                  <div className="flex items-center gap-2">
                     {isUserReview && !isEditing && (
                       <button
                         onClick={() => handleEditClick(review)}
@@ -166,10 +164,10 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
                         <FiEdit2 className="w-4 h-4" />
                       </button>
                     )}
-                    <span className="text-xs text-gray-400 font-mono">
-                      {review.created_at && new Date(review.created_at).toLocaleDateString()}
-                    </span>
                   </div>
+                  <span className="text-xs text-gray-400 font-mono">
+                    {review.created_at && new Date(review.created_at).toLocaleDateString()}
+                  </span>
                 </div>
 
                 {isEditing ? (

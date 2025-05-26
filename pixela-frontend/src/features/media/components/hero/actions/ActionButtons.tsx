@@ -2,7 +2,6 @@
 
 import { FaBookmark, FaPen } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { favoritesAPI } from '@/api/favorites/favorites';
 import { ReviewModal } from '../../review/ReviewModal';
@@ -14,12 +13,19 @@ interface ActionButtonsProps {
   refreshReviews?: () => void;
 }
 
+const STYLES = {
+  container: 'flex gap-4',
+  favoriteButton: (isFavorited: boolean, isLoading: boolean) => `p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg ${isFavorited ? 'bg-[#FF2D55] text-white border border-white/20 hover:bg-[#FF4A6B]' : 'bg-[#FF2D55]/10 text-[#FF2D55] border border-[#FF2D55]/40 hover:bg-[#FF2D55]/20'} ${isLoading ? 'opacity-60 cursor-not-allowed' : ''}`,
+  bookmarkIcon: (isFavorited: boolean) => `w-5 h-5 transition-all duration-300 ${isFavorited ? '' : 'drop-shadow-[0_0_8px_rgba(255,45,85,0.5)] scale-110'}`,
+  reviewButton: 'bg-[#1A1A1A] hover:bg-[#252525] text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 border border-white/10 relative z-50',
+  penIcon: 'w-5 h-5',
+};
+
 export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: ActionButtonsProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const router = useRouter();
   const { isAuthenticated, checkAuth } = useAuthStore();
 
   useEffect(() => {
@@ -87,28 +93,20 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className={STYLES.container}>
         <button 
           onClick={handleFavorite}
           disabled={isLoading}
-          className={`p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg
-            ${isFavorited
-              ? 'bg-[#FF2D55] text-white border border-white/20 hover:bg-[#FF4A6B]'
-              : 'bg-[#FF2D55]/10 text-[#FF2D55] border border-[#FF2D55]/40 hover:bg-[#FF2D55]/20'
-            }
-          `}
+          className={STYLES.favoriteButton(isFavorited, isLoading)}
         >
-          <FaBookmark className={`w-5 h-5 transition-all duration-300 ${
-            isFavorited
-              ? ''
-              : 'drop-shadow-[0_0_8px_rgba(255,45,85,0.5)] scale-110'
-          }`} />
+          <FaBookmark className={STYLES.bookmarkIcon(isFavorited)} />
         </button>
         <button 
           onClick={handleReview}
-          className="bg-[#1A1A1A] hover:bg-[#252525] text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 border border-white/10"
+          className={STYLES.reviewButton}
+          type="button"
         >
-          <FaPen className="w-5 h-5" />
+          <FaPen className={STYLES.penIcon} />
           Hacer Reseña
         </button>
       </div>

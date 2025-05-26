@@ -19,6 +19,13 @@ type ParticleOptions = {
   opacity?: number;
 };
 
+const STYLES = {
+  container: "absolute inset-0 w-full h-full overflow-hidden",
+  smallParticle: "absolute rounded-full bg-[#ff007f]",
+  mediumParticle: "absolute rounded-full bg-gradient-to-r from-[#ff007f]/60 to-[#ff00ff]/60",
+  glowParticle: "absolute rounded-full"
+} as const;
+
 // Componente para partículas sutiles
 export const FooterParticles = () => {
   // Función optimizada para generar partículas
@@ -50,11 +57,11 @@ export const FooterParticles = () => {
   return (
     <>
       {/* Partículas pequeñas sutiles */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <div className={STYLES.container}>
         {smallParticles.map(particle => (
           <div 
             key={`small-${particle.id}`}
-            className="absolute rounded-full bg-[#ff007f]"
+            className={STYLES.smallParticle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
@@ -72,7 +79,7 @@ export const FooterParticles = () => {
         {mediumParticles.map(particle => (
           <div 
             key={`medium-${particle.id}`}
-            className="absolute rounded-full bg-gradient-to-r from-[#ff007f]/60 to-[#ff00ff]/60"
+            className={STYLES.mediumParticle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
@@ -90,7 +97,7 @@ export const FooterParticles = () => {
         {glowParticles.map(particle => (
           <div 
             key={`glow-${particle.id}`}
-            className="absolute rounded-full"
+            className={STYLES.glowParticle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,

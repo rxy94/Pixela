@@ -1,15 +1,17 @@
 "use client";
 
 import Image from 'next/image';
+import clsx from 'clsx';
 
 interface MediaPosterProps {
   posterUrl: string;
   title: string;
   onClick: () => void;
+  className?: string;
 }
 
-export const MediaPoster = ({ posterUrl, title, onClick }: MediaPosterProps) => (
-  <div className="w-64 flex-shrink-0">
+export const MediaPoster = ({ posterUrl, title, onClick, className }: MediaPosterProps) => (
+  <div className={clsx("w-64 flex-shrink-0", className)}>
     <div 
       className="relative group cursor-pointer"
       onClick={onClick}

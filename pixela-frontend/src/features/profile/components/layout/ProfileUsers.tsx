@@ -31,7 +31,7 @@ const STYLES = {
   userItem: 'flex items-center bg-pixela-dark-opacity/50 pt-2 px-4 rounded gap-4',
   avatarContainer: 'min-w-[32px] max-w-[32px] flex justify-center',
   contentContainer: 'flex flex-col justify-center flex-2 pl-5',
-  editForm: 'grid grid-cols-3 gap-4 w-full',
+  editForm: 'grid grid-cols-1 sm:grid-cols-3 gap-4 gap-y-2 w-full max-w-lg mx-auto mb-8',
   formGroup: 'flex flex-col',
   label: 'text-xs text-gray-400 mb-1 block',
   input: clsx(

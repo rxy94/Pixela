@@ -11,8 +11,8 @@ import { useRouter } from 'next/navigation';
  * Constantes para la configuración del componente
  */
 const STYLES = {
-  card: 'w-[375px] flex flex-col relative group',
-  posterContainer: 'relative w-full h-[528px] overflow-hidden',
+  card: 'w-[280px] md:w-[375px] flex flex-col relative group',
+  posterContainer: 'relative w-full h-[395px] md:h-[528px] overflow-hidden',
   noiseEffect: 'noise-effect opacity-5'
 } as const;
 

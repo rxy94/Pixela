@@ -7,11 +7,11 @@ const STYLES = {
     button: {
       container: {
         base: "absolute top-1/2 transform -translate-y-1/2 z-20",
-        left: "left-4",
-        right: "right-4"
+        left: "left-2 sm:left-3 md:left-4 lg:left-4",
+        right: "right-2 sm:right-3 md:right-4 lg:right-4"
       },
-      base: "p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300",
-      icon: "h-8 w-8"
+      base: "p-1 sm:p-1 md:p-1.5 lg:p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300",
+      icon: "h-6 w-6 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8"
     }
   }
 } as const;

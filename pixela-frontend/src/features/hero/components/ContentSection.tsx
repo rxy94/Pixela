@@ -5,23 +5,23 @@ import clsx from "clsx";
 
 const STYLES = {
   accentLine: {
-    base: "w-24 h-1 bg-pixela-accent",
-    withMargin: "mb-8"
+    base: "w-16 md:w-24 lg:w-24 h-1 bg-pixela-accent",
+    withMargin: "mb-4 md:mb-6 lg:mb-8"
   },
   heroTitle: {
-    base: "text-7xl font-bold text-pixela-light mb-6 tracking-tight leading-[1.1]",
+    base: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-pixela-light mb-4 md:mb-5 lg:mb-6 tracking-tight leading-[1.1] drop-shadow-sm",
     accent: "text-pixela-accent"
   },
   secondaryButton: {
     base: "group flex items-center transition-all duration-300",
-    text: "font-medium text-pixela-light group-hover:text-white group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] transition-all duration-300 mr-2",
-    icon: "h-6 w-6 animate-bounce text-pixela-light group-hover:text-pixela-accent opacity-80 group-hover:opacity-100"
+    text: "font-medium text-pixela-light group-hover:text-white group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] transition-all duration-300 mr-2 text-sm sm:text-base lg:text-base",
+    icon: "h-5 w-5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 animate-bounce text-pixela-light group-hover:text-pixela-accent opacity-80 group-hover:opacity-100"
   },
   contentSection: {
-    base: "absolute inset-x-0 bottom-0 z-10",
-    container: "max-w-[83.333%] mx-auto pb-36",
-    description: "text-xl text-pixela-light/80 max-w-lg mb-12",
-    buttonsContainer: "flex items-center gap-8"
+    base: "absolute inset-x-0 bottom-0 z-10 px-4 sm:px-5 md:px-6 lg:px-0",
+    container: "w-full max-w-[95%] sm:max-w-xl md:max-w-2xl lg:max-w-[83.333%] mx-auto pb-20 sm:pb-24 md:pb-28 lg:pb-36",
+    description: "text-base sm:text-lg md:text-lg lg:text-xl text-pixela-light/80 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-lg mb-6 md:mb-8 lg:mb-12 drop-shadow-sm backdrop-blur-[2px] sm:backdrop-blur-0",
+    buttonsContainer: "flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8"
   }
 } as const;
 

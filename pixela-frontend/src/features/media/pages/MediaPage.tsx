@@ -63,7 +63,7 @@ export const MediaPage = ({ media }: MediaPageProps) => {
 
       {/* Content Sections */}
       <div className="relative z-10 -mt-20 pb-40">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 pt-8 md:pt-0">
           {/* Proveedores de Streaming */}
           <StreamingProviders 
             providers={media.proveedores || []}

@@ -8,9 +8,9 @@ import { TrendingSerie, TrendingMovie } from '../type';
  * Constantes de estilo para el carrusel de medios
  */
 const STYLES = {
-  container: 'trending-carousel',
+  container: 'trending-carousel mx-0',
   slides: 'flex gap-0',
-  slide: 'relative min-w-[375px] max-w-[375px] w-[375px] flex-none'
+  slide: 'relative w-[280px] min-w-[280px] max-w-[280px] md:w-[375px] md:min-w-[375px] md:max-w-[375px] flex-none'
 } as const;
 
 /**

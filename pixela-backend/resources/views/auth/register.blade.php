@@ -1,6 +1,6 @@
 <x-guest-layout>
 
-    <form method="POST" action="{{ route('register') }}" class="py-4 space-y-6">
+    <form method="POST" action="{{ route('register') }}" class="py-4 space-y-6 w-full max-w-xs mx-auto px-4">
         @csrf
 
         <!-- Titulo del Register -->

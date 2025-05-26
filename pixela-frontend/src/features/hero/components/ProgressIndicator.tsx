@@ -4,10 +4,10 @@ import { FiPlay, FiPause } from "react-icons/fi";
 
 const STYLES = {
   progress: {
-    container: "absolute bottom-28 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-xl",
-    content: "flex flex-col items-center gap-4",
+    container: "absolute bottom-6 sm:bottom-14 md:bottom-20 lg:bottom-28 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-xl px-4 lg:px-0",
+    content: "flex flex-col items-center gap-3 sm:gap-3 md:gap-3 lg:gap-4",
     controls: "flex items-center justify-between w-full",
-    counter: "text-pixela-light/70 text-sm font-medium"
+    counter: "text-pixela-light/70 text-xs sm:text-xs md:text-sm lg:text-sm font-medium"
   },
   bar: {
     container: "w-full h-1 bg-pixela-light/20 rounded-full overflow-hidden",
@@ -15,12 +15,12 @@ const STYLES = {
   },
   dot: {
     base: "h-2 rounded-full transition-all duration-300",
-    active: "bg-pixela-accent w-6",
+    active: "bg-pixela-accent w-4 sm:w-4 md:w-5 lg:w-6",
     inactive: "bg-pixela-light/50 w-2 hover:bg-pixela-light/70"
   },
   playback: {
-    button: "p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300",
-    icon: "h-4 w-4"
+    button: "p-1 sm:p-1 md:p-1.5 lg:p-2 rounded-full bg-pixela-dark/40 backdrop-blur-sm text-pixela-light hover:text-pixela-accent hover:bg-pixela-dark/60 transition-all duration-300",
+    icon: "h-3 w-3 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4"
   }
 } as const;
 
@@ -101,6 +101,10 @@ export const ProgressIndicator = ({ images }: ProgressIndicatorProps) => {
     progress 
   } = useHeroStore();
 
+  if (!images || images.length === 0) {
+    return null;
+  }
+
   return (
     <div className={STYLES.progress.container}>
       <div className={STYLES.progress.content}>
@@ -112,7 +116,7 @@ export const ProgressIndicator = ({ images }: ProgressIndicatorProps) => {
             onToggle={() => setIsPlaying(!isPlaying)} 
           />
           
-          <div className="flex space-x-2">
+          <div className="flex space-x-1 sm:space-x-1 md:space-x-1.5 lg:space-x-2">
             {images.map((_, index) => (
               <SlideDot
                 key={index}
