@@ -134,6 +134,26 @@ export const Navbar = () => {
     setMobileMenuOpen(false);
   };
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith('/#')) {
+        e.preventDefault();
+        const sectionId = href.replace('/#', '');
+        
+        if (window.location.pathname !== '/') {
+            window.location.href = href;
+        } else {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+    }
+    closeMobileMenu();
+  };
+
   return (
     <>
       <nav className={STYLES.nav} role="navigation">
@@ -150,6 +170,7 @@ export const Navbar = () => {
                   href={link.href} 
                   className={STYLES.navLink}
                   aria-label={link.label}
+                  onClick={(e) => handleNavClick(e, link.href)}
                 >
                   {link.label}
                   <span className={STYLES.navLinkUnderline} />
@@ -224,7 +245,7 @@ export const Navbar = () => {
               key={link.href} 
               href={link.href} 
               className={STYLES.mobileNavLink}
-              onClick={closeMobileMenu}
+              onClick={(e) => handleNavClick(e, link.href)}
             >
               {link.label}
             </Link>

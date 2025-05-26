@@ -19,9 +19,15 @@ export default async function Home() {
   return (
     <main>
       <HeroSection {...heroData} />
-      <TrendingSection series={trendingSeries} movies={trendingMovies} />
-      <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />
-      <AboutSection />
+      <div id="trending" className="scroll-mt-24">
+        <TrendingSection series={trendingSeries} movies={trendingMovies} />
+      </div>
+      <div id="discover" className="scroll-mt-24">
+        <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />
+      </div>
+      <div id="about" className="scroll-mt-24">
+        <AboutSection />
+      </div>
     </main>
   );
 }
