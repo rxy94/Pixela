@@ -166,8 +166,11 @@ MediaCard.displayName = 'MediaCard';
 const ContentGrid = ({ movies, series, searchTerm }: { movies: Pelicula[], series: Serie[], searchTerm: string }) => {
     const allContent = [...movies, ...series]
         .filter(item => {
-            const title = 'title' in item ? item.title : item.name;
-            return title.toLowerCase().includes(searchTerm.toLowerCase());
+            if ('title' in item) {
+                return item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
+            } else {
+                return (item as Serie).name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
+            }
         })
         .sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
 
