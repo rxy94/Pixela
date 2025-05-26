@@ -54,6 +54,11 @@ export const API_ENDPOINTS = {
         CREATE: `${API_URL}/reviews`,
         UPDATE: `${API_URL}/reviews/:id`,
         DELETE: `${API_URL}/reviews/:id`,
+    },
+
+    // Categories
+    CATEGORIES: {
+        LIST: `${API_URL}/tmdb/categories`,
     }
 
 };

@@ -1,8 +1,7 @@
-import React from 'react'
+'use client';
 
-const CategoriesPage = () => {
-  return (
-    <h1>Categories Page</h1>
-  )
+import { CategoriesContainer } from '@/features/categories/components/CategoriesContainer';
+
+export default function CategoriesPage() {
+    return <CategoriesContainer />;
 }
-export default CategoriesPage;
