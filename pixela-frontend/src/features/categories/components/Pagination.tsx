@@ -1,13 +1,15 @@
 import { useCallback } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const STYLES = {
-    container: 'flex justify-center items-center gap-2 mt-8',
-    button: 'px-4 py-2 rounded-lg bg-pixela-dark/50 border border-pixela-accent/20 hover:bg-pixela-accent/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-pixela-dark/50',
-    buttonActive: 'bg-pixela-accent/20 text-pixela-light',
-    dots: 'text-pixela-light/50 px-2',
-    pageButton: 'min-w-[40px] h-[40px] flex items-center justify-center',
-    navButton: 'flex items-center gap-2',
+    container: 'flex justify-center items-center gap-1 md:gap-2',
+    button: 'flex items-center justify-center rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed',
+    pageButton: 'w-8 h-8 md:w-10 md:h-10 text-sm md:text-base',
+    activeButton: 'bg-pixela-accent text-white shadow-lg shadow-pixela-accent/20',
+    inactiveButton: 'bg-pixela-dark/30 text-pixela-light/80 border border-pixela-accent/20 hover:bg-pixela-accent/10 hover:border-pixela-accent/40',
+    ellipsis: 'flex items-center justify-center w-8 h-8 md:w-10 md:h-10 text-pixela-light/60',
+    navButton: 'w-8 h-8 md:w-10 md:h-10 text-pixela-light/60 hover:text-pixela-accent'
 } as const;
 
 const MAX_VISIBLE_PAGES = 5;
@@ -29,111 +31,87 @@ interface PaginationProps {
  * @returns {JSX.Element | null} Los controles de paginación o null si no hay páginas
  */
 export const Pagination = ({ currentPage, totalPages, onPageChange, disabled = false }: PaginationProps) => {
-    const renderPageNumbers = useCallback(() => {
-        if (totalPages <= 1) return [];
-
-        const pages = [];
-        const halfVisible = Math.floor(MAX_VISIBLE_PAGES / 2);
+    const getPageNumbers = () => {
+        const pages: (number | '...')[] = [];
+        const maxVisiblePages = window.innerWidth < 768 ? 3 : 5;
         
-        // Aseguramos que no excedamos el límite de TMDB
-        const safeTotalPages = Math.min(totalPages, MAX_TOTAL_PAGES);
-        let startPage = Math.max(1, currentPage - halfVisible);
-        const endPage = Math.min(safeTotalPages, startPage + MAX_VISIBLE_PAGES - 1);
-        
-        // Ajustar el rango si estamos cerca del final
-        if (endPage - startPage + 1 < MAX_VISIBLE_PAGES) {
-            startPage = Math.max(1, endPage - MAX_VISIBLE_PAGES + 1);
+        if (totalPages <= maxVisiblePages) {
+            return Array.from({ length: totalPages }, (_, i) => i + 1);
         }
 
-        // Primera página y elipsis inicial
-        if (startPage > 1) {
-            pages.push(
-                <button
-                    key="first"
-                    onClick={() => onPageChange(1)}
-                    className={`${STYLES.button} ${STYLES.pageButton}`}
-                    aria-label="Ir a la primera página"
-                    disabled={disabled}
-                >
-                    1
-                </button>
-            );
-            if (startPage > 2) {
-                pages.push(
-                    <span key="dots1" className={STYLES.dots} aria-hidden="true">
-                        ...
-                    </span>
-                );
-            }
+        // Siempre mostrar primera página
+        pages.push(1);
+
+        // Calcular páginas alrededor de la actual
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+
+        // Añadir elipsis inicial si es necesario
+        if (start > 2) {
+            pages.push('...');
         }
 
-        // Páginas numeradas
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(
-                <button
-                    key={i}
-                    onClick={() => onPageChange(i)}
-                    className={`${STYLES.button} ${STYLES.pageButton} ${i === currentPage ? STYLES.buttonActive : ''}`}
-                    aria-label={`Ir a la página ${i}`}
-                    aria-current={i === currentPage ? 'page' : undefined}
-                    disabled={disabled}
-                >
-                    {i}
-                </button>
-            );
+        // Añadir páginas alrededor de la actual
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
         }
 
-        // Última página y elipsis final
-        if (endPage < safeTotalPages) {
-            if (endPage < safeTotalPages - 1) {
-                pages.push(
-                    <span key="dots2" className={STYLES.dots} aria-hidden="true">
-                        ...
-                    </span>
-                );
-            }
-            pages.push(
-                <button
-                    key="last"
-                    onClick={() => onPageChange(safeTotalPages)}
-                    className={`${STYLES.button} ${STYLES.pageButton}`}
-                    aria-label="Ir a la última página"
-                    disabled={disabled}
-                >
-                    {safeTotalPages}
-                </button>
-            );
+        // Añadir elipsis final si es necesario
+        if (end < totalPages - 1) {
+            pages.push('...');
+        }
+
+        // Siempre mostrar última página
+        if (totalPages > 1) {
+            pages.push(totalPages);
         }
 
         return pages;
-    }, [currentPage, totalPages, onPageChange, disabled]);
+    };
 
     // No mostramos la paginación si no hay páginas o si la página actual es inválida
     if (totalPages <= 1 || currentPage > MAX_TOTAL_PAGES) return null;
 
     return (
-        <nav className={STYLES.container} role="navigation" aria-label="Paginación">
+        <div className={STYLES.container}>
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1 || disabled}
                 className={`${STYLES.button} ${STYLES.navButton}`}
-                aria-label="Ir a la página anterior"
+                aria-label="Página anterior"
             >
-                <FaChevronLeft className="w-4 h-4" />
-                <span>Anterior</span>
+                <FiChevronLeft className="w-5 h-5" />
             </button>
 
-            {renderPageNumbers()}
+            {getPageNumbers().map((page, index) => (
+                page === '...' ? (
+                    <span key={`ellipsis-${index}`} className={STYLES.ellipsis}>
+                        ...
+                    </span>
+                ) : (
+                    <button
+                        key={page}
+                        onClick={() => onPageChange(page as number)}
+                        disabled={disabled}
+                        className={`${STYLES.button} ${STYLES.pageButton} ${
+                            currentPage === page
+                                ? STYLES.activeButton
+                                : STYLES.inactiveButton
+                        }`}
+                    >
+                        {page}
+                    </button>
+                )
+            ))}
 
             <button
                 onClick={() => onPageChange(currentPage + 1)}
-                disabled={currentPage >= Math.min(totalPages, MAX_TOTAL_PAGES) || disabled}
+                disabled={currentPage === totalPages || disabled}
                 className={`${STYLES.button} ${STYLES.navButton}`}
-                aria-label="Ir a la página siguiente"
+                aria-label="Página siguiente"
             >
-                <span>Siguiente</span>
-                <FaChevronRight className="w-4 h-4" />
+                <FiChevronRight className="w-5 h-5" />
             </button>
-        </nav>
+        </div>
     );
 }; 

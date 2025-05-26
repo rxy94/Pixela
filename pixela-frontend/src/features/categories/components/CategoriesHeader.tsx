@@ -2,8 +2,9 @@ import { MediaTypeSelector } from './MediaTypeSelector';
 import { MediaType } from '../types/media';
 
 const STYLES = {
-    container: 'flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12',
-    title: 'text-4xl md:text-5xl font-black font-outfit text-transparent bg-clip-text bg-gradient-to-r from-pixela-accent to-pink-500',
+    container: 'flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8',
+    title: 'text-4xl md:text-4xl font-bold text-pixela-accent px-4 md:px-0',
+    controls: 'flex flex-col sm:flex-row gap-4 w-full md:w-auto justify-end px-4 md:px-0',
 } as const;
 
 interface CategoriesHeaderProps {
@@ -22,13 +23,13 @@ interface CategoriesHeaderProps {
 export const CategoriesHeader = ({ selectedMediaType, onMediaTypeChange }: CategoriesHeaderProps) => {
     return (
         <div className={STYLES.container}>
-            <h1 className={STYLES.title}>
-                {selectedMediaType === 'all' ? 'Todo el Contenido' : 'Categorías'}
-            </h1>
-            <MediaTypeSelector 
-                activeType={selectedMediaType}
-                onTypeChange={onMediaTypeChange}
-            />
+            <h1 className={STYLES.title}>Categorías</h1>
+            <div className={STYLES.controls}>
+                <MediaTypeSelector 
+                    selectedType={selectedMediaType}
+                    onTypeChange={onMediaTypeChange}
+                />
+            </div>
         </div>
     );
 }; 

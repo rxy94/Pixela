@@ -7,6 +7,13 @@ interface MediaTypeSelectorProps {
     onTypeChange: (type: MediaType) => void;
 }
 
+const STYLES = {
+    container: 'flex gap-2',
+    button: 'px-5 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm md:text-base',
+    buttonActive: 'bg-pixela-accent/10 text-pixela-accent border border-pixela-accent/30',
+    buttonInactive: 'bg-pixela-dark/20 text-pixela-light/60 border border-pixela-accent/10 hover:bg-pixela-accent/5 hover:text-pixela-accent/80'
+} as const;
+
 /**
  * Componente selector de tipo de medio (películas/series/todos).
  * 
@@ -22,15 +29,15 @@ export const MediaTypeSelector = ({ selectedType, onTypeChange }: MediaTypeSelec
     ];
 
     return (
-        <div className="flex gap-2">
+        <div className={STYLES.container}>
             {options.map(({ value, label }) => (
                 <button
                     key={value}
                     onClick={() => onTypeChange(value)}
-                    className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+                    className={`${STYLES.button} ${
                         selectedType === value
-                            ? 'bg-pixela-primary text-white shadow-lg shadow-pixela-primary/20'
-                            : 'bg-pixela-dark/50 text-gray-300 hover:bg-pixela-dark hover:text-white'
+                            ? STYLES.buttonActive
+                            : STYLES.buttonInactive
                     }`}
                 >
                     {label}
