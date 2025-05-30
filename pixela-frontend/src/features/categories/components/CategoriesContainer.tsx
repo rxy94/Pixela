@@ -1,0 +1,158 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { CategoriesList } from './CategoriesList';
+import { CategoriesContent } from './CategoriesContent';
+import { CategoriesHeader } from './CategoriesHeader';
+import { Pagination } from './Pagination';
+import { Category } from '@/api/categories/categories';
+import { useCategoriesStore } from '../store';
+import { useContentLoader } from '../hooks/useContentLoader';
+
+const STYLES = {
+    container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',
+    contentWrapper: 'container mx-auto px-4 py-8 md:py-12',
+    mainContent: 'flex flex-col md:flex-row gap-6 md:gap-8 items-start',
+    categoriesContainer: 'w-full md:w-64 flex-shrink-0 md:sticky md:top-28 max-w-md mx-auto md:mx-0 md:max-w-none md:mb-8',
+    contentArea: 'flex-1 w-full max-w-4xl mx-auto md:mx-0 md:max-w-none',
+    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 md:max-w-none'
+} as const;
+
+/**
+ * Componente principal que maneja la visualización y navegación de categorías de contenido.
+ * Permite filtrar por tipo de medio (películas/series) y categorías específicas.
+ * Implementa paginación para la navegación del contenido.
+ * 
+ * @component
+ * @returns {JSX.Element} El componente CategoriesContainer renderizado
+ */
+export const CategoriesContainer = () => {
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
+    const { selectedMediaType, setSelectedMediaType } = useCategoriesStore();
+    
+    const {
+        movies,
+        series,
+        loading,
+        error,
+        currentPage,
+        totalPages,
+        loadContent,
+        resetContent
+    } = useContentLoader(selectedMediaType);
+
+    /**
+     * Maneja la selección de una categoría y carga su contenido.
+     * 
+     * @param {Category} category - La categoría seleccionada
+     */
+    const handleCategorySelect = useCallback(async (category: Category) => {
+        setSelectedCategory(category);
+        resetContent();
+        await loadContent(category, 1);
+    }, [loadContent, resetContent]);
+
+    /**
+     * Maneja el cambio de página en la paginación.
+     * 
+     * @param {number} page - El número de página a cargar
+     */
+    const handlePageChange = useCallback(async (page: number) => {
+        await loadContent(selectedCategory, page);
+    }, [selectedCategory, loadContent]);
+
+    /**
+     * Maneja el cambio de tipo de medio.
+     * 
+     * @param {MediaType} type - El nuevo tipo de medio
+     */
+    const handleMediaTypeChange = useCallback(async (type: 'all' | 'movies' | 'series') => {
+        setSelectedMediaType(type);
+        setSelectedCategory(null);
+        resetContent();
+        await loadContent(null, 1);
+    }, [setSelectedMediaType, resetContent, loadContent]);
+
+    // Carga inicial del contenido
+    useEffect(() => {
+        const initializeContent = async () => {
+            await handleMediaTypeChange('all');
+            setIsInitialized(true);
+        };
+
+        initializeContent();
+    }, []);
+
+    const getContentToShow = useCallback(() => {
+        switch (selectedMediaType) {
+            case 'all':
+                return {
+                    movies: movies,
+                    series: series
+                };
+            case 'movies':
+                return {
+                    movies: movies,
+                    series: []
+                };
+            case 'series':
+                return {
+                    movies: [],
+                    series: series
+                };
+            default:
+                return {
+                    movies: [],
+                    series: []
+                };
+        }
+    }, [selectedMediaType, movies, series]);
+
+    const content = getContentToShow();
+
+    return (
+        <div className={STYLES.container}>
+            <div className={STYLES.contentWrapper}>
+                <CategoriesHeader 
+                    selectedMediaType={selectedMediaType}
+                    onMediaTypeChange={handleMediaTypeChange}
+                />
+                
+                <div className={STYLES.mainContent}>
+                    {isInitialized && selectedMediaType !== 'all' && (
+                        <div className={STYLES.categoriesContainer}>
+                            <CategoriesList 
+                                onCategorySelect={handleCategorySelect}
+                                selectedCategory={selectedCategory}
+                            />
+                        </div>
+                    )}
+
+                    <div className={STYLES.contentArea}>
+                        <div className="transform-gpu">
+                            <CategoriesContent
+                                selectedCategory={selectedCategory}
+                                movies={content.movies}
+                                series={content.series}
+                                loading={loading}
+                                error={error}
+                            />
+                        </div>
+
+                        {totalPages > 1 && (
+                            <div className={STYLES.paginationContainer}>
+                                <Pagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    onPageChange={handlePageChange}
+                                    disabled={loading}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}; 
