@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\TmdbSeriesService;
+use App\Services\TmdbService;
 use App\Transformers\SeriesTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,10 +19,14 @@ use Exception;
 class SeriesController extends Controller
 {
     protected TmdbSeriesService $tmdbSeriesService;
+    protected TmdbService $tmdbService;
 
-    public function __construct(TmdbSeriesService $tmdbSeriesService)
-    {
+    public function __construct(
+        TmdbSeriesService $tmdbSeriesService,
+        TmdbService $tmdbService
+    ) {
         $this->tmdbSeriesService = $tmdbSeriesService;
+        $this->tmdbService = $tmdbService;
     }
 
     /**
@@ -306,7 +311,11 @@ class SeriesController extends Controller
     {
         try {
             $page = $request->get('page', 1);
-            $series = $this->tmdbSeriesService->getSeriesByGenre($genreId, $page);
+            
+            // Convert movie genre ID to series genre ID if needed
+            $tvGenreId = $this->tmdbSeriesService->convertGenreId($genreId, 'movie', 'tv') ?? $genreId;
+            
+            $series = $this->tmdbSeriesService->getSeriesByGenre($tvGenreId, $page);
 
             return $this->paginatedResponse($series, $page);
 
@@ -316,7 +325,7 @@ class SeriesController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-    }   
+    }
 
     /**
      * @OA\Get(
