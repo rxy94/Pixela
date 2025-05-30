@@ -73,6 +73,13 @@ services:
             - "3000:3000"
         volumes:
             - '../pixela-frontend:/usr/src/app'
+        environment:
+            # Para llamadas server-side desde el contenedor Next.js a Laravel:
+            NEXT_PUBLIC_API_INTERNAL_URL: "http://laravel.test/api"
+            # Para llamadas client-side (desde el navegador del usuario) a Laravel:
+            NEXT_PUBLIC_BACKEND_URL: "http://${PUBLIC_HOSTNAME}:${APP_PORT}"
+            NEXT_PUBLIC_API_URL: "http://${PUBLIC_HOSTNAME}:${APP_PORT}/api"
+        #command: npm run build && npm run start
         command: npm run dev
         networks:
             - sail
