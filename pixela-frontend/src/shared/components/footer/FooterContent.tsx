@@ -36,7 +36,7 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
         {/* Grids principales */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-8 md:gap-y-16 py-8 md:py-16">
           {/* Columna 1: Logo y descripción */}
-          <div className="flex flex-col space-y-4 md:space-y-6">
+          <div className="flex flex-col space-y-4 md:space-y-6 md:col-span-4">
             <div className="flex items-center">
               <div className="relative">
                 <span
@@ -55,7 +55,7 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
                 </span>
               </div>
             </div>
-            <p className="text-white/80 text-sm md:text-base max-w-md leading-relaxed mt-2">
+            <p className="text-white/80 text-sm md:text-base max-w-md lg:max-w-2xl xl:max-w-xl leading-relaxed mt-2">
               Descubriendo historias que nos conectan. Pixela une a los amantes del cine y las series en una experiencia visual donde compartir, opinar y disfrutar del séptimo arte es parte del viaje.
             </p>
             <div className="flex flex-wrap gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-4 mt-2 md:mt-3">
