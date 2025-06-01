@@ -10,7 +10,7 @@ import { Category } from '@/api/categories/categories';
 const STYLES = {
     container: 'w-full',
     categoriesWrapper: 'w-full',
-    categoriesContainer: 'p-3 md:p-4 md:pb-12',
+    categoriesContainer: 'p-3 md:p-0 md:pt-0 md:pb-12',
     title: 'text-lg md:text-xl font-semibold mb-3 md:mb-4 text-white',
     list: 'space-y-1.5 md:space-y-6',
     categoryButton: 'w-full px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all duration-200 font-medium text-sm flex items-center gap-2 md:gap-3 mb-2 md:mb-4',
