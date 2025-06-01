@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\TmdbSeriesService;
-use App\Services\TmdbService;
 use App\Transformers\SeriesTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,14 +18,11 @@ use Exception;
 class SeriesController extends Controller
 {
     protected TmdbSeriesService $tmdbSeriesService;
-    protected TmdbService $tmdbService;
 
     public function __construct(
-        TmdbSeriesService $tmdbSeriesService,
-        TmdbService $tmdbService
+        TmdbSeriesService $tmdbSeriesService
     ) {
         $this->tmdbSeriesService = $tmdbSeriesService;
-        $this->tmdbService = $tmdbService;
     }
 
     /**
