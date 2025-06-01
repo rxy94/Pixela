@@ -23,8 +23,18 @@ const STYLES = {
     categoryIcon: 'w-4 h-4 text-pixela-light/60',
     categoryName: 'truncate',
     mobileButton: 'md:hidden w-full px-4 py-3 rounded-xl bg-pixela-dark/30 text-pixela-light/80 border border-pixela-accent/20 flex items-center justify-between hover:bg-pixela-accent/10 hover:border-pixela-accent/40',
+    mobileButtonContent: 'flex items-center gap-2',
+    chevronIcon: 'w-5 h-5',
+    desktopContainer: 'hidden md:block'
 } as const;
 
+/**
+ * Componente que muestra la lista de categorías.
+ * 
+ * @component
+ * @param {CategoriesProps} props - Propiedades del componente
+ * @returns {JSX.Element} La lista de categorías renderizada
+ */
 export const CategoriesList: React.FC<CategoriesProps> = ({ 
     onCategorySelect,
     selectedCategory 
@@ -65,15 +75,15 @@ export const CategoriesList: React.FC<CategoriesProps> = ({
                 className={STYLES.mobileButton}
                 onClick={() => setIsModalOpen(true)}
             >
-                <span className="flex items-center gap-2">
+                <span className={STYLES.mobileButtonContent}>
                     <FiGrid className={STYLES.categoryIcon} />
                     <span>{selectedCategory?.name || 'Seleccionar categoría'}</span>
                 </span>
-                <FiChevronDown className="w-5 h-5" />
+                <FiChevronDown className={STYLES.chevronIcon} />
             </button>
 
             {/* Lista para desktop */}
-            <div className="hidden md:block">
+            <div className={STYLES.desktopContainer}>
                 <div className={STYLES.categoriesWrapper}>
                     <div className={STYLES.categoriesContainer}>
                         {categories.map((category) => (
