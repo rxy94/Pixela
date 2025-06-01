@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\Traits\TmdbServiceTrait;
+use App\Services\Traits\GenreMappingTrait;
 use GuzzleHttp\Client;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class TmdbSeriesService
 {
     use TmdbServiceTrait;
+    use GenreMappingTrait;
 
     public function __construct(Client $client)
     {
@@ -26,6 +28,28 @@ class TmdbSeriesService
     public function getSeriesById(int $id): array
     {
         return $this->makeRequest("/tv/{$id}");
+    }
+
+    /**
+     * Get the genre ID for TV shows by name
+     *
+     * @param string $genreName Name of the genre (e.g: 'action', 'drama')
+     * @return int|null TV genre ID or null if not found
+     */
+    public function getTvGenreId(string $genreName): ?int
+    {
+        return $this->getGenreId($genreName, 'tv');
+    }
+
+    /**
+     * Get the genre ID for TV shows based on the movie genre ID
+     *
+     * @param int $movieGenreId Movie genre ID
+     * @return int|null TV genre ID or null if not found
+     */
+    public function getTvGenreIdFromMovieId(int $movieGenreId): ?int
+    {
+        return $this->convertGenreId($movieGenreId, 'movie', 'tv');
     }
 
     /**
@@ -83,6 +107,7 @@ class TmdbSeriesService
      * Get the list of series by genre
      *
      * @param int $genreId ID of the genre
+     * @param int $page Page number for pagination (default 1)
      * @return array
      * @throws Exception
      */
@@ -90,6 +115,7 @@ class TmdbSeriesService
     {
         return $this->paginatedRequest("/discover/tv", [
             'with_genres' => $genreId,
+            'language' => 'es-ES'
         ], $page);
     }
     

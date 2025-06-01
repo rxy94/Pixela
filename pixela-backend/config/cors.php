@@ -27,6 +27,7 @@ return [
     'allowed_methods'   => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
     'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test'],
+    # Para producción --> 'allowed_origins'   => [env('FRONTEND_URL', 'http://localhost:3000'), 'http://laravel.test'],
 
     'allowed_headers'   => ['*'],
 

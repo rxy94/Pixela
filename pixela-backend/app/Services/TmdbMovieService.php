@@ -3,16 +3,40 @@
 namespace App\Services;
 
 use App\Services\Traits\TmdbServiceTrait;
+use App\Services\Traits\GenreMappingTrait;
 use GuzzleHttp\Client;
 use Exception;
 
 class TmdbMovieService
 {
     use TmdbServiceTrait;
+    use GenreMappingTrait;
 
     public function __construct(Client $client)
     {
         $this->initializeTmdbService($client);
+    }
+
+    /**
+     * Get the genre ID for movies by name
+     *
+     * @param string $genreName Name of the genre (e.g: 'action', 'drama')
+     * @return int|null Movie genre ID or null if not found
+     */
+    public function getMovieGenreId(string $genreName): ?int
+    {
+        return $this->getGenreId($genreName, 'movie');
+    }
+
+    /**
+     * Get the genre ID for movies based on the TV show genre ID
+     *
+     * @param int $tvGenreId TV show genre ID
+     * @return int|null Movie genre ID or null if not found
+     */
+    public function getMovieGenreIdFromTvId(int $tvGenreId): ?int
+    {
+        return $this->convertGenreId($tvGenreId, 'tv', 'movie');
     }
 
     /**

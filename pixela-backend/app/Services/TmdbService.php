@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Services\Traits\TmdbServiceTrait;
+use App\Services\Traits\GenreMappingTrait;
 use GuzzleHttp\Client;
 
 class TmdbService
 {
     use TmdbServiceTrait;
+    use GenreMappingTrait;
 
     public function __construct(Client $client)
     {
@@ -34,6 +36,5 @@ class TmdbService
     {
         return $this->paginatedRequest("/trending/all/week", [], $page);
     }
-
 }
 
