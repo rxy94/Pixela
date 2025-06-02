@@ -21,13 +21,17 @@ return [
         'login',        // POST /login
         'logout',       // POST /logout
         'register',     // POST /register
+        'verify-email', // GET /verify-email
+        'verify-email/*', // GET /verify-email/{id}/{hash}
+        'confirm-password', // POST /confirm-password
+        'confirm-password/*', // POST /confirm-password/{id}/{hash}
 
     ],
 
     'allowed_methods'   => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
     'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test'],
-    # Para producción --> 'allowed_origins'   => [env('FRONTEND_URL', 'http://localhost:3000'), 'http://laravel.test'],
+    // PRODUCTION: 'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test', 'https://pixela.duckdns.org'],
 
     'allowed_headers'   => ['*'],
 

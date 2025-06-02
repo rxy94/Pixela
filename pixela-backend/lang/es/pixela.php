@@ -35,5 +35,10 @@ return [
     'reset_password_button' => 'Restablecer contraseña',
     'new_password' => 'Nueva contraseña',
     'confirm_new_password' => 'Confirmar nueva contraseña',
+
+    # Verify email prompt
+    'verify_email_prompt' => '¡Gracias por registrarte!',
+    'verify_email_prompt_msg' => 'Por favor, revisa tu correo electrónico y haz clic en el enlace de verificación para activar tu cuenta.',
+    'go_to_login' => 'Ir al login',
     
 ];
