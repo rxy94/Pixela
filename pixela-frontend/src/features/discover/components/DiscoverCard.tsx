@@ -5,6 +5,10 @@ import { FaStar } from "react-icons/fa";
 import { MediaContent, MediaType } from "../type";
 import { TrendingSerie } from "@/features/trending/type";
 import clsx from "clsx";
+import { useState } from "react";
+import { Badge } from "@/shared/components/Badge";
+import { ActionButtons } from "@/shared/components/ActionButtons";
+import { useRouter } from 'next/navigation';
 
 interface DiscoverCardProps {
   media: MediaContent;
@@ -14,17 +18,23 @@ interface DiscoverCardProps {
 }
 
 const STYLES = {
-  containerBase: "relative aspect-[2/3] transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-pixela-accent/20 group rounded-2xl overflow-hidden",
+  containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden",
   image: "object-cover",
-  overlay: "absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end p-2 sm:p-3 rounded-2xl transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-hover:backdrop-blur-sm",
-  title: "text-white font-bold text-base sm:text-lg font-outfit line-clamp-1 mb-1 sm:mb-2",
-  ratingContainer: "flex items-center bg-black/30 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full",
-  ratingIcon: "text-yellow-400 mr-1 w-3 h-3 sm:w-auto sm:h-auto",
-  ratingText: "text-white font-semibold text-xs sm:text-sm",
-  yearContainer: "text-white/80 bg-black/30 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-xs sm:text-sm",
-  overview: "text-white/90 text-[10px] sm:text-xs md:text-sm line-clamp-2",
-  glowEffect: "absolute inset-0 rounded-2xl transition-opacity duration-300 opacity-0 group-hover:opacity-100 bg-gradient-to-t from-pixela-accent/20 to-transparent"
+  overlay: "absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-3 sm:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+  overlayContent: "mb-3 sm:mb-4",
+  title: "text-pixela-light font-bold text-lg sm:text-xl mb-2 font-outfit",
+  infoContainer: "flex items-center gap-2 sm:gap-3 mb-3",
+  rating: {
+    container: "flex items-center",
+    icon: "text-yellow-400 mr-1",
+    value: "text-pixela-light font-semibold text-sm"
+  },
+  year: "text-pixela-light/80 text-sm",
+  badge: "text-pixela-light/90 bg-pixela-dark/60 px-2 py-0.5 rounded-sm text-xs",
+  noiseEffect: "noise-effect opacity-5"
 } as const;
+
+const HIGH_RATING_THRESHOLD = 7.5;
 
 /**
  * Type guard para determinar si el contenido es una serie
@@ -34,24 +44,93 @@ const isTrendingSerie = (media: MediaContent): media is TrendingSerie => {
 };
 
 /**
+ * Componente que renderiza el contenido superpuesto al hacer hover
+ */
+const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
+  media: MediaContent;
+  type: MediaType;
+  onFollowClick: () => void;
+  onReviewsClick: () => void;
+}) => {
+  const releaseYear = isTrendingSerie(media)
+    ? media.first_air_date?.split('-')[0]
+    : media.release_date?.split('-')[0];
+
+  return (
+    <div className={STYLES.overlay}>
+      <div className={STYLES.overlayContent}>
+        <h3 className={STYLES.title}>
+          {media.title}
+        </h3>
+        
+        <div className={STYLES.infoContainer}>
+          <div className={STYLES.rating.container}>
+            <FaStar className={STYLES.rating.icon} />
+            <span className={STYLES.rating.value}>
+              {media.vote_average?.toFixed(1) || "N/A"}
+            </span>
+          </div>
+          
+          {releaseYear && (
+            <span className={STYLES.year}>
+              {releaseYear}
+            </span>
+          )}
+          
+          <span className={STYLES.badge}>
+            {type === 'series' ? 'Serie' : 'Película'}
+          </span>
+        </div>
+      </div>
+
+      <ActionButtons 
+        tmdbId={Number(media.id)}
+        itemType={type === 'series' ? 'series' : 'movie'}
+        onFollowClick={onFollowClick}
+        onReviewsClick={onReviewsClick}
+        detailsHref={type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`}
+        infoLabel="Más información"
+        followLabel="Favoritos"
+        reviewsLabel="Reseñas"
+      />
+    </div>
+  );
+};
+
+/**
  * Componente que muestra una tarjeta de contenido multimedia (serie o película)
  */
 export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const router = useRouter();
+  
   const imagePath = type === 'series' 
     ? media.poster_path || media.backdrop_path
     : media.backdrop_path || media.poster_path;
   
-  const releaseYear = isTrendingSerie(media)
-    ? media.first_air_date?.split('-')[0]
-    : media.release_date?.split('-')[0];
+  const isHighRated = (media.vote_average ?? 0) >= HIGH_RATING_THRESHOLD;
 
   const containerClasses = clsx(
     STYLES.containerBase,
     isMobile ? "w-full" : "w-[200px]"
   );
 
+  const handleFollowClick = () => {
+    console.log("Seguir", type === 'series' ? 'serie' : 'película', media.title);
+  };
+
+  const handleReviewsClick = () => {
+    const route = type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`;
+    router.prefetch(route);
+    router.push(route);
+  };
+
   return (
-    <div className={containerClasses}>
+    <div 
+      className={containerClasses}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <Image
         src={`https://image.tmdb.org/t/p/w500${imagePath}`}
         alt={media.title}
@@ -63,30 +142,24 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
         loading={index < 4 ? "eager" : "lazy"}
       />
       
-      <div className={STYLES.overlay}>
-        <h3 className={STYLES.title}>
-          {media.title}
-        </h3>
-        
-        <div className="flex items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-          <div className={STYLES.ratingContainer}>
-            <FaStar className={STYLES.ratingIcon} />
-            <span className={STYLES.ratingText}>
-              {media.vote_average?.toFixed(1) || "N/A"}
-            </span>
-          </div>
-          
-          <span className={STYLES.yearContainer}>
-            {releaseYear}
-          </span>
-        </div>
-
-        <p className={STYLES.overview}>
-          {media.overview}
-        </p>
-      </div>
-
-      <div className={STYLES.glowEffect} />
+      <div className={STYLES.noiseEffect} />
+      
+      {isHovered && (
+        <OverlayContent 
+          media={media}
+          type={type}
+          onFollowClick={handleFollowClick}
+          onReviewsClick={handleReviewsClick}
+        />
+      )}
+      
+      {isHighRated && (
+        <Badge 
+          label="TOP PIXELA"
+          position="top-left"
+          variant="primary"
+        />
+      )}
     </div>
   );
 }; 

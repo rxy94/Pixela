@@ -29,7 +29,7 @@ export function HeroSection({ media, onPosterClick, title, refreshReviews }: Her
       {/* Content */}
       <div className="relative container mx-auto px-4">
         {/* Mobile Layout */}
-        <div className="md:hidden pt-36 pb-8">
+        <div className="lg:hidden pt-36 md:pt-44 pb-8">
           <div className="flex flex-col items-center gap-6">
             <MediaPoster 
               posterUrl={media.poster} 
@@ -58,7 +58,7 @@ export function HeroSection({ media, onPosterClick, title, refreshReviews }: Her
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden md:flex h-[80vh] items-end pb-20">
+        <div className="hidden lg:flex h-[80vh] items-end pb-20">
           <div className="flex flex-row gap-8">
             <MediaPoster 
               posterUrl={media.poster} 

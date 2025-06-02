@@ -13,6 +13,7 @@ interface CastSectionProps {
 
 export function CastSection({ actors }: CastSectionProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -22,18 +23,20 @@ export function CastSection({ actors }: CastSectionProps) {
   });
   
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px es el breakpoint md de Tailwind
+    const checkDevice = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768); // Móvil: < 768px
+      setIsTablet(width >= 768 && width < 1024); // Tablet: 768px - 1024px
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
     
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkDevice);
   }, []);
   
   useEffect(() => {
-    if (!emblaApi || (!isMobile && actors.length <= 6)) return;
+    if (!emblaApi || (!isMobile && !isTablet && actors.length <= 6)) return;
     
     const onPointerDown = () => setIsDragging(true);
     const onPointerUp = () => setIsDragging(false);
@@ -45,14 +48,15 @@ export function CastSection({ actors }: CastSectionProps) {
       emblaApi.off('pointerDown', onPointerDown);
       emblaApi.off('pointerUp', onPointerUp);
     };
-  }, [emblaApi, isMobile, actors.length]);
+  }, [emblaApi, isMobile, isTablet, actors.length]);
   
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   
   if (!actors || actors.length === 0) return null;
   
-  const useGrid = !isMobile && actors.length <= 6;
+  // Usar grid solo en desktop (>= 1024px) cuando hay 6 o menos actores
+  const useGrid = !isMobile && !isTablet && actors.length <= 6;
   
   return (
     <div className="mb-12 pt-8">
@@ -66,14 +70,14 @@ export function CastSection({ actors }: CastSectionProps) {
       </div>
       
       {useGrid ? (
-        // Cuadrícula cuando hay pocos actores
+        // Cuadrícula solo en desktop cuando hay pocos actores
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {actors.map(actor => (
             <ActorCard key={actor.id} actor={actor} />
           ))}
         </div>
       ) : (
-        // Slider cuando hay muchos actores
+        // Slider en móvil, tablet, y desktop con muchos actores
         <div className="relative">
           <div 
             className={clsx(
