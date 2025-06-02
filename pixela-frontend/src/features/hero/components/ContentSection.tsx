@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
 import { HeroContent } from "../type";
 import clsx from "clsx";
+import { ProgressIndicator } from "./ProgressIndicator";
 
 const STYLES = {
   accentLine: {
@@ -21,7 +22,9 @@ const STYLES = {
     base: "absolute inset-x-0 bottom-0 z-10 px-4 sm:px-5 md:px-6 lg:px-0",
     container: "w-full max-w-[95%] sm:max-w-xl md:max-w-2xl lg:max-w-[83.333%] mx-auto pb-20 sm:pb-24 md:pb-28 lg:pb-36",
     description: "text-base sm:text-lg md:text-lg lg:text-xl text-pixela-light/80 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-lg mb-6 md:mb-8 lg:mb-12 drop-shadow-sm backdrop-blur-[2px] sm:backdrop-blur-0",
-    buttonsContainer: "flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8"
+    buttonsContainer: "flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 lg:gap-8 ipad:flex-col ipad:items-start ipad:gap-6",
+    buttonWrapper: "ipad:w-full",
+    progressWrapper: "hidden ipad:block ipad:w-full"
   }
 } as const;
 
@@ -89,7 +92,8 @@ export const ContentSection = ({
   accentTitle,
   description,
   secondaryButtonText,
-}: HeroContent) => {
+  images,
+}: HeroContent & { images: string[] }) => {
   return (
     <div className={STYLES.contentSection.base}>
       <div className={STYLES.contentSection.container}>
@@ -105,10 +109,15 @@ export const ContentSection = ({
         </p>
         
         <div className={STYLES.contentSection.buttonsContainer}>
-          <SecondaryButton 
-            text={secondaryButtonText} 
-            href="#tendencias" 
-          />
+          <div className={STYLES.contentSection.buttonWrapper}>
+            <SecondaryButton 
+              text={secondaryButtonText} 
+              href="#tendencias" 
+            />
+          </div>
+          <div className={STYLES.contentSection.progressWrapper}>
+            <ProgressIndicator images={images} />
+          </div>
         </div>
       </div>
     </div>

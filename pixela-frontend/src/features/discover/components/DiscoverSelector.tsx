@@ -9,7 +9,7 @@ interface DiscoverSelectorProps {
 }
 
 const STYLES = {
-    container: "flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 w-full sm:w-auto",
+    container: "flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 w-full sm:w-auto ipad:w-full",
     button: "px-6 py-2 rounded-full transition-all duration-300 font-medium min-w-[120px] flex-1",
     activeButton: "bg-pixela-accent text-pixela-dark shadow-md shadow-pixela-accent/20",
     inactiveButton: "text-pixela-light hover:bg-white/10"

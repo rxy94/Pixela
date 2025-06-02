@@ -10,6 +10,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        'ipad': {'raw': '(width: 768px) and (height: 1024px)'},
+      },
       fontFamily: {
         sans: ["var(--font-sans)"],
         outfit: ["var(--font-outfit)"],
