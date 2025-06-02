@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaInstagram, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
+import { FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
 
 const STYLES = {
   container: "w-full flex flex-col space-y-4 md:space-y-5 ipad:space-y-4",
@@ -14,7 +14,6 @@ const STYLES = {
 
 const socialLinks = [
   { name: 'Instagram', icon: FaInstagram, href: 'https://instagram.com/pixela' },
-  { name: 'Twitter', icon: FaTwitter, href: 'https://twitter.com/pixela' },
   { name: 'LinkedIn', icon: FaLinkedin, href: 'https://linkedin.com/company/pixela' },
   { name: 'GitHub', icon: FaGithub, href: 'https://github.com/pixela' },
 ];
