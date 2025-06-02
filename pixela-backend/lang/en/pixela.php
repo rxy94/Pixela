@@ -36,4 +36,9 @@ return [
     'reset_password_button' => 'Reset password',
     'new_password' => 'New password',
     'confirm_new_password' => 'Confirm new password',
+
+    # Verify email prompt
+    'verify_email_prompt' => 'Thank you for registering!',
+    'verify_email_prompt_msg' => 'Please check your email and click on the verification link to activate your account.',
+    'go_to_login' => 'Go to login',
 ];
