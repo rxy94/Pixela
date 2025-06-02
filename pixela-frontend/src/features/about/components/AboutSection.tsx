@@ -8,42 +8,49 @@ import type { TeamMember, FeatureCard } from '../data/aboutData';
 /**
  * Estilos constantes para el componente AboutSection
  * @constant
+ * 
  */
 const STYLES = {
   section: "py-36 px-4 max-sm:px-2 bg-pixela-dark",
-  container: "max-w-7xl mx-auto max-sm:w-5/6",
+  container: "max-w-7xl mx-auto max-sm:w-5/6 ipad:w-[90%]",
   title: "text-6xl max-sm:text-4xl font-black mb-8 text-pixela-accent font-outfit relative inline-block max-sm:text-[64px] max-sm:leading-[0.95] max-sm:break-words",
   titleUnderline: "absolute -bottom-2 left-0 w-0 h-1 bg-pixela-accent group-hover:w-full transition-all duration-500",
-  subtitle: "text-xl max-sm:text-base text-white/80",
-  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float-smooth hover:-translate-y-2",
-  cardIcon: "text-4xl text-pixela-accent",
-  cardTitle: "text-2xl font-semibold text-white mb-4 group-hover:text-pixela-accent transition-colors duration-300 flex items-center",
-  cardDescription: "text-white/70 leading-relaxed flex-grow",
-  comingSoon: "px-2 py-1 text-xs font-bold uppercase tracking-wider bg-pixela-accent/20 text-pixela-accent rounded-full border border-pixela-accent/30",
-  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 animate-float-smooth hover:-translate-y-2 cursor-pointer",
-  teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300",
-  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6",
+  titleMobile: "block sm:hidden text-left",
+  titleDesktop: "hidden sm:block",
+  subtitle: "text-xl max-sm:text-base text-white/80 ipad:text-left",
+  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float-smooth hover:-translate-y-2 ipad:p-6",
+  cardIcon: "text-4xl text-pixela-accent ipad:text-3xl",
+  cardIconContainer: "mb-6",
+  cardTitle: "text-2xl font-semibold text-white mb-4 group-hover:text-pixela-accent transition-colors duration-300 flex items-center ipad:text-xl ipad:mb-3 mt-1",
+  cardTitleContainer: "flex items-center gap-3 mb-4 ipad:flex-col ipad:items-start ipad:gap-2",
+  cardDescription: "text-white/70 leading-relaxed flex-grow ipad:text-sm ipad:leading-relaxed",
+  comingSoon: "px-2 py-1 text-xs font-bold uppercase tracking-wider bg-pixela-accent/20 text-pixela-accent rounded-full border border-pixela-accent/30 ipad:px-1.5 ipad:py-0.5 ipad:text-[10px] ipad:self-start ",
+  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 animate-float-smooth hover:-translate-y-2 cursor-pointer ipad:p-5",
+  teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300 ipad:w-28 ipad:h-28",
+  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6 ipad:flex-row ipad:gap-4",
   teamCardImageContainer: "flex-shrink-0 max-sm:w-full max-sm:flex max-sm:justify-start sm:w-auto",
   teamCardInfo: "flex-grow max-sm:text-left max-sm:w-full sm:text-left sm:w-auto",
-  teamCardHeader: "flex max-sm:flex-row max-sm:items-center max-sm:justify-between max-sm:gap-1 sm:flex-row sm:items-start sm:gap-3 mb-2",
-  linkedinButton: "group/linkedin p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-2",
+  teamCardHeader: "flex flex-row items-center justify-between gap-3 sm:flex-row sm:items-start sm:gap-3 mb-2 md:items-center md:justify-between md:gap-2",
+  linkedinButton: "group/linkedin p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-1 sm:-mt-2 md:-mt-1.5 md:p-1.5",
   linkedinButtonMobile: "max-sm:ml-auto",
-  linkedinIcon: "text-lg text-pixela-accent group-hover/linkedin:scale-110 transition-transform duration-300 w-5 h-5",
-  teamSection: "py-20",
-  teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16",
-  teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16",
-  teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8",
-  teamTextContainer: "mt-8 max-sm:mt-2",
-  teamDescription: "text-xl max-sm:text-base text-white/90 leading-relaxed mb-4",
-  teamRole: "text-pixela-accent/80 text-sm mb-3",
+  linkedinIcon: "text-lg text-pixela-accent group-hover/linkedin:scale-110 transition-transform duration-300 w-5 h-5 sm:w-5 sm:h-5 sm:text-lg",
+  teamSection: "py-20 ipad:py-12",
+  teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16 ipad:flex-col ipad:gap-8",
+  teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16 ipad:w-full ipad:pt-0",
+  teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8 ipad:w-full ipad:gap-6",
+  teamTextContainer: "mt-8 max-sm:mt-2 ipad:mt-6",
+  teamDescription: "text-xl max-sm:text-base text-white/90 leading-relaxed mb-4 ipad:text-lg ipad:mb-3",
+  teamRole: "text-pixela-accent/80 text-sm mb-3 ipad:text-xs",
   teamInfoContainer: "space-y-1.5 mb-3",
   teamInfoLabel: "text-white/70 text-sm",
   teamInfoValue: "text-pixela-accent font-medium text-sm",
-  teamQuote: "text-white/80 italic text-sm leading-relaxed",
-  teamHeader: "text-center max-sm:text-left mb-16",
-  teamHeaderText: "space-y-4 max-w-3xl mx-auto max-sm:mx-0",
-  teamCardsGrid: "grid grid-cols-1 md:grid-cols-3 gap-8 mb-20",
+  teamQuote: "text-white/80 italic text-sm leading-relaxed ipad:text-xs ipad:leading-relaxed",
+  teamHeader: "text-center max-sm:text-left mb-16 ipad:text-left",
+  teamHeaderText: "space-y-4 max-w-3xl mx-auto max-sm:mx-0 ipad:mx-0",
+  teamCardsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6 mb-20",
   teamInfoRow: "flex items-start gap-2",
+  teamTitleMobileEquipo: "block sm:hidden",
+  teamTitleDesktopEquipo: "hidden sm:block",
 } as const;
 
 /**
@@ -60,10 +67,10 @@ const FeatureCard = ({ icon, title, description, isComingSoon }: FeatureCard) =>
       animationDuration: '8s'
     }}
   >
-    <div className="mb-6">
+    <div className={STYLES.cardIconContainer}>
       <div className={STYLES.cardIcon}>{icon}</div>
     </div>
-    <div className="flex items-center gap-3 mb-4">
+    <div className={STYLES.cardTitleContainer}>
       <h3 className={STYLES.cardTitle}>{title}</h3>
       {isComingSoon && (
         <span className={STYLES.comingSoon}>Próximamente</span>
@@ -136,8 +143,8 @@ const AboutSection = () => {
         {/* Título y Subtítulo */}
         <div className={STYLES.teamHeader}>
           <h1 className={STYLES.title}>
-            <span className="block sm:hidden">QUIÉ-<br/>NES SOMOS</span>
-            <span className="hidden sm:block">Quiénes Somos</span>
+            <span className={STYLES.titleMobile}>QUIÉ-<br/>NES SOMOS</span>
+            <span className={STYLES.titleDesktop}>Quiénes Somos</span>
             <span className={STYLES.titleUnderline}></span>
           </h1>
           <div className={STYLES.teamHeaderText}>
@@ -160,8 +167,8 @@ const AboutSection = () => {
             {/* Columna de texto */}
             <div className={STYLES.teamTextColumn}>
               <h2 className={STYLES.title}>
-                <span className="block sm:hidden">NUES-<br/>TRO EQUIPO</span>
-                <span className="hidden sm:block">Nuestro Equipo</span>
+                <span className={STYLES.teamTitleMobileEquipo}>NUES-<br/>TRO EQUIPO</span>
+                <span className={STYLES.teamTitleDesktopEquipo}>Nuestro Equipo</span>
                 <span className={STYLES.titleUnderline}></span>
               </h2>
               <div className={STYLES.teamTextContainer}>
