@@ -23,24 +23,24 @@ const HIGH_RATING_THRESHOLD = 7.5;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 const STYLES = {
-    card: 'w-full flex flex-col relative group',
+    card: 'w-full flex flex-col relative group overflow-hidden',
     posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
     noiseEffect: 'noise-effect opacity-5',
-    contentGrid: 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6',
+    contentGrid: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6',
     emptyState: 'text-center text-gray-400 py-12',
     errorState: 'text-center text-red-500 py-12',
     searchContainer: 'relative mb-8',
     searchIcon: 'absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none',
     searchInput: 'w-full pl-10 pr-4 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300',
-    overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-5 transition-opacity duration-300',
-    overlayContent: 'mb-4',
-    title: 'text-pixela-light font-bold text-xl mb-2 font-outfit',
-    mediaInfo: 'flex items-center gap-3 mb-3',
+    overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark/95 via-pixela-dark/80 to-transparent flex flex-col justify-end p-3 md:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-lg',
+    overlayContent: 'mb-2 md:mb-3',
+    title: 'text-pixela-light font-bold text-sm md:text-base lg:text-lg mb-1 md:mb-2 font-outfit overflow-hidden text-ellipsis whitespace-nowrap',
+    mediaInfo: 'flex items-center gap-2 mb-2 md:mb-3 flex-wrap',
     rating: 'flex items-center',
-    ratingIcon: 'text-yellow-400 mr-1',
-    ratingText: 'text-pixela-light font-semibold',
-    year: 'text-pixela-light/80',
-    mediaType: 'text-pixela-light/90 bg-pixela-dark/60 px-2 py-0.5 rounded-sm text-xs',
+    ratingIcon: 'text-yellow-400 mr-1 text-xs md:text-sm',
+    ratingText: 'text-pixela-light font-semibold text-xs md:text-sm',
+    year: 'text-pixela-light/80 text-xs md:text-sm',
+    mediaType: 'text-pixela-light/90 bg-pixela-dark/60 px-1.5 py-0.5 rounded-sm text-xs',
     poster: 'object-cover',
     mainContainer: 'space-y-8 pb-24',
     contentWrapper: 'transform-gpu'
@@ -123,7 +123,6 @@ const MediaCard = memo(({
     type: 'series' | 'movies',
     index: number 
 }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const router = useRouter();
     
     const isHighRated = (media.vote_average ?? 0) >= HIGH_RATING_THRESHOLD;
@@ -140,11 +139,7 @@ const MediaCard = memo(({
     };
     
     return (
-        <div 
-            className={STYLES.card}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className={STYLES.card}>
             <div className={STYLES.posterContainer}>
                 <PosterImage 
                     posterPath={media.poster_path || media.poster || ''}
@@ -156,14 +151,12 @@ const MediaCard = memo(({
                 
                 <div className={STYLES.noiseEffect} />
                 
-                {isHovered && (
-                    <OverlayContent 
-                        media={media}
-                        type={type}
-                        onFollowClick={handleFollowClick}
-                        onReviewsClick={handleReviewsClick}
-                    />
-                )}
+                <OverlayContent 
+                    media={media}
+                    type={type}
+                    onFollowClick={handleFollowClick}
+                    onReviewsClick={handleReviewsClick}
+                />
                 
                 {isHighRated && (
                     <Badge 

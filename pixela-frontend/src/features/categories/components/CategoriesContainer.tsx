@@ -12,10 +12,10 @@ import { useContentLoader } from '../hooks/useContentLoader';
 const STYLES = {
     container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',
     contentWrapper: 'container mx-auto px-4 py-8 md:py-12',
-    mainContent: 'flex flex-col md:flex-row gap-6 md:gap-8 items-start',
-    categoriesContainer: 'w-full md:w-64 flex-shrink-0 md:sticky md:top-28 max-w-md mx-auto md:mx-0 md:max-w-none',
-    contentArea: 'flex-1 w-full max-w-4xl mx-auto md:mx-0 md:max-w-none',
-    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 md:max-w-none'
+    mainContent: 'flex flex-col lg:flex-row gap-6 md:gap-8 items-start',
+    categoriesContainer: 'w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-28 max-w-md mx-auto lg:mx-0 lg:max-w-none hidden lg:block',
+    contentArea: 'flex-1 w-full max-w-4xl mx-auto lg:mx-0 lg:max-w-none',
+    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 lg:max-w-none'
 } as const;
 
 /**
@@ -86,7 +86,7 @@ export const CategoriesContainer = () => {
         };
 
         initializeContent();
-    }, []);
+    }, [isInitialized, handleMediaTypeChange]);
 
     // Manejar cambios en el tipo de medio después de la inicialización
     useEffect(() => {
@@ -118,6 +118,17 @@ export const CategoriesContainer = () => {
                     )}
 
                     <div className={STYLES.contentArea}>
+                        {/* Botón de categorías para móvil y tablet */}
+                        {isInitialized && selectedMediaType !== 'all' && (
+                            <div className="lg:hidden mb-6">
+                                <CategoriesList 
+                                    onCategorySelect={handleCategorySelect}
+                                    selectedCategory={selectedCategory}
+                                    mediaType={selectedMediaType}
+                                />
+                            </div>
+                        )}
+                        
                         <div className="transform-gpu">
                             <CategoriesContent
                                 selectedCategory={selectedCategory}
