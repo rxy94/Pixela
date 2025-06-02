@@ -86,7 +86,7 @@ export const CategoriesContainer = () => {
         };
 
         initializeContent();
-    }, []);
+    }, [isInitialized, handleMediaTypeChange]);
 
     // Manejar cambios en el tipo de medio después de la inicialización
     useEffect(() => {

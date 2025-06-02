@@ -32,10 +32,13 @@ const STYLES = {
   mobileCloseButton: 'absolute top-6 right-6 text-pixela-light hover:text-pixela-accent p-2',
   mobileNavLink: 'font-outfit font-black text-5xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
   mobileNavContainer: 'flex flex-col items-start w-full space-y-2 sm:space-y-8 pl-2 sm:pl-6',
+  mobileWelcomeText: 'text-sm sm:text-base font-outfit text-pixela-light/60 pl-4 sm:pl-8 mb-1',
+  mobileUserGreeting: 'flex flex-col items-start pl-4 sm:pl-8 mb-4',
+  mobileHelloText: 'text-sm sm:text-base font-outfit text-pixela-light/70 mb-1',
+  mobileUserName: 'text-2xl sm:text-3xl font-outfit font-bold text-pixela-accent bg-gradient-to-r from-pixela-accent to-pink-400 bg-clip-text text-transparent',
   mobileUserSection: 'mt-8 sm:mt-12 flex flex-col items-start w-full space-y-4 sm:space-y-6',
   mobileUserContainer: 'flex flex-col items-start gap-4 sm:gap-5 w-full pl-2 sm:pl-6',
-  mobileUserName: 'text-xl sm:text-2xl font-outfit font-bold text-pixela-light mb-2 pl-4 sm:pl-8',
-  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-2 sm:py-3 pl-4 sm:pl-8 rounded-full hover:bg-transparent w-full bg-gradient-to-r from-pixela-accent/10 to-pixela-accent/5 shadow-sm shadow-pixela-accent/5 border border-pixela-accent/20',
+  mobileActionButton: 'flex items-center justify-start gap-3 text-pixela-light hover:text-pixela-accent transition-colors duration-300 py-2 sm:py-3 pl-4 sm:pl-8 rounded-lg hover:bg-pixela-accent/5 w-full border border-pixela-accent/10 hover:border-pixela-accent/30',
   mobileActionText: 'text-lg sm:text-xl font-outfit',
 } as const;
 
@@ -70,18 +73,30 @@ const MobileActionButton = ({
   onClick,
   icon: Icon,
   label,
+  userName,
 }: {
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   icon: React.ElementType;
   label: string;
+  userName?: string;
 }) => (
   <button
     onClick={onClick}
     className={STYLES.mobileActionButton}
     aria-label={label}
   >
-    <Icon className="h-6 w-6" />
-    <span className={STYLES.mobileActionText}>{label}</span>
+    {userName ? (
+      <>
+        <span className={STYLES.mobileActionText}>{userName}</span>
+        <span className="text-pixela-light/40">|</span>
+        <Icon className="h-6 w-6" />
+      </>
+    ) : (
+      <>
+        <Icon className="h-6 w-6" />
+        <span className={STYLES.mobileActionText}>{label}</span>
+      </>
+    )}
   </button>
 );
 
@@ -256,11 +271,11 @@ export const Navbar = () => {
           <div className={STYLES.mobileUserContainer}>
             {isAuthenticated && user && (
               <>
-                <span className={STYLES.mobileUserName}>{user.name}</span>
                 <MobileActionButton
                   onClick={handleProfile}
                   icon={FiUser}
                   label="Perfil"
+                  userName={user.name}
                 />
               </>
             )}
