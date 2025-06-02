@@ -47,7 +47,7 @@ const STYLES = {
   teamQuote: "text-white/80 italic text-sm leading-relaxed ipad:text-xs ipad:leading-relaxed",
   teamHeader: "text-center max-sm:text-left mb-16 ipad:text-left",
   teamHeaderText: "space-y-4 max-w-3xl mx-auto max-sm:mx-0 ipad:mx-0",
-  teamCardsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6 mb-20",
+  teamCardsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6 mb-20 [&>*:nth-child(3)]:md:col-span-2 [&>*:nth-child(3)]:lg:col-span-1",
   teamInfoRow: "flex items-start gap-2",
   teamTitleMobileEquipo: "block sm:hidden",
   teamTitleDesktopEquipo: "hidden sm:block",
