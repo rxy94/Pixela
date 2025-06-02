@@ -8,6 +8,7 @@ export interface Serie extends Media {
   // Campos de TMDB
   poster_path?: string;
   name?: string;
+  title?: string;
   vote_average?: number;
   first_air_date?: string;
   overview?: string;
