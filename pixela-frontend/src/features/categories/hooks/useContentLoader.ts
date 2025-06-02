@@ -26,11 +26,13 @@ interface ApiResponse<T> {
  * @param ITEMS_PER_PAGE - Número de elementos por página
  * @param MAX_TMDB_PAGES - Límite máximo de páginas de TMDB (no acepta más de 500 páginas)
  * @param MIN_PAGE - Página mínima permitida
+ * @param INITIAL_LOAD_COUNT - Número de imágenes a precargar inicialmente
  */
 const PAGINATION_CONFIG = {
     ITEMS_PER_PAGE: 20,
     MAX_TMDB_PAGES: 500,
     MIN_PAGE: 1,
+    INITIAL_LOAD_COUNT: 6,
 } as const;
 
 /**
@@ -140,6 +142,28 @@ const processErrorMessage = (error: unknown): string => {
 };
 
 /**
+ * Precarga solo las primeras N imágenes para mejorar el rendimiento inicial
+ * @param content Array de contenido con imágenes
+ * @param count Número de imágenes a precargar
+ */
+const preloadInitialImages = async (content: ContentItem[], count: number = PAGINATION_CONFIG.INITIAL_LOAD_COUNT): Promise<void> => {
+    const initialContent = content.slice(0, count);
+    const imagePromises = initialContent.map(item => {
+        const imageUrl = item.poster_path || item.poster;
+        if (!imageUrl) return Promise.resolve();
+        
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = resolve;
+            img.onerror = resolve;
+            img.src = imageUrl;
+        });
+    });
+    
+    await Promise.all(imagePromises);
+};
+
+/**
  * Hook personalizado para cargar y manejar contenido de películas y series
  * 
  * Este hook proporciona funcionalidad completa para:
@@ -209,16 +233,22 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
         movieResult: ApiResponse<Pelicula[]>,
         seriesResult: ApiResponse<Serie[]>
     ): Promise<void> => {
-        const contentUpdatePromises = [
-            preloadImages(movieResult.data).then(() => {
-                updateContent(movieResult.data, true, movieResult.total_pages);
-            }),
-            preloadImages(seriesResult.data).then(() => {
-                updateContent(seriesResult.data, false, seriesResult.total_pages);
-            })
-        ];
-
-        await Promise.all(contentUpdatePromises);
+        // Precargar solo las primeras imágenes de cada tipo
+        await Promise.all([
+            preloadInitialImages(movieResult.data),
+            preloadInitialImages(seriesResult.data)
+        ]);
+        
+        updateContent(movieResult.data, true, movieResult.total_pages);
+        updateContent(seriesResult.data, false, seriesResult.total_pages);
+        
+        // Precargar el resto de imágenes en segundo plano
+        setTimeout(() => {
+            Promise.all([
+                preloadImages(movieResult.data.slice(PAGINATION_CONFIG.INITIAL_LOAD_COUNT)),
+                preloadImages(seriesResult.data.slice(PAGINATION_CONFIG.INITIAL_LOAD_COUNT))
+            ]);
+        }, 0);
     }, [updateContent]);
 
     /**
@@ -228,9 +258,15 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
     const processMoviesOnly = useCallback(async (
         movieResult: ApiResponse<Pelicula[]>
     ): Promise<void> => {
-        await preloadImages(movieResult.data);
+        // Precargar solo las primeras imágenes
+        await preloadInitialImages(movieResult.data);
         updateContent(movieResult.data, true, movieResult.total_pages);
         setSeries([]);
+        
+        // Precargar el resto de imágenes en segundo plano
+        setTimeout(() => {
+            preloadImages(movieResult.data.slice(PAGINATION_CONFIG.INITIAL_LOAD_COUNT));
+        }, 0);
     }, [updateContent]);
 
     /**
@@ -240,10 +276,15 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
     const processSeriesOnly = useCallback(async (
         seriesResult: ApiResponse<Serie[]>
     ): Promise<void> => {
-        console.log('[DEBUG] Series loaded:', seriesResult.data.length, 'items');
-        await preloadImages(seriesResult.data);
+        // Precargar solo las primeras imágenes
+        await preloadInitialImages(seriesResult.data);
         updateContent(seriesResult.data, false, seriesResult.total_pages);
         setMovies([]);
+        
+        // Precargar el resto de imágenes en segundo plano
+        setTimeout(() => {
+            preloadImages(seriesResult.data.slice(PAGINATION_CONFIG.INITIAL_LOAD_COUNT));
+        }, 0);
     }, [updateContent]);
 
     /**
