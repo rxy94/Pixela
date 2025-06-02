@@ -31,15 +31,27 @@ const STYLES = {
     errorState: 'text-center text-red-500 py-12',
     searchContainer: 'relative mb-8',
     searchIcon: 'absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none',
-    searchInput: 'w-full pl-10 pr-4 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300'
+    searchInput: 'w-full pl-10 pr-4 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300',
+    overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-5 transition-opacity duration-300',
+    overlayContent: 'mb-4',
+    title: 'text-pixela-light font-bold text-xl mb-2 font-outfit',
+    mediaInfo: 'flex items-center gap-3 mb-3',
+    rating: 'flex items-center',
+    ratingIcon: 'text-yellow-400 mr-1',
+    ratingText: 'text-pixela-light font-semibold',
+    year: 'text-pixela-light/80',
+    mediaType: 'text-pixela-light/90 bg-pixela-dark/60 px-2 py-0.5 rounded-sm text-xs',
+    poster: 'object-cover',
+    mainContainer: 'space-y-8 pb-24',
+    contentWrapper: 'transform-gpu'
 } as const;
 
 const PosterImage = memo(({ posterPath, title, isInitiallyVisible }: { posterPath: string, title: string, isInitiallyVisible: boolean }) => (
     <Image
         src={`${TMDB_IMAGE_BASE_URL}${posterPath}`}
-        alt={title}
+        alt={title || 'Imagen no disponible'}
         fill
-        className="object-cover"
+        className={STYLES.poster}
         priority={isInitiallyVisible}
         sizes="(max-width: 768px) 100vw, 375px"
         loading={isInitiallyVisible ? "eager" : "lazy"}
@@ -59,31 +71,32 @@ const OverlayContent = memo(({
     onFollowClick: () => void,
     onReviewsClick: () => void
 }) => (
-    <div className="absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent 
-                    flex flex-col justify-end p-5 transition-opacity duration-300">
-        <div className="mb-4">
-            <h3 className="text-pixela-light font-bold text-xl mb-2 font-outfit">
-                {type === 'movies' ? (media as Pelicula).title : (media as Serie).name}
+    <div className={STYLES.overlay}>
+        <div className={STYLES.overlayContent}>
+            <h3 className={STYLES.title}>
+                {type === 'movies' 
+                    ? (media as Pelicula).title || (media as Pelicula).titulo || 'Sin título'
+                    : (media as Serie).name || (media as Serie).titulo || 'Sin título'}
             </h3>
             
-            <div className="flex items-center gap-3 mb-3">
-                <div className="flex items-center">
-                    <FaStar className="text-yellow-400 mr-1" />
-                    <span className="text-pixela-light font-semibold">
-                        {media.vote_average?.toFixed(1) || "N/A"}
+            <div className={STYLES.mediaInfo}>
+                <div className={STYLES.rating}>
+                    <FaStar className={STYLES.ratingIcon} />
+                    <span className={STYLES.ratingText}>
+                        {media.vote_average?.toFixed(1) || media.puntuacion?.toFixed(1) || "N/A"}
                     </span>
                 </div>
                 
-                {(type === 'movies' && (media as Pelicula).release_date?.split('-')[0]) || 
-                 (type === 'series' && (media as Serie).first_air_date?.split('-')[0]) ? (
-                    <span className="text-pixela-light/80">
+                {(type === 'movies' && ((media as Pelicula).release_date || (media as Pelicula).fecha)) || 
+                 (type === 'series' && ((media as Serie).first_air_date || (media as Serie).fecha)) ? (
+                    <span className={STYLES.year}>
                         {type === 'movies' 
-                            ? (media as Pelicula).release_date?.split('-')[0]
-                            : (media as Serie).first_air_date?.split('-')[0]}
+                            ? ((media as Pelicula).release_date || (media as Pelicula).fecha)?.split('-')[0]
+                            : ((media as Serie).first_air_date || (media as Serie).fecha)?.split('-')[0]}
                     </span>
                 ) : null}
                 
-                <span className="text-pixela-light/90 bg-pixela-dark/60 px-2 py-0.5 rounded-sm text-xs">
+                <span className={STYLES.mediaType}>
                     {type === 'series' ? 'Serie' : 'Película'}
                 </span>
             </div>
@@ -94,7 +107,7 @@ const OverlayContent = memo(({
             itemType={type === 'series' ? 'series' : 'movie'}
             onFollowClick={onFollowClick}
             onReviewsClick={onReviewsClick}
-            detailsHref={`/${type}/${media.id}`}
+            detailsHref={type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`}
         />
     </div>
 ));
@@ -121,8 +134,9 @@ const MediaCard = memo(({
     };
 
     const handleReviewsClick = () => {
-        router.prefetch(`/${type}/${media.id}`);
-        router.push(`/${type}/${media.id}`);
+        const route = type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`;
+        router.prefetch(route);
+        router.push(route);
     };
     
     return (
@@ -133,8 +147,10 @@ const MediaCard = memo(({
         >
             <div className={STYLES.posterContainer}>
                 <PosterImage 
-                    posterPath={media.poster_path || ''}
-                    title={type === 'movies' ? (media as Pelicula).title || '' : (media as Serie).name || ''}
+                    posterPath={media.poster_path || media.poster || ''}
+                    title={type === 'movies' 
+                        ? ((media as Pelicula).title || (media as Pelicula).titulo || 'Sin título')
+                        : ((media as Serie).name || (media as Serie).titulo || 'Sin título')}
                     isInitiallyVisible={isInitiallyVisible}
                 />
                 
@@ -163,30 +179,57 @@ const MediaCard = memo(({
 
 MediaCard.displayName = 'MediaCard';
 
+/**
+ * Componente que muestra el contenido de películas y series.   
+ * 
+ * @component
+ * @param {CategoriesContentProps} props - Propiedades del componente
+ * @returns {JSX.Element} El contenido renderizado
+ */
 const ContentGrid = ({ movies, series, searchTerm }: { movies: Pelicula[], series: Serie[], searchTerm: string }) => {
-    const allContent = [...movies, ...series]
+    // Crear contenido con identificadores claros de tipo
+    const movieContent = movies.map(movie => ({ ...movie, mediaType: 'movie' as const }));
+    const seriesContent = series.map(serie => ({ ...serie, mediaType: 'series' as const }));
+    
+    type ContentItem = (Pelicula & { mediaType: 'movie' }) | (Serie & { mediaType: 'series' });
+    
+    const allContent: ContentItem[] = [...movieContent, ...seriesContent]
         .filter(item => {
-            if ('title' in item) {
-                return item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
-            } else {
-                return (item as Serie).name?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false;
+            // Si no hay término de búsqueda, mostrar todo
+            if (searchTerm === '') {
+                return true;
             }
+            
+            const searchField = item.mediaType === 'movie' 
+                ? (item as Pelicula).title || (item as Pelicula).titulo
+                : (item as Serie).name || (item as Serie).titulo;
+            
+            const shouldInclude = searchField?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+            
+            if (!shouldInclude && item.mediaType === 'series') {
+                console.log('[DEBUG] Serie filtered out:', { 
+                    id: item.id, 
+                    searchField, 
+                    searchTerm, 
+                    name: (item as Serie).name,
+                    titulo: (item as Serie).titulo
+                });
+            }
+            
+            return shouldInclude;
         })
         .sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
 
     return (
         <div className={STYLES.contentGrid}>
-            {allContent.map((item, index) => {
-                const isMovie = 'title' in item;
-                return (
+            {allContent.map((item, index) => (
                     <MediaCard
-                        key={`${item.id}-${isMovie ? 'movie' : 'series'}`}
+                    key={`${item.id}-${item.mediaType}`}
                         media={item}
-                        type={isMovie ? 'movies' : 'series'}
+                    type={item.mediaType === 'movie' ? 'movies' : 'series'}
                         index={index}
                     />
-                );
-            })}
+            ))}
         </div>
     );
 };
@@ -228,7 +271,7 @@ export const CategoriesContent = ({
     }
 
     return (
-        <div className="space-y-8 pb-24">
+        <div className={STYLES.mainContainer}>
             <div className={STYLES.searchContainer}>
                 <div className={STYLES.searchIcon}>
                     <FiSearch className="h-5 w-5 text-pixela-light/40" />
@@ -242,7 +285,7 @@ export const CategoriesContent = ({
                 />
             </div>
 
-            <div className="transform-gpu">
+            <div className={STYLES.contentWrapper}>
                 <ContentGrid movies={movies} series={series} searchTerm={searchTerm} />
             </div>
         </div>
