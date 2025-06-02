@@ -34,16 +34,11 @@ const STYLES = {
 
 /**
  * Botón de navegación para el slider
- * 
- * @example
- * ```tsx
- * <SliderNavButton
- *   icon={<ChevronLeftIcon />}
- *   direction="prev"
- *   onClick={() => handlePrev()}
- *   ariaLabel="Anterior"
- * />
- * ```
+ * @param {ReactNode} icon - Icono del botón
+ * @param {() => void} onClick - Función a ejecutar al hacer click
+ * @param {SliderDirection} direction - Dirección del botón
+ * @param {string} ariaLabel - Etiqueta para el botón
+ * @param {string} className - Clases CSS adicionales
  */
 export const SliderNavButton = ({
   icon,

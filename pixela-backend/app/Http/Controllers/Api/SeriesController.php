@@ -19,8 +19,9 @@ class SeriesController extends Controller
 {
     protected TmdbSeriesService $tmdbSeriesService;
 
-    public function __construct(TmdbSeriesService $tmdbSeriesService)
-    {
+    public function __construct(
+        TmdbSeriesService $tmdbSeriesService
+    ) {
         $this->tmdbSeriesService = $tmdbSeriesService;
     }
 
@@ -306,7 +307,11 @@ class SeriesController extends Controller
     {
         try {
             $page = $request->get('page', 1);
-            $series = $this->tmdbSeriesService->getSeriesByGenre($genreId, $page);
+            
+            // Convert movie genre ID to series genre ID if needed
+            $tvGenreId = $this->tmdbSeriesService->convertGenreId($genreId, 'movie', 'tv') ?? $genreId;
+            
+            $series = $this->tmdbSeriesService->getSeriesByGenre($tvGenreId, $page);
 
             return $this->paginatedResponse($series, $page);
 
@@ -316,7 +321,7 @@ class SeriesController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
-    }   
+    }
 
     /**
      * @OA\Get(

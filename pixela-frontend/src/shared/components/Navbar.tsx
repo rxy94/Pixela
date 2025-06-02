@@ -94,7 +94,6 @@ export const Navbar = () => {
   const logout = useAuthStore((s) => s.logout);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Bloquear el scroll cuando el menú móvil está abierto
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';

@@ -13,7 +13,7 @@ const STYLES = {
     container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',
     contentWrapper: 'container mx-auto px-4 py-8 md:py-12',
     mainContent: 'flex flex-col md:flex-row gap-6 md:gap-8 items-start',
-    categoriesContainer: 'w-full md:w-64 flex-shrink-0 md:sticky md:top-28 max-w-md mx-auto md:mx-0 md:max-w-none md:mb-8',
+    categoriesContainer: 'w-full md:w-64 flex-shrink-0 md:sticky md:top-28 max-w-md mx-auto md:mx-0 md:max-w-none',
     contentArea: 'flex-1 w-full max-w-4xl mx-auto md:mx-0 md:max-w-none',
     paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 md:max-w-none'
 } as const;
@@ -68,6 +68,7 @@ export const CategoriesContainer = () => {
      * @param {MediaType} type - El nuevo tipo de medio
      */
     const handleMediaTypeChange = useCallback(async (type: 'all' | 'movies' | 'series') => {
+        console.log('[DEBUG] handleMediaTypeChange called with:', type);
         setSelectedMediaType(type);
         setSelectedCategory(null);
         resetContent();
@@ -77,39 +78,25 @@ export const CategoriesContainer = () => {
     // Carga inicial del contenido
     useEffect(() => {
         const initializeContent = async () => {
-            await handleMediaTypeChange('all');
-            setIsInitialized(true);
+            if (!isInitialized) {
+                console.log('[DEBUG] Initializing content...');
+                await handleMediaTypeChange('all');
+                setIsInitialized(true);
+            }
         };
 
         initializeContent();
     }, []);
 
-    const getContentToShow = useCallback(() => {
-        switch (selectedMediaType) {
-            case 'all':
-                return {
-                    movies: movies,
-                    series: series
-                };
-            case 'movies':
-                return {
-                    movies: movies,
-                    series: []
-                };
-            case 'series':
-                return {
-                    movies: [],
-                    series: series
-                };
-            default:
-                return {
-                    movies: [],
-                    series: []
-                };
+    // Manejar cambios en el tipo de medio después de la inicialización
+    useEffect(() => {
+        console.log('[DEBUG] MediaType effect - isInitialized:', isInitialized, 'selectedMediaType:', selectedMediaType);
+        if (isInitialized) {
+            console.log('[DEBUG] Loading content for mediaType:', selectedMediaType);
+            resetContent();
+            loadContent(null, 1);
         }
-    }, [selectedMediaType, movies, series]);
-
-    const content = getContentToShow();
+    }, [selectedMediaType, isInitialized, resetContent, loadContent]);
 
     return (
         <div className={STYLES.container}>
@@ -125,6 +112,7 @@ export const CategoriesContainer = () => {
                             <CategoriesList 
                                 onCategorySelect={handleCategorySelect}
                                 selectedCategory={selectedCategory}
+                                mediaType={selectedMediaType}
                             />
                         </div>
                     )}
@@ -133,8 +121,8 @@ export const CategoriesContainer = () => {
                         <div className="transform-gpu">
                             <CategoriesContent
                                 selectedCategory={selectedCategory}
-                                movies={content.movies}
-                                series={content.series}
+                                movies={selectedMediaType === 'series' ? [] : movies}
+                                series={selectedMediaType === 'movies' ? [] : series}
                                 loading={loading}
                                 error={error}
                             />

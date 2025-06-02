@@ -3,7 +3,7 @@ import { MediaType } from '../types/media';
 
 const STYLES = {
     container: 'flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8',
-    title: 'text-4xl md:text-4xl font-bold text-pixela-accent px-4 md:px-0',
+    title: 'text-5xl md:text-6xl font-bold text-pixela-accent px-4 md:px-0',
     controls: 'flex flex-col sm:flex-row gap-4 w-full md:w-auto justify-end px-4 md:px-0',
 } as const;
 

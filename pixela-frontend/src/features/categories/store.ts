@@ -1,18 +1,27 @@
 import { create } from 'zustand';
 import { CategoriesState } from './type';
-import { getAllCategories } from '@/api/categories/categories';
+import { getCategoriesForMediaType } from '@/api/categories/categories';
 import { MediaType } from './types/media';
 
-export const useCategoriesStore = create<CategoriesState>((set) => ({
+/**
+ * Store para manejar las categorías.
+ * 
+ * @function
+ * @param {CategoriesState} set - Función para actualizar el estado
+ * @param {CategoriesState} get - Función para obtener el estado
+ * @returns {CategoriesState} - Estado del store
+ */
+export const useCategoriesStore = create<CategoriesState>((set, get) => ({
     categories: [],
     loading: false,
     error: null,
     selectedMediaType: 'movies' as MediaType,
 
-    fetchCategories: async () => {
+    fetchCategories: async (mediaType?: MediaType) => {
         set({ loading: true, error: null });
         try {
-            const categories = await getAllCategories();
+            const currentMediaType = mediaType || get().selectedMediaType;
+            const categories = await getCategoriesForMediaType(currentMediaType);
             set({ categories, loading: false });
         } catch (error) {
             set({ 
@@ -24,5 +33,6 @@ export const useCategoriesStore = create<CategoriesState>((set) => ({
 
     setSelectedMediaType: (type: MediaType) => {
         set({ selectedMediaType: type });
+        get().fetchCategories(type);
     }
 })); 
