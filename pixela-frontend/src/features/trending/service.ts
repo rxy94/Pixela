@@ -1,5 +1,5 @@
 import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
-import { API_BASE_URL } from "@/api/shared/apiEndpoints";
+import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
@@ -22,7 +22,7 @@ async function fetchTrendingMedia<T>(
     options: FetchOptions = {}
 ): Promise<T[]> {
     const { limit = DEFAULT_LIMIT, offset = DEFAULT_OFFSET } = options;
-    const endpoint = `${API_BASE_URL}/${mediaType}/trending`;
+    const endpoint = `${API_BASE_URL}/${mediaType}/trending`; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 
     try {
         console.log(`Fetching trending ${mediaType} from: ${endpoint}?limit=${limit}&offset=${offset}`);

@@ -53,6 +53,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'frontend_url' => env('FRONTEND_URL', 'http://localhost'),
+    // PRODUCTION:'frontend_url' => env('FRONTEND_URL', 'https://pixela.duckdns.org'),
 
     /*
     |--------------------------------------------------------------------------

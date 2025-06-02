@@ -1,8 +1,9 @@
 // URLs base
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_INTERNAL_URL || 'http://laravel.test/api';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_INTERNAL_URL || 'http://laravel.test/api'; // QUITAR EN PRODUCTION
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost'; //Se usa en apiHelpers.ts
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
+// PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 export const API_ENDPOINTS = {
     // Series
     SERIES: {
@@ -10,7 +11,7 @@ export const API_ENDPOINTS = {
         LIST: `${API_BASE_URL}/series`,
         GET_CAST: (id: string) => `${API_BASE_URL}/series/${id}/cast`,
         GET_VIDEOS: (id: string) => `${API_BASE_URL}/series/${id}/videos`,
-        GET_IMAGES: (id: string) => `${API_URL}/series/${id}/images`, // Va con localhost/api
+        GET_IMAGES: (id: string) => `${API_URL}/series/${id}/images`,
         GET_WATCH_PROVIDERS: (id: string) => `${API_BASE_URL}/series/${id}/watch-providers`,
     },
 
@@ -20,7 +21,7 @@ export const API_ENDPOINTS = {
         LIST: `${API_BASE_URL}/movies`,
         GET_CAST: (id: string) => `${API_BASE_URL}/movies/${id}/cast`,
         GET_VIDEOS: (id: string) => `${API_BASE_URL}/movies/${id}/videos`,
-        GET_IMAGES: (id: string) => `${API_URL}/movies/${id}/images`, // Va con localhost/api
+        GET_IMAGES: (id: string) => `${API_URL}/movies/${id}/images`,
         GET_WATCH_PROVIDERS: (id: string) => `${API_BASE_URL}/movies/${id}/watch-providers`,
     },
 

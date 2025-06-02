@@ -28,7 +28,7 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|View
     {
         $request->validate([
             'name' => ['required', 'string', 'max:100'],
@@ -45,6 +45,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect()->route('register')->with('status', __('auth.register'));
+        Auth::login($user);
+
+        return view('auth.verify-email-prompt')->with('status', __('auth.register'));
     }
 }

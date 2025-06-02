@@ -19,7 +19,7 @@
                 required 
                 autofocus 
                 autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2 text-[14px] font-['Outfit']" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2 text-[#ec1b69] text-[14px] font-['Outfit']" />
         </div>
 
         <!-- Email Address -->
@@ -34,7 +34,7 @@
                 :value="old('email')" 
                 required 
                 autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2 text-[14px] font-['Outfit']" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2 text-[#ec1b69] text-[14px] font-['Outfit']" />
         </div>
 
         <!-- Password -->
@@ -48,7 +48,7 @@
                 placeholder="{{ __('pixela.password') }}"
                 required 
                 autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2 text-[14px] font-['Outfit']" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2 text-[#ec1b69] text-[14px] font-['Outfit']" />
         </div>
 
         <!-- Confirm Password -->
@@ -62,7 +62,7 @@
                 placeholder="{{ __('pixela.confirm_password') }}"
                 required 
                 autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-[14px] font-['Outfit']" />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-[#ec1b69] text-[14px] font-['Outfit']" />
         </div>
 
         <!-- Mensaje de éxito -->

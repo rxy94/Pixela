@@ -1,6 +1,5 @@
 import { DiscoverResponse, TrendingSerie, TrendingMovie } from "./type";
-import { API_BASE_URL } from "@/api/shared/apiEndpoints"; 
-// Useremos las rutas ya definidas en apiEndpoints.ts para evitar problemas de rutas
+import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 
 const DISCOVER_LIMIT = 7;
 
@@ -13,7 +12,7 @@ type MediaType = 'series' | 'movies';
  */
 async function fetchDiscoveredContent<T>(type: MediaType): Promise<T[]> {
     try {
-        const response = await fetch(`${API_BASE_URL}/${type}/discover?limit=${DISCOVER_LIMIT}`);
+        const response = await fetch(`${API_BASE_URL}/${type}/discover?limit=${DISCOVER_LIMIT}`); // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
         
         if (!response.ok) {
             throw new Error(`Error de API: ${response.status} ${response.statusText}`);

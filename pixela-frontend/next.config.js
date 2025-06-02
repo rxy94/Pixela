@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-// Para despliegue --> const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
+// PRODUCTION: const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
 const nextConfig = {
     async rewrites() {
@@ -9,12 +9,12 @@ const nextConfig = {
             {
                 source: '/api/series/:path*',
                 destination: 'http://localhost/api/series/:path*',
-                // Despliegue --> destination: `${backendApiUrl}/series/:path*`,
+                // PRODUCTION: destination: `${backendApiUrl}/series/:path*`,
             },
             {
                 source: '/api/movies/:path*',
                 destination: 'http://localhost/api/movies/:path*',
-                // Despliegue --> destination: `${backendApiUrl}/movies/:path*`,
+                // PRODUCTION: destination: `${backendApiUrl}/movies/:path*`,
             },
         ];
     },
@@ -26,7 +26,8 @@ const nextConfig = {
             'laravel.test',
             'localhost',
             'i.pravatar.cc',
-            'picsum.photos'
+            'picsum.photos',
+            'pixela.duckdns.org'
         ],
     },
     webpack: (config, { isServer }) => {
