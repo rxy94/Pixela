@@ -26,7 +26,7 @@ const STYLES = {
     card: 'w-full flex flex-col relative group',
     posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
     noiseEffect: 'noise-effect opacity-5',
-    contentGrid: 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6',
+    contentGrid: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6',
     emptyState: 'text-center text-gray-400 py-12',
     errorState: 'text-center text-red-500 py-12',
     searchContainer: 'relative mb-8',

@@ -22,10 +22,10 @@ const STYLES = {
     errorText: 'text-red-400 font-medium',
     categoryIcon: 'w-4 h-4 text-pixela-light/60',
     categoryName: 'truncate',
-    mobileButton: 'md:hidden w-full px-4 py-3 rounded-xl bg-pixela-dark/30 text-pixela-light/80 border border-pixela-accent/20 flex items-center justify-between hover:bg-pixela-accent/10 hover:border-pixela-accent/40',
+    mobileButton: 'lg:hidden w-full px-4 py-3 rounded-xl bg-pixela-dark/30 text-pixela-light/80 border border-pixela-accent/20 flex items-center justify-between hover:bg-pixela-accent/10 hover:border-pixela-accent/40',
     mobileButtonContent: 'flex items-center gap-2',
     chevronIcon: 'w-5 h-5',
-    desktopContainer: 'hidden md:block'
+    desktopContainer: 'hidden lg:block'
 } as const;
 
 /**
