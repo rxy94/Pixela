@@ -7,6 +7,7 @@ return [
     'back_to_login' => 'Back to login',
     'email' => 'Email',
     'password' => 'Password',
+    'view_api' => 'View API',
 
     # Register
     'register' => 'Register',
