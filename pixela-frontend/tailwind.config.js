@@ -28,6 +28,20 @@ module.exports = {
       backgroundColor: {
         'dark-opacity': 'rgba(17, 17, 17, 0.47)',
       },
+      animation: {
+        'float': 'float 6s ease-in-out infinite',
+        'float-smooth': 'float-smooth 8s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'float-smooth': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+      },
       fontSize: {
         'pixela-sans': {  
           'xs': ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.05em', fontFamily: 'var(--font-sans)' }],       // 12px
