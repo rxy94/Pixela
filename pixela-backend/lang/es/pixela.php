@@ -7,6 +7,7 @@ return [
     'email' => 'Email',
     'password' => 'Contraseña',
     'back_to_login' => 'Volver al login',
+    'view_api' => 'Ver API',
     
     # Register
     'register' => 'Registrarse',

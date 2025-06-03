@@ -147,17 +147,11 @@
     opacity: 0;
     transition: all 0.2s ease;
     backdrop-filter: blur(2px);
-    
-    &::before {
-      content: 'Cambiar foto';
-      color: white;
-      font-size: $font-size-small;
-      font-weight: 500;
-      text-align: center;
-      padding: $spacing-xs $spacing-sm;
-      background-color: rgba(#ec1b69, 0.8);
-      border-radius: $border-radius-sm;
-    }
+  }
+
+  &__camera-icon {
+    font-size: 2rem;
+    color: white;
   }
 
   &__upload-button {
