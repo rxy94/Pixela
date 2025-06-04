@@ -13,11 +13,12 @@ export default async function SeriePage(
     const serie = await getSeriesData(id);
     
     return (
-      <section className="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 min-h-screen pb-12">
+      <section className="min-h-screen pb-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900">
         <MediaPage media={serie} />
       </section>
     );
   } catch (error) {
+    console.error('Error al obtener los datos de la serie:', error);
     notFound();
   }
 } 
