@@ -282,4 +282,20 @@ class TmdbMovieService
         ], $page);
     }
 
+    /**
+     * Search for movies by query string
+     *
+     * @param string $query Search query
+     * @param int $page Page number for pagination (default 1)
+     * @return array
+     * @throws Exception
+     */
+    public function searchMovies(string $query, int $page = 1): array
+    {
+        return $this->paginatedRequest("/search/movie", [
+            'query' => $query,
+            'language' => 'es-ES',
+            'include_adult' => false
+        ], $page);
+    }
 } 

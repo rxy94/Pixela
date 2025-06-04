@@ -627,5 +627,67 @@ class MovieController extends Controller
             ], 500);
         }
     }
-    
+
+    /**
+     * @OA\Get(
+     *     path="/api/movies/search",
+     *     summary="Search movies",
+     *     description="Search for movies using a query string",
+     *     operationId="searchMovies",
+     *     tags={"Movies"},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         required=true,
+     *         description="Search query string",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         required=false,
+     *         description="Page number (default: 1)",
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Search results",
+     *         @OA\JsonContent(ref="#/components/schemas/PaginatedMovieResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
+     */
+    public function searchMovies(Request $request): JsonResponse
+    {
+        try {
+            $query = $request->get('query');
+            
+            if (empty($query)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Search query is required'
+                ], 400);
+            }
+
+            $page = $request->get('page', 1);
+            $movies = $this->tmdbMovieService->searchMovies($query, $page);
+
+            return $this->paginatedResponse($movies, $page);
+
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

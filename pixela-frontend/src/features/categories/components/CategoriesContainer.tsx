@@ -15,7 +15,8 @@ const STYLES = {
     mainContent: 'flex flex-col lg:flex-row gap-6 md:gap-8 items-start',
     categoriesContainer: 'w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-28 max-w-md mx-auto lg:mx-0 lg:max-w-none hidden lg:block',
     contentArea: 'flex-1 w-full max-w-4xl mx-auto lg:mx-0 lg:max-w-none',
-    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 lg:max-w-none'
+    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 lg:max-w-none',
+    searchContainer: 'w-full max-w-4xl mx-auto mb-6 lg:max-w-none'
 } as const;
 
 /**
@@ -39,7 +40,9 @@ export const CategoriesContainer = () => {
         currentPage,
         totalPages,
         loadContent,
-        resetContent
+        resetContent,
+        searchContent,
+        searchQuery
     } = useContentLoader(selectedMediaType);
 
     /**
@@ -74,6 +77,21 @@ export const CategoriesContainer = () => {
         resetContent();
         await loadContent(null, 1);
     }, [setSelectedMediaType, resetContent, loadContent]);
+
+    /**
+     * Maneja la búsqueda de contenido
+     * @param {string} query - Término de búsqueda
+     */
+    const handleSearch = useCallback(async (query: string) => {
+        if (query.trim()) {
+            setSelectedCategory(null);
+            resetContent();
+            await searchContent(query, 1);
+        } else {
+            resetContent();
+            await loadContent(null, 1);
+        }
+    }, [searchContent, loadContent, resetContent]);
 
     // Carga inicial del contenido
     useEffect(() => {
@@ -136,6 +154,8 @@ export const CategoriesContainer = () => {
                                 series={selectedMediaType === 'movies' ? [] : series}
                                 loading={loading}
                                 error={error}
+                                searchQuery={searchQuery}
+                                onSearch={handleSearch}
                             />
                         </div>
 
