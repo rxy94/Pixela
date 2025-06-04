@@ -44,3 +44,88 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='5' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   pointer-events: none;
 }
+
+/* Animación de shimmer para skeleton loading */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(236, 27, 105, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Delays para efectos escalonados */
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-400 {
+    animation-delay: 0.4s;
+}
+
+.delay-600 {
+    animation-delay: 0.6s;
+}
+
+.delay-800 {
+    animation-delay: 0.8s;
+}
+
+/* Clases de delay para animaciones float */
+.animation-delay-200 {
+    animation-delay: 200ms;
+}
+
+.animation-delay-400 {
+    animation-delay: 400ms;
+}
+
+.animation-delay-600 {
+    animation-delay: 600ms;
+}
+
+.animation-delay-800 {
+    animation-delay: 800ms;
+}

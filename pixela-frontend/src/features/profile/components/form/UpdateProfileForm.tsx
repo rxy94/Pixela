@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import Image from 'next/image';
-import { FiUser, FiMail, FiX } from 'react-icons/fi';
+import { FiUser, FiMail, FiX, FiCamera } from 'react-icons/fi';
 import { IoKeyOutline } from 'react-icons/io5';
 import { useForm } from 'react-hook-form';
 import { useRef, useState } from 'react';
@@ -21,6 +21,7 @@ const STYLES = {
   avatarImage: 'profile-edit__avatar-image',
   avatarPlaceholder: 'profile-edit__avatar-placeholder',
   avatarOverlay: 'profile-edit__avatar-overlay',
+  cameraIcon: 'profile-edit__camera-icon',
   fileInput: 'profile-edit__file-input',
   uploadButton: 'profile-edit__upload-button',
   error: 'profile-edit__error',
@@ -166,7 +167,9 @@ export const UpdateProfileForm: FC<UpdateProfileFormProps> = ({
                 </div>
               )}
             </div>
-            <div className={STYLES.avatarOverlay} />
+            <div className={STYLES.avatarOverlay}>
+              <FiCamera className={STYLES.cameraIcon} />
+            </div>
             <input
               type="file"
               accept="image/*"

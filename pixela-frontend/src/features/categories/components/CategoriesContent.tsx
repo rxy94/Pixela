@@ -7,8 +7,9 @@ import { FaStar } from 'react-icons/fa';
 import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
-import { useState, memo } from 'react';
+import { useState, memo, useMemo, useEffect } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import { ContentSkeleton } from './ContentSkeleton';
 
 interface CategoriesContentProps {
     selectedCategory: Category | null;
@@ -21,9 +22,10 @@ interface CategoriesContentProps {
 const INITIAL_VISIBLE_ITEMS = 6;
 const HIGH_RATING_THRESHOLD = 7.5;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+const BATCH_SIZE = 12;
 
 const STYLES = {
-    card: 'w-full flex flex-col relative group overflow-hidden',
+    card: 'w-full flex flex-col relative group overflow-hidden animate-fade-in',
     posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
     noiseEffect: 'noise-effect opacity-5',
     contentGrid: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6',
@@ -43,9 +45,20 @@ const STYLES = {
     mediaType: 'text-pixela-light/90 bg-pixela-dark/60 px-1.5 py-0.5 rounded-sm text-xs',
     poster: 'object-cover',
     mainContainer: 'space-y-8 pb-24',
-    contentWrapper: 'transform-gpu'
+    contentWrapper: 'transform-gpu',
+    searchIconInner: 'h-5 w-5 text-pixela-light/40',
+    mobileCategoriesList: 'lg:hidden mb-6'
 } as const;
 
+/**
+ * Componente que muestra la imagen de la película o serie.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {string} props.posterPath - URL de la imagen de la película o serie
+ * @param {string} props.title - Título de la película o serie  
+ * @param {boolean} props.isInitiallyVisible - Indica si la imagen se debe cargar inicialmente
+ */
 const PosterImage = memo(({ posterPath, title, isInitiallyVisible }: { posterPath: string, title: string, isInitiallyVisible: boolean }) => (
     <Image
         src={`${TMDB_IMAGE_BASE_URL}${posterPath}`}
@@ -55,11 +68,24 @@ const PosterImage = memo(({ posterPath, title, isInitiallyVisible }: { posterPat
         priority={isInitiallyVisible}
         sizes="(max-width: 768px) 100vw, 375px"
         loading={isInitiallyVisible ? "eager" : "lazy"}
+        quality={75}
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
     />
 ));
 
 PosterImage.displayName = 'PosterImage';
 
+/**
+ * Componente que muestra el contenido de películas y series.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Pelicula | Serie} props.media - Película o serie
+ * @param {'series' | 'movies'} props.type - Tipo de media  
+ * @param {() => void} props.onFollowClick - Función para manejar el clic en el botón de seguir
+ * @param {() => void} props.onReviewsClick - Función para manejar el clic en el botón de reseñas
+ */
 const OverlayContent = memo(({ 
     media, 
     type, 
@@ -76,7 +102,7 @@ const OverlayContent = memo(({
             <h3 className={STYLES.title}>
                 {type === 'movies' 
                     ? (media as Pelicula).title || (media as Pelicula).titulo || 'Sin título'
-                    : (media as Serie).name || (media as Serie).titulo || 'Sin título'}
+                    : (media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título'}
             </h3>
             
             <div className={STYLES.mediaInfo}>
@@ -114,6 +140,16 @@ const OverlayContent = memo(({
 
 OverlayContent.displayName = 'OverlayContent';
 
+/**
+ * Componente que muestra la tarjeta de la película o serie.
+ * 
+ * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Pelicula | Serie} props.media - Película o serie
+ * @param {'series' | 'movies'} props.type - Tipo de media
+ * @param {number} props.index - Índice de la película o serie  
+ * @returns {JSX.Element} La tarjeta renderizada
+ */
 const MediaCard = memo(({ 
     media, 
     type, 
@@ -139,13 +175,20 @@ const MediaCard = memo(({
     };
     
     return (
-        <div className={STYLES.card}>
+        <div 
+            className={STYLES.card}
+            style={{
+                animationDelay: `${index * 50}ms`,
+                opacity: 0,
+                animation: 'fadeIn 0.5s ease-out forwards'
+            }}
+        >
             <div className={STYLES.posterContainer}>
                 <PosterImage 
                     posterPath={media.poster_path || media.poster || ''}
                     title={type === 'movies' 
                         ? ((media as Pelicula).title || (media as Pelicula).titulo || 'Sin título')
-                        : ((media as Serie).name || (media as Serie).titulo || 'Sin título')}
+                        : ((media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título')}
                     isInitiallyVisible={isInitiallyVisible}
                 />
                 
@@ -173,68 +216,83 @@ const MediaCard = memo(({
 MediaCard.displayName = 'MediaCard';
 
 /**
- * Componente que muestra el contenido de películas y series.   
+ * Hook para filtrar y ordenar el contenido de películas y series.
  * 
- * @component
- * @param {CategoriesContentProps} props - Propiedades del componente
- * @returns {JSX.Element} El contenido renderizado
+ * @param {Pelicula[]} movies - Array de películas
+ * @param {Serie[]} series - Array de series
+ * @param {string} searchTerm - Término de búsqueda
+ * @returns {Pelicula[] | Serie[]} Array de películas o series filtrado y ordenado
  */
-const ContentGrid = ({ movies, series, searchTerm }: { movies: Pelicula[], series: Serie[], searchTerm: string }) => {
-    // Crear contenido con identificadores claros de tipo
-    const movieContent = movies.map(movie => ({ ...movie, mediaType: 'movie' as const }));
-    const seriesContent = series.map(serie => ({ ...serie, mediaType: 'series' as const }));
-    
-    type ContentItem = (Pelicula & { mediaType: 'movie' }) | (Serie & { mediaType: 'series' });
-    
-    const allContent: ContentItem[] = [...movieContent, ...seriesContent]
-        .filter(item => {
-            // Si no hay término de búsqueda, mostrar todo
-            if (searchTerm === '') {
-                return true;
-            }
-            
-            const searchField = item.mediaType === 'movie' 
-                ? (item as Pelicula).title || (item as Pelicula).titulo
-                : (item as Serie).name || (item as Serie).titulo;
-            
-            const shouldInclude = searchField?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
-            
-            if (!shouldInclude && item.mediaType === 'series') {
-                console.log('[DEBUG] Serie filtered out:', { 
-                    id: item.id, 
-                    searchField, 
-                    searchTerm, 
-                    name: (item as Serie).name,
-                    titulo: (item as Serie).titulo
-                });
-            }
-            
-            return shouldInclude;
-        })
-        .sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
-
-    return (
-        <div className={STYLES.contentGrid}>
-            {allContent.map((item, index) => (
-                    <MediaCard
-                    key={`${item.id}-${item.mediaType}`}
-                        media={item}
-                    type={item.mediaType === 'movie' ? 'movies' : 'series'}
-                        index={index}
-                    />
-            ))}
-        </div>
-    );
+const useFilteredContent = (movies: Pelicula[], series: Serie[], searchTerm: string) => {
+    return useMemo(() => {
+        const movieContent = movies.map(movie => ({ ...movie, mediaType: 'movie' as const }));
+        const seriesContent = series.map(serie => ({ ...serie, mediaType: 'series' as const }));
+        
+        return [...movieContent, ...seriesContent]
+            .filter(item => {
+                if (searchTerm === '') return true;
+                
+                const searchField = item.mediaType === 'movie' 
+                    ? (item as Pelicula).title || (item as Pelicula).titulo
+                    : (item as Serie).name || (item as Serie).titulo || (item as Serie).title;
+                
+                return searchField?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+            })
+            .sort((a, b) => (b.vote_average || 0) - (a.vote_average || 0));
+    }, [movies, series, searchTerm]);
 };
 
 /**
  * Componente que muestra el contenido de películas y series.
  * 
  * @component
+ * @param {Object} props - Propiedades del componente
+ * @param {Pelicula[]} props.movies - Array de películas
+ * @param {Serie[]} props.series - Array de series
+ * @param {string} props.searchTerm - Término de búsqueda
+ * @returns {JSX.Element} El contenido renderizado
+ */
+const ContentGrid = memo(({ movies, series, searchTerm }: { movies: Pelicula[], series: Serie[], searchTerm: string }) => {
+    const [visibleItems, setVisibleItems] = useState(BATCH_SIZE);
+    const filteredContent = useFilteredContent(movies, series, searchTerm);
+    const hasMore = visibleItems < filteredContent.length;
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1000) {
+                setVisibleItems(prev => Math.min(prev + BATCH_SIZE, filteredContent.length));
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [filteredContent.length]);
+
+    return (
+        <div className={STYLES.contentGrid}>
+            {filteredContent.slice(0, visibleItems).map((item, index) => (
+                <MediaCard
+                    key={`${item.id}-${item.mediaType}`}
+                    media={item}
+                    type={item.mediaType === 'movie' ? 'movies' : 'series'}
+                    index={index}
+                />
+            ))}
+            {hasMore && <div className="h-8" />}
+        </div>
+    );
+});
+
+ContentGrid.displayName = 'ContentGrid';
+
+/**
+ * Componente que muestra el contenido de películas y series.   
+ * 
+ * @component
  * @param {CategoriesContentProps} props - Propiedades del componente
  * @returns {JSX.Element} El contenido renderizado
  */
-export const CategoriesContent = ({
+export const CategoriesContent = memo(({
     selectedCategory,
     movies,
     series,
@@ -242,6 +300,18 @@ export const CategoriesContent = ({
     error
 }: CategoriesContentProps) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const [isContentReady, setIsContentReady] = useState(false);
+
+    useEffect(() => {
+        if (!loading && (movies.length > 0 || series.length > 0)) {
+            const timer = setTimeout(() => {
+                setIsContentReady(true);
+            }, 300);
+            return () => clearTimeout(timer);
+        } else {
+            setIsContentReady(false);
+        }
+    }, [loading, movies, series]);
 
     if (error) {
         return (
@@ -251,9 +321,13 @@ export const CategoriesContent = ({
         );
     }
 
+    if (loading || !isContentReady) {
+        return <ContentSkeleton count={12} />;
+    }
+
     const hasContent = movies.length > 0 || series.length > 0;
 
-    if (!hasContent && !loading) {
+    if (!hasContent) {
         return (
             <div className={STYLES.emptyState}>
                 {selectedCategory 
@@ -267,7 +341,7 @@ export const CategoriesContent = ({
         <div className={STYLES.mainContainer}>
             <div className={STYLES.searchContainer}>
                 <div className={STYLES.searchIcon}>
-                    <FiSearch className="h-5 w-5 text-pixela-light/40" />
+                    <FiSearch className={STYLES.searchIconInner} />
                 </div>
                 <input
                     type="text"
@@ -283,4 +357,6 @@ export const CategoriesContent = ({
             </div>
         </div>
     );
-}; 
+});
+
+CategoriesContent.displayName = 'CategoriesContent'; 
