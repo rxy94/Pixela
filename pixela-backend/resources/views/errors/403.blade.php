@@ -7,8 +7,21 @@
     @vite('resources/css/error-pages.css')
 </head>
 <body class="error-403">
+    <div class="background-animation">
+        <div class="floating-element">
+            <div class="icon">🔒</div>
+        </div>
+        <div class="floating-element">
+            <div class="icon">🛡️</div>
+        </div>
+        <div class="floating-element">
+            <div class="icon">⚡</div>
+        </div>
+        <div class="floating-element">
+            <div class="icon">🔐</div>
+        </div>
+    </div>
     <div class="container">
-        <div class="lock-animation">🔒</div>
         <div class="error-code">403</div>
         <h1 class="error-title">¡Acceso Clasificado!</h1>
         <div class="security-badge">🕵️ ÁREA RESTRINGIDA 🕵️</div>
@@ -31,32 +44,5 @@
             </a>
         </div>
     </div>
-
-    <script>
-        console.log('🔒 Pixela 403 - Acceso prohibido');
-        console.log('🔑 Asegúrate de tener los permisos necesarios');
-        
-        // Efecto de "escaneado de seguridad"
-        function createScanLine() {
-            const scanLine = document.createElement('div');
-            scanLine.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: linear-gradient(90deg, transparent, #ff9500, transparent);
-                animation: scan 3s linear infinite;
-                z-index: 1000;
-            `;
-            
-            document.body.appendChild(scanLine);
-            setTimeout(() => scanLine.remove(), 3000);
-        }
-        
-        // Ejecutar escaneo cada 5 segundos
-        setInterval(createScanLine, 5000);
-        createScanLine(); // Ejecutar inmediatamente
-    </script>
 </body>
 </html> 
