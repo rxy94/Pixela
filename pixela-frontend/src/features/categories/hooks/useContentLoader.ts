@@ -65,6 +65,7 @@ interface EndpointParams {
  * @param error - Mensaje de error
  * @param currentPage - Página actual
  * @param totalPages - Total de páginas disponibles
+ * @param searchQuery - Término de búsqueda actual
  */
 interface ContentState {
     movies: Pelicula[];
@@ -73,6 +74,7 @@ interface ContentState {
     error: string | null;
     currentPage: number;
     totalPages: number;
+    searchQuery: string;
 }
 
 /**
@@ -83,6 +85,8 @@ interface ContentActions {
     loadContent: (category: Category | null, page: number) => Promise<void>;
     /** Función para resetear todo el contenido */
     resetContent: () => void;
+    /** Función para buscar contenido */
+    searchContent: (query: string, page?: number) => Promise<void>;
 }
 
 /**
@@ -101,6 +105,15 @@ const buildApiEndpoint = ({ category, page, mediaType }: EndpointParams): string
         : `/${mediaType}/discover`;
     
     return `${baseEndpoint}?page=${page}&limit=${PAGINATION_CONFIG.ITEMS_PER_PAGE}`;
+};
+
+/**
+ * Construye el endpoint de búsqueda de la API
+ * @param params - Parámetros para construir el endpoint
+ * @returns Endpoint construido
+ */
+const buildSearchEndpoint = ({ query, page, mediaType }: { query: string; page: number; mediaType: 'movies' | 'series' }): string => {
+    return `/${mediaType}/search?query=${encodeURIComponent(query)}&page=${page}`;
 };
 
 /**
@@ -185,6 +198,7 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
+    const [searchQuery, setSearchQuery] = useState<string>('');
     
     // Referencia para prevenir cargas múltiples simultáneas
     const isLoadingRef = useRef<boolean>(false);
@@ -387,6 +401,61 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
         }
     }, [selectedMediaType, processAllMediaContent, processMoviesOnly, processSeriesOnly]);
 
+    /**
+     * Realiza una búsqueda en el contenido
+     * @param query - Término de búsqueda
+     * @param page - Número de página
+     */
+    const searchContent = useCallback(async (query: string, page: number = 1): Promise<void> => {
+        if (!query.trim() || !isValidPage(page)) {
+            return;
+        }
+
+        if (isLoadingRef.current) {
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        setSearchQuery(query);
+        isLoadingRef.current = true;
+
+        try {
+            if (selectedMediaType === 'all') {
+                const [movieResult, seriesResult] = await Promise.all([
+                    fetchFromAPI<ApiResponse<Pelicula[]>>(buildSearchEndpoint({ query, page, mediaType: 'movies' })),
+                    fetchFromAPI<ApiResponse<Serie[]>>(buildSearchEndpoint({ query, page, mediaType: 'series' }))
+                ]);
+
+                await processAllMediaContent(movieResult, seriesResult);
+            } else {
+                const endpoint = buildSearchEndpoint({
+                    query,
+                    page,
+                    mediaType: selectedMediaType as 'movies' | 'series'
+                });
+
+                const result = await fetchFromAPI<ApiResponse<ContentItem[]>>(endpoint);
+                const isMoviesContent = selectedMediaType === 'movies';
+
+                await preloadInitialImages(result.data);
+                updateContent(result.data, isMoviesContent, result.total_pages);
+
+                // Precargar el resto de imágenes en segundo plano
+                setTimeout(() => {
+                    preloadImages(result.data.slice(PAGINATION_CONFIG.INITIAL_LOAD_COUNT));
+                }, 0);
+            }
+
+            setCurrentPage(page);
+        } catch (error) {
+            setError(processErrorMessage(error));
+        } finally {
+            setLoading(false);
+            isLoadingRef.current = false;
+        }
+    }, [selectedMediaType, processAllMediaContent, updateContent]);
+
     return {
         movies,
         series,
@@ -394,8 +463,10 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
         error,
         currentPage,
         totalPages: Math.min(totalPages, PAGINATION_CONFIG.MAX_TMDB_PAGES),
+        searchQuery,
         
         loadContent,
-        resetContent
+        resetContent,
+        searchContent
     };
 }; 

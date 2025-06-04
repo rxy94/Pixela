@@ -263,4 +263,21 @@ class TmdbSeriesService
             'language' => 'es-ES'
         ], $page);
     }
+
+    /**
+     * Search for TV series by query string
+     *
+     * @param string $query Search query
+     * @param int $page Page number for pagination (default 1)
+     * @return array
+     * @throws Exception
+     */
+    public function searchSeries(string $query, int $page = 1): array
+    {
+        return $this->paginatedRequest("/search/tv", [
+            'query' => $query,
+            'language' => 'es-ES',
+            'include_adult' => false
+        ], $page);
+    }
 } 

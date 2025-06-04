@@ -59,7 +59,7 @@ Route::group([
     Route::get('/{movieId}/creator', 'getMovieCreator')->where('movieId', '[0-9]+'); #http GET http://localhost/api/movies/550/creator
     Route::get('/{movieId}/images', 'getMovieImages')->where('movieId', '[0-9]+'); #http GET http://localhost/api/movies/550/images
     Route::get('/{movieId}/reviews', 'getMovieReviews')->where('movieId', '[0-9]+'); #http GET http://localhost/api/movies/550/reviews
-
+    Route::get('/search', 'searchMovies'); #http GET http://localhost/api/movies/search?query=the+office
 });
 
 // Series routes
@@ -78,4 +78,5 @@ Route::group([
     Route::get('/{seriesId}/watch-providers', 'getSeriesWatchProviders')->where('seriesId', '[0-9]+'); #http GET http://localhost/api/series/108978/watch-providers
     Route::get('/{seriesId}/images', 'getSeriesImages')->where('seriesId', '[0-9]+'); #http GET http://localhost/api/series/108978/images
     Route::get('/{seriesId}/reviews', 'getSeriesReviews')->where('seriesId', '[0-9]+'); #http GET http://localhost/api/series/108978/reviews
+    Route::get('/search', 'searchSeries'); #http GET http://localhost/api/series/search?query=the+office
 });
