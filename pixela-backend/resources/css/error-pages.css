@@ -159,7 +159,8 @@ body {
 
 /* Estilos específicos para página 403 */
 .error-403 {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    position: relative;
 }
 
 .error-403 .error-code {
@@ -168,7 +169,7 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 0 30px rgba(255, 149, 0, 0.5);
-    animation: pulse 2s ease-in-out infinite;
+    animation: glow 2s ease-in-out infinite alternate;
 }
 
 .error-403 .movie-quote {
@@ -185,34 +186,11 @@ body {
     border-radius: 25px;
     margin: 1rem 0;
     font-weight: bold;
-    animation: blink 1.5s infinite;
-}
-
-.lock-animation {
-    font-size: 4rem;
-    margin: 2rem 0;
-    animation: shake 2s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0.5; }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
 }
 
 /* Estilos específicos para página 500 */
 .error-500 {
-    background: linear-gradient(135deg, #1a0a0a 0%, #2a1a1a 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
 .error-500 .error-code {
@@ -221,7 +199,7 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
-    animation: flicker 1.5s ease-in-out infinite alternate;
+    animation: glow 2s ease-in-out infinite alternate;
 }
 
 .error-500 .movie-quote {
@@ -230,33 +208,10 @@ body {
     background: rgba(255, 51, 51, 0.1);
 }
 
-.technical-info {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 51, 51, 0.3);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 2rem 0;
-    font-family: monospace;
-    text-align: left;
-    font-size: 0.9rem;
-}
-
-@keyframes flicker {
-    0%, 100% { opacity: 1; filter: brightness(1); }
-    50% { opacity: 0.8; filter: brightness(0.8); }
-}
-
-/* Animaciones adicionales */
-@keyframes rise {
-    to {
-        transform: translateY(-100vh);
-        opacity: 0;
-    }
-}
-
-@keyframes scan {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(100vh); }
+.error-500 .security-badge {
+    background: rgba(255, 51, 51, 0.2);
+    border: 2px solid #ff3333;
+    color: #ff6666;
 }
 
 /* Responsive */
