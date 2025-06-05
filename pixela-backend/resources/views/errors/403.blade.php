@@ -24,7 +24,6 @@
     <div class="container">
         <div class="error-code">403</div>
         <h1 class="error-title">¡Acceso Clasificado!</h1>
-        <div class="security-badge">🕵️ ÁREA RESTRINGIDA 🕵️</div>
         <p class="error-message">
             Esta área está más protegida que los secretos de la CIA en las películas de espías. 
             <br>Necesitas los permisos adecuados para acceder a este contenido.
@@ -36,8 +35,8 @@
         </div>
 
         <div class="actions">
-            <a href="{{ url('/login') }}" class="btn btn-primary">
-                🏠 {{ __('pixela.back_to_login') }}
+            <a href="{{ config('app.frontend_url') }}" class="btn btn-primary">
+                🏠 {{ __('pixela.back_to_home') }}
             </a>
             <a href="{{ url('/api/documentation') }}" class="btn btn-secondary">
                 📚 {{ __('pixela.view_api') }}

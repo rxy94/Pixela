@@ -49,8 +49,35 @@ const STYLES = {
     mainContainer: 'space-y-8 pb-24',
     contentWrapper: 'transform-gpu',
     searchIconInner: 'h-5 w-5 text-pixela-light/40',
-    mobileCategoriesList: 'lg:hidden mb-6'
+    mobileCategoriesList: 'lg:hidden mb-6',
+    placeholderContainer: 'absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex flex-col items-center justify-center p-4 text-center',
+    placeholderEmoji: 'text-4xl mb-3 opacity-50',
+    placeholderTitle: 'text-white text-sm font-medium leading-tight mb-2 line-clamp-3',
+    placeholderNoImage: 'text-xs text-gray-400 opacity-75',
+    placeholderOverlay: 'absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none'
 } as const;
+
+/**
+ * Componente placeholder cuando no hay imagen disponible
+ */
+const PlaceholderPoster = memo(({ title, type }: { title: string, type: 'movies' | 'series' }) => {
+    return (
+        <div className={STYLES.placeholderContainer}>
+            <div className={STYLES.placeholderEmoji}>
+                {type === 'movies' ? '🎬' : '📺'}
+            </div>
+            <h3 className={STYLES.placeholderTitle}>
+                {title}
+            </h3>
+            <div className={STYLES.placeholderNoImage}>
+                Sin imagen disponible
+            </div>
+            <div className={STYLES.placeholderOverlay} />
+        </div>
+    );
+});
+
+PlaceholderPoster.displayName = 'PlaceholderPoster';
 
 /**
  * Componente que muestra la imagen de la película o serie.
@@ -60,21 +87,37 @@ const STYLES = {
  * @param {string} props.posterPath - URL de la imagen de la película o serie
  * @param {string} props.title - Título de la película o serie  
  * @param {boolean} props.isInitiallyVisible - Indica si la imagen se debe cargar inicialmente
+ * @param {'movies' | 'series'} props.type - Tipo de contenido
  */
-const PosterImage = memo(({ posterPath, title, isInitiallyVisible }: { posterPath: string, title: string, isInitiallyVisible: boolean }) => (
-    <Image
-        src={`${TMDB_IMAGE_BASE_URL}${posterPath}`}
-        alt={title || 'Imagen no disponible'}
-        fill
-        className={STYLES.poster}
-        priority={isInitiallyVisible}
-        sizes="(max-width: 768px) 100vw, 375px"
-        loading={isInitiallyVisible ? "eager" : "lazy"}
-        quality={75}
-        placeholder="blur"
-        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
-    />
-));
+const PosterImage = memo(({ posterPath, title, isInitiallyVisible, type }: { 
+    posterPath: string, 
+    title: string, 
+    isInitiallyVisible: boolean,
+    type: 'movies' | 'series'
+}) => {
+    const [imageError, setImageError] = useState(false);
+    
+    // Si no hay posterPath o hubo error, mostrar placeholder
+    if (!posterPath || posterPath.trim() === '' || imageError) {
+        return <PlaceholderPoster title={title} type={type} />;
+    }
+
+    return (
+        <Image
+            src={`${TMDB_IMAGE_BASE_URL}${posterPath}`}
+            alt={title || 'Imagen no disponible'}
+            fill
+            className={STYLES.poster}
+            priority={isInitiallyVisible}
+            sizes="(max-width: 768px) 100vw, 375px"
+            loading={isInitiallyVisible ? "eager" : "lazy"}
+            quality={75}
+            placeholder="blur"
+            onError={() => setImageError(true)}
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkMjU1LS0yMi4qLjgyPj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj4+Oj7/2wBDAR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+        />
+    );
+});
 
 PosterImage.displayName = 'PosterImage';
 
@@ -180,9 +223,12 @@ const MediaCard = memo(({
         <div 
             className={STYLES.card}
             style={{
-                animationDelay: `${index * 50}ms`,
                 opacity: 0,
-                animation: 'fadeIn 0.5s ease-out forwards'
+                animationName: 'fadeIn',
+                animationDuration: '0.5s',
+                animationTimingFunction: 'ease-out',
+                animationFillMode: 'forwards',
+                animationDelay: `${index * 50}ms`
             }}
         >
             <div className={STYLES.posterContainer}>
@@ -192,6 +238,7 @@ const MediaCard = memo(({
                         ? ((media as Pelicula).title || (media as Pelicula).titulo || 'Sin título')
                         : ((media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título')}
                     isInitiallyVisible={isInitiallyVisible}
+                    type={type}
                 />
                 
                 <div className={STYLES.noiseEffect} />
