@@ -9,7 +9,8 @@ const STYLES = {
   avatar: 'rounded-full object-cover border-2 border-pixela-accent/30',
   name: 'text-white font-medium',
   placeholderContainer: 'w-10 h-10 rounded-full border-2 border-pixela-accent/30 bg-gradient-to-br from-pixela-dark via-pixela-dark/80 to-black flex items-center justify-center',
-  placeholderIcon: 'text-pixela-accent/60 text-lg'
+  placeholderIcon: 'text-pixela-accent/60 text-lg',
+  placeholderInitials: 'text-white text-sm font-semibold'
 } as const;
 
 interface CreatorAvatarProps {
@@ -30,7 +31,7 @@ const AvatarPlaceholder = memo(({ name }: { name: string }) => {
   return (
     <div className={STYLES.placeholderContainer}>
       {initials ? (
-        <span className="text-white text-sm font-semibold">{initials}</span>
+        <span className={STYLES.placeholderInitials}>{initials}</span>
       ) : (
         <span className={STYLES.placeholderIcon}>👤</span>
       )}
