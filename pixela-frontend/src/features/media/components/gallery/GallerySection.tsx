@@ -143,11 +143,11 @@ export function GallerySection({ media }: GallerySectionProps) {
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedGalleryImage(null)}
         >
-          <div className="relative max-w-7xl max-h-[90vh]" onClick={e => e.stopPropagation()}>
+          <div className="relative max-w-4xl max-h-[70vh]" onClick={e => e.stopPropagation()}>
             <img 
               src={selectedGalleryImage} 
               alt="Preview"
-              className="max-h-[90vh] max-w-full object-contain" 
+              className="max-h-[70vh] max-w-full object-contain" 
             />
             <button
               className="absolute -top-10 right-0 text-white hover:text-pixela-accent"
