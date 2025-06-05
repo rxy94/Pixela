@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { UserResponse } from '@/api/auth/types';
+import { User } from '@/api/users/types';
 import { ProfileFormData } from '@/features/profile/types/profileTypes';
 import { authAPI } from '@/api/auth/auth';
 import { usersAPI } from '@/api/users/users';
@@ -67,7 +68,7 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   useEffect(() => {
     if (redirecting) {
       const timer = setTimeout(() => {
-        window.location.replace('http://localhost:3000');
+        window.location.replace('http://localhost:3000'); // TODO: Cambiar a la URL de producción
       }, 1200);
 
       return () => clearTimeout(timer);
@@ -104,6 +105,18 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
     }
+  };
+
+  const handleUserUpdated = (updatedUser: User) => {
+    if (updatedUser.user_id === user.user_id) {
+      const userResponse: UserResponse = {
+        ...user,
+        ...updatedUser,
+        password: updatedUser.password || ''
+      };
+      setUser(userResponse);
+    }
+    setRefreshUsers(r => !r);
   };
 
   if (redirecting) {
@@ -196,7 +209,10 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
                   setShowCreateModal(false);
                 }}
               />
-              <ProfileUsers refresh={refreshUsers} />
+              <ProfileUsers 
+                refresh={refreshUsers} 
+                onUserUpdated={handleUserUpdated}
+              />
             </ContentPanel>
           )}
         </div>
