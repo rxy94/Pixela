@@ -101,7 +101,7 @@ body {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
-.error-404 .error-code {
+.error-code {
     background: linear-gradient(45deg, #ec1b69, #ff6b9d);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -109,7 +109,7 @@ body {
     animation: glow 2s ease-in-out infinite alternate;
 }
 
-.error-404 .movie-quote {
+.movie-quote {
     color: #ff6b9d;
     border-left: 3px solid #ec1b69;
     background: rgba(236, 27, 105, 0.1);
@@ -163,55 +163,9 @@ body {
     position: relative;
 }
 
-.error-403 .error-code {
-    background: linear-gradient(45deg, #ff9500, #ffb84d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 30px rgba(255, 149, 0, 0.5);
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-.error-403 .movie-quote {
-    color: #ffb84d;
-    border-left: 3px solid #ff9500;
-    background: rgba(255, 149, 0, 0.1);
-}
-
-.security-badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 149, 0, 0.2);
-    border: 2px solid #ff9500;
-    border-radius: 25px;
-    margin: 1rem 0;
-    font-weight: bold;
-}
-
 /* Estilos específicos para página 500 */
 .error-500 {
     background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-}
-
-.error-500 .error-code {
-    background: linear-gradient(45deg, #ff3333, #ff6666);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 0 30px rgba(255, 51, 51, 0.5);
-    animation: glow 2s ease-in-out infinite alternate;
-}
-
-.error-500 .movie-quote {
-    color: #ff6666;
-    border-left: 3px solid #ff3333;
-    background: rgba(255, 51, 51, 0.1);
-}
-
-.error-500 .security-badge {
-    background: rgba(255, 51, 51, 0.2);
-    border: 2px solid #ff3333;
-    color: #ff6666;
 }
 
 /* Responsive */

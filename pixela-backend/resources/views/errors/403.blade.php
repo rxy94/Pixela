@@ -24,7 +24,6 @@
     <div class="container">
         <div class="error-code">403</div>
         <h1 class="error-title">¡Acceso Clasificado!</h1>
-        <div class="security-badge">🕵️ ÁREA RESTRINGIDA 🕵️</div>
         <p class="error-message">
             Esta área está más protegida que los secretos de la CIA en las películas de espías. 
             <br>Necesitas los permisos adecuados para acceder a este contenido.
