@@ -8,6 +8,7 @@ import { Pagination } from './Pagination';
 import { Category } from '@/api/categories/categories';
 import { useCategoriesStore } from '../store/categoriesStore';
 import { useContentLoader } from '../hooks/useContentLoader';
+import { MediaType } from '../types/media';
 
 const STYLES = {
     container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',
@@ -32,6 +33,9 @@ export const CategoriesContainer = () => {
     const [isInitialized, setIsInitialized] = useState(false);
     const { selectedMediaType, setSelectedMediaType } = useCategoriesStore();
     
+    // Para el hook useContentLoader, convertimos 'random' a 'all' ya que cargamos todo
+    const loaderMediaType = selectedMediaType === 'random' ? 'all' : selectedMediaType;
+    
     const {
         movies,
         series,
@@ -43,7 +47,7 @@ export const CategoriesContainer = () => {
         resetContent,
         searchContent,
         searchQuery
-    } = useContentLoader(selectedMediaType);
+    } = useContentLoader(loaderMediaType);
 
     /**
      * Maneja la selección de una categoría y carga su contenido.
@@ -70,12 +74,18 @@ export const CategoriesContainer = () => {
      * 
      * @param {MediaType} type - El nuevo tipo de medio
      */
-    const handleMediaTypeChange = useCallback(async (type: 'all' | 'movies' | 'series') => {
+    const handleMediaTypeChange = useCallback(async (type: MediaType) => {
         console.log('[DEBUG] handleMediaTypeChange called with:', type);
         setSelectedMediaType(type);
         setSelectedCategory(null);
         resetContent();
-        await loadContent(null, 1);
+        
+        if (type === 'random') {
+            // Para contenido aleatorio, cargamos tanto películas como series y las mezclamos
+            await loadContent(null, 1);
+        } else {
+            await loadContent(null, 1);
+        }
     }, [setSelectedMediaType, resetContent, loadContent]);
 
     /**
@@ -125,7 +135,7 @@ export const CategoriesContainer = () => {
                 />
                 
                 <div className={STYLES.mainContent}>
-                    {isInitialized && selectedMediaType !== 'all' && (
+                    {isInitialized && selectedMediaType !== 'all' && selectedMediaType !== 'random' && (
                         <div className={STYLES.categoriesContainer}>
                             <CategoriesList 
                                 onCategorySelect={handleCategorySelect}
@@ -137,7 +147,7 @@ export const CategoriesContainer = () => {
 
                     <div className={STYLES.contentArea}>
                         {/* Botón de categorías para móvil y tablet */}
-                        {isInitialized && selectedMediaType !== 'all' && (
+                        {isInitialized && selectedMediaType !== 'all' && selectedMediaType !== 'random' && (
                             <div className="mb-6 lg:hidden">
                                 <CategoriesList 
                                     onCategorySelect={handleCategorySelect}
@@ -160,7 +170,7 @@ export const CategoriesContainer = () => {
                             />
                         </div>
 
-                        {totalPages > 1 && (
+                        {totalPages > 1 && selectedMediaType !== 'random' && (
                             <div className={STYLES.paginationContainer}>
                                 <Pagination
                                     currentPage={currentPage}

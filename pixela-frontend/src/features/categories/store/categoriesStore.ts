@@ -45,7 +45,9 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
         set({ loading: true, error: null });
         try {
             const currentMediaType = mediaType || get().selectedMediaType;
-            const categories = await getCategoriesForMediaType(currentMediaType);
+            // Para 'random', usamos 'all' para obtener todas las categorías
+            const apiMediaType = currentMediaType === 'random' ? 'all' : currentMediaType;
+            const categories = await getCategoriesForMediaType(apiMediaType);
             set({ categories, loading: false });
         } catch (error) {
             set({ 
