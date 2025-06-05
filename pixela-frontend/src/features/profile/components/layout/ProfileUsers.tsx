@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
-import { usersAPI } from '@/api/users/users';
 import type { User } from '@/api/users/types';
+import { usersAPI } from '@/api/users/users';
 import { FiLoader, FiAlertCircle, FiEdit, FiCheck, FiX } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
 import { UserAvatar } from '@/features/profile/components/avatar/UserAvatar';
@@ -84,7 +83,7 @@ interface ProfileUsersProps {
  * @param {ProfileUsersProps} props - Props del componente
  * @returns {JSX.Element} Componente ProfileUsers
  */
-export const ProfileUsers: FC<ProfileUsersProps> = ({ refresh, onUserUpdated }) => {
+export const ProfileUsers = ({ refresh, onUserUpdated }: ProfileUsersProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
