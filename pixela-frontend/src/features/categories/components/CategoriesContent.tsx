@@ -8,7 +8,7 @@ import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect } from 'react';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiX } from 'react-icons/fi';
 import { ContentSkeleton } from './ContentSkeleton';
 
 interface CategoriesContentProps {
@@ -19,6 +19,7 @@ interface CategoriesContentProps {
     error: string | null;
     searchQuery: string;
     onSearch: (query: string) => void;
+    mediaType: 'all' | 'movies' | 'series';
 }
 
 const INITIAL_VISIBLE_ITEMS = 6;
@@ -35,7 +36,8 @@ const STYLES = {
     errorState: 'text-center text-red-500 py-12',
     searchContainer: 'relative mb-8',
     searchIcon: 'absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none',
-    searchInput: 'w-full pl-10 pr-4 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300',
+    searchInput: 'w-full pl-10 pr-10 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300',
+    clearButton: 'absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-pixela-light/40 hover:text-pixela-light transition-colors duration-300',
     overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark/95 via-pixela-dark/80 to-transparent flex flex-col justify-end p-3 md:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-lg',
     overlayContent: 'mb-2 md:mb-3',
     title: 'text-pixela-light font-bold text-sm md:text-base lg:text-lg mb-1 md:mb-2 font-outfit overflow-hidden text-ellipsis whitespace-nowrap',
@@ -348,7 +350,8 @@ export const CategoriesContent = memo(({
     loading,
     error,
     searchQuery,
-    onSearch
+    onSearch,
+    mediaType
 }: CategoriesContentProps) => {
     const [isContentReady, setIsContentReady] = useState(false);
     const [inputValue, setInputValue] = useState(searchQuery);
@@ -356,6 +359,12 @@ export const CategoriesContent = memo(({
     useEffect(() => {
         setInputValue(searchQuery);
     }, [searchQuery]);
+
+
+    useEffect(() => {
+        setInputValue('');
+        onSearch('');
+    }, [mediaType, onSearch]);
 
     useEffect(() => {
         if (!loading && (movies.length > 0 || series.length > 0)) {
@@ -367,6 +376,31 @@ export const CategoriesContent = memo(({
             setIsContentReady(false);
         }
     }, [loading, movies, series]);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const handleFormSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSearch(inputValue);
+    };
+
+    const handleClearSearch = () => {
+        setInputValue('');
+        onSearch('');
+    };
+
+    const getSearchPlaceholder = () => {
+        switch (mediaType) {
+            case 'movies':
+                return 'Buscar películas...';
+            case 'series':
+                return 'Buscar series...';
+            default:
+                return 'Buscar películas o series...';
+        }
+    };
 
     if (error) {
         return (
@@ -392,34 +426,30 @@ export const CategoriesContent = memo(({
         );
     }
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSearch(inputValue);
-        if (inputValue.trim() !== '') {
-            setInputValue('');
-        }
-    };
-
     return (
         <div className={STYLES.mainContainer}>
-            <div className={STYLES.searchContainer}>
-                <form onSubmit={handleFormSubmit}>
-                    <div className={STYLES.searchIcon}>
-                        <FiSearch className={STYLES.searchIconInner} />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Buscar por título..."
-                        className={STYLES.searchInput}
-                        value={inputValue}
-                        onChange={handleInputChange}
-                    />
-                </form>
-            </div>
+            <form onSubmit={handleFormSubmit} className={STYLES.searchContainer}>
+                <div className={STYLES.searchIcon}>
+                    <FiSearch className={STYLES.searchIconInner} />
+                </div>
+                <input
+                    type="text"
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    placeholder={getSearchPlaceholder()}
+                    className={STYLES.searchInput}
+                />
+                {inputValue && (
+                    <button
+                        type="button"
+                        onClick={handleClearSearch}
+                        className={STYLES.clearButton}
+                        aria-label="Limpiar búsqueda"
+                    >
+                        <FiX className="w-5 h-5" />
+                    </button>
+                )}
+            </form>
 
             <div className={STYLES.contentWrapper}>
                 <ContentGrid movies={movies} series={series} searchTerm={''} />
