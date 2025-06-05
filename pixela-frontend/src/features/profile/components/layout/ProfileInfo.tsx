@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { FC } from 'react';
 import type { UserResponse } from '@/api/auth/types';
 import { FiUser, FiMail, FiCalendar, FiShield, FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
@@ -48,7 +47,7 @@ interface ProfileInfoProps {
  * @param {ProfileInfoProps} props - Props del componente
  * @returns {JSX.Element} Componente ProfileInfo
  */
-export const ProfileInfo: FC<ProfileInfoProps> = ({ user: initialUser, onEdit, refreshTrigger }) => {
+export const ProfileInfo = ({ user: initialUser, onEdit, refreshTrigger }: ProfileInfoProps) => {
   const [user, setUser] = useState<UserResponse>(initialUser);
 
   useEffect(() => {

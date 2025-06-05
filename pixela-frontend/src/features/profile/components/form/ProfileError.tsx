@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { ProfileErrorProps } from "@/features/profile/types/profileTypes";
 
@@ -23,9 +22,9 @@ const DEFAULT_ERROR_MESSAGE = "No se pudo cargar la información del usuario.";
  * @param {ProfileErrorProps} props - Props del componente
  * @returns {JSX.Element} Componente ProfileError
  */
-export const ProfileError: FC<ProfileErrorProps> = ({ 
+export const ProfileError = ({ 
   message = DEFAULT_ERROR_MESSAGE 
-}) => {
+}: ProfileErrorProps) => {
   const handleRetry = () => window.location.reload();
 
   return (

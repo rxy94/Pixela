@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useState } from 'react';
 import { FiX } from 'react-icons/fi';
 import clsx from 'clsx';
@@ -123,11 +122,11 @@ const INITIAL_FORM_STATE: UserForm = {
  * @param {UserCreateModalProps} props - Props del componente
  * @returns {JSX.Element | null} Componente UserCreateModal
  */
-export const UserCreateModal: FC<UserCreateModalProps> = ({ 
+export const UserCreateModal = ({ 
   isOpen, 
   onClose, 
   onUserCreated 
-}) => {
+}: UserCreateModalProps) => {
   const [form, setForm] = useState<UserForm>(INITIAL_FORM_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

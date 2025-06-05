@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { FiInfo } from 'react-icons/fi';
 import clsx from 'clsx';
 
@@ -42,13 +42,13 @@ interface ContentPanelProps {
  * @param {ContentPanelProps} props - Props del componente
  * @returns {JSX.Element} Componente ContentPanel
  */
-export const ContentPanel: FC<ContentPanelProps> = ({ 
+export const ContentPanel = ({ 
   title, 
   children, 
   isEmpty = false, 
   emptyMessage = "No hay elementos disponibles.",
   headerAction
-}) => {
+}: ContentPanelProps) => {
   return (
     <div className={STYLES.container}>
       <div className={STYLES.header}>

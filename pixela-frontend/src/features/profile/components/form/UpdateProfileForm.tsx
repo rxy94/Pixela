@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import Image from 'next/image';
 import { FiUser, FiMail, FiX, FiCamera } from 'react-icons/fi';
 import { IoKeyOutline } from 'react-icons/io5';
@@ -50,11 +49,11 @@ const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
  * @param {UpdateProfileFormProps} props - Props del componente
  * @returns {JSX.Element} Componente UpdateProfileForm
  */
-export const UpdateProfileForm: FC<UpdateProfileFormProps> = ({
+export const UpdateProfileForm = ({
   initialData,
   onCancel,
   onSubmit
-}) => {
+}: UpdateProfileFormProps) => {
   const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormData>({
     defaultValues: {
       name: initialData.name,
