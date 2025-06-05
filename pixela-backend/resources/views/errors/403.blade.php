@@ -36,8 +36,8 @@
         </div>
 
         <div class="actions">
-            <a href="{{ url('/login') }}" class="btn btn-primary">
-                🏠 {{ __('pixela.back_to_login') }}
+            <a href="{{ config('app.frontend_url') }}" class="btn btn-primary">
+                🏠 {{ __('pixela.back_to_home') }}
             </a>
             <a href="{{ url('/api/documentation') }}" class="btn btn-secondary">
                 📚 {{ __('pixela.view_api') }}

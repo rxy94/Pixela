@@ -36,26 +36,13 @@
         </div>
 
         <div class="actions">
-            <a href="{{ url('/login') }}" class="btn btn-primary">
-                🏠 {{ __('pixela.back_to_login') }}
+            <a href="{{ config('app.frontend_url') }}" class="btn btn-primary">
+                🏠 {{ __('pixela.back_to_home') }}
             </a>
             <a href="{{ url('/api/documentation') }}" class="btn btn-secondary">
                 📚 {{ __('pixela.view_api') }}
             </a>
         </div>
     </div>
-
-    <script>
-        // Añadir interactividad al código de error
-        document.querySelector('.error-code').addEventListener('click', function() {
-            this.style.animation = 'none';
-            setTimeout(() => {
-                this.style.animation = 'glow 2s ease-in-out infinite alternate';
-            }, 100);
-        });
-
-        console.log('🎬 Pixela 404 - Página no encontrada');
-        console.log('💡 Tip: Verifica la URL o navega usando los botones disponibles');
-    </script>
 </body>
 </html> 

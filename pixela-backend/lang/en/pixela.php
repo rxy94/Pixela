@@ -5,6 +5,7 @@ return [
     # Common
     'welcome' => 'Welcome to Pixela',
     'back_to_login' => 'Back to login',
+    'back_to_home' => 'Back to home',
     'email' => 'Email',
     'password' => 'Password',
     'view_api' => 'View API',
