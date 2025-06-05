@@ -156,6 +156,7 @@ export const CategoriesContainer = () => {
                                 error={error}
                                 searchQuery={searchQuery}
                                 onSearch={handleSearch}
+                                mediaType={selectedMediaType}
                             />
                         </div>
 
