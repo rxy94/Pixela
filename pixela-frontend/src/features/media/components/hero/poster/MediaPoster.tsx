@@ -5,6 +5,12 @@ import clsx from 'clsx';
 import { useState, memo } from 'react';
 
 const STYLES = {
+  container: 'w-64 flex-shrink-0',
+  posterWrapper: 'relative group cursor-pointer',
+  imageContainer: 'relative w-full aspect-[2/3]',
+  image: 'rounded-lg shadow-2xl shadow-black/50 transition duration-300 group-hover:scale-105',
+  hoverOverlay: 'absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center',
+  hoverText: 'text-white text-sm font-medium',
   placeholderContainer: 'absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex flex-col items-center justify-center p-4 text-center rounded-lg',
   placeholderEmoji: 'text-4xl mb-3 opacity-50',
   placeholderTitle: 'text-white text-sm font-medium leading-tight mb-2 line-clamp-3',
@@ -44,19 +50,19 @@ export const MediaPoster = ({ posterUrl, title, onClick, className, type = 'movi
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className={clsx("w-64 flex-shrink-0", className)}>
+    <div className={clsx(STYLES.container, className)}>
       <div 
-        className="relative group cursor-pointer"
+        className={STYLES.posterWrapper}
         onClick={onClick}
       >
-        <div className="relative w-full aspect-[2/3]">
+        <div className={STYLES.imageContainer}>
           {!posterUrl || posterUrl.trim() === '' || imageError ? (
             <PlaceholderPoster title={title} type={type} />
           ) : (
             <Image 
               src={posterUrl} 
               alt={title}
-              className="rounded-lg shadow-2xl shadow-black/50 transition duration-300 group-hover:scale-105"
+              className={STYLES.image}
               fill
               sizes="(max-width: 768px) 100vw, 256px"
               priority
@@ -65,8 +71,8 @@ export const MediaPoster = ({ posterUrl, title, onClick, className, type = 'movi
             />
           )}
         </div>
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-          <span className="text-white text-sm font-medium">Ampliar</span>
+        <div className={STYLES.hoverOverlay}>
+          <span className={STYLES.hoverText}>Ampliar</span>
         </div>
       </div>
     </div>
