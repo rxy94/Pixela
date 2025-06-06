@@ -16,34 +16,52 @@ interface HeroSectionProps {
   refreshReviews?: () => void;
 }
 
+const STYLES = {
+  container: "relative min-h-[80vh] w-full",
+  contentWrapper: "relative container mx-auto px-4",
+  mobile: {
+    layout: "lg:hidden pt-36 md:pt-44 pb-8",
+    innerContainer: "flex flex-col items-center gap-6",
+    posterWidth: "w-48",
+    content: "w-full",
+    synopsis: "text-gray-300 text-base leading-relaxed mt-4 mb-6"
+  },
+  desktop: {
+    layout: "hidden lg:flex h-[80vh] items-end pb-20",
+    innerContainer: "flex flex-row gap-8",
+    content: "flex-grow",
+    synopsis: "text-gray-300 text-lg max-w-3xl leading-relaxed mb-8"
+  }
+} as const;
+
 export function HeroSection({ media, onPosterClick, title, refreshReviews }: HeroSectionProps) {
   // Mapeo exacto de tipo
   const getItemType = (tipo: 'pelicula' | 'serie'): 'movie' | 'series' =>
     tipo === 'pelicula' ? 'movie' : 'series';
 
   return (
-    <div className="relative min-h-[80vh] w-full">
+    <div className={STYLES.container}>
       {/* Backdrop con degradado */}
       <BackdropImage backdropUrl={media.backdrop} />
       
       {/* Content */}
-      <div className="relative container mx-auto px-4">
+      <div className={STYLES.contentWrapper}>
         {/* Mobile Layout */}
-        <div className="lg:hidden pt-36 md:pt-44 pb-8">
-          <div className="flex flex-col items-center gap-6">
+        <div className={STYLES.mobile.layout}>
+          <div className={STYLES.mobile.innerContainer}>
             <MediaPoster 
               posterUrl={media.poster} 
               title={media.titulo} 
               onClick={onPosterClick}
-              className="w-48" 
+              className={STYLES.mobile.posterWidth} 
             />
-            <div className="w-full">
+            <div className={STYLES.mobile.content}>
               <MediaTitle title={media.titulo} score={media.puntuacion} />
               <GenresList genres={media.generos} />
               <MediaMetadata media={media} />
               <CreatorInfo media={media} />
               
-              <p className="text-gray-300 text-base leading-relaxed mt-4 mb-6">
+              <p className={STYLES.mobile.synopsis}>
                 {media.sinopsis}
               </p>
 
@@ -58,21 +76,21 @@ export function HeroSection({ media, onPosterClick, title, refreshReviews }: Her
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:flex h-[80vh] items-end pb-20">
-          <div className="flex flex-row gap-8">
+        <div className={STYLES.desktop.layout}>
+          <div className={STYLES.desktop.innerContainer}>
             <MediaPoster 
               posterUrl={media.poster} 
               title={media.titulo} 
               onClick={onPosterClick} 
             />
             
-            <div className="flex-grow">
+            <div className={STYLES.desktop.content}>
               <MediaTitle title={media.titulo} score={media.puntuacion} />
               <GenresList genres={media.generos} />
               <MediaMetadata media={media} />
               <CreatorInfo media={media} />
               
-              <p className="text-gray-300 text-lg max-w-3xl leading-relaxed mb-8">
+              <p className={STYLES.desktop.synopsis}>
                 {media.sinopsis}
               </p>
 
