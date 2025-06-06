@@ -15,7 +15,7 @@ export const MediaTitle = ({ title, score }: MediaTitleProps) => (
         <span className="text-[#FF2D55] text-xl font-bold">{score.toFixed(1)}</span>
         <span className="text-[#FF2D55] ml-1">★</span>
       </div>
-      {score >= 8.5 && (
+      {score >= 8.0 && (
         <div className="relative group">
           <div className="absolute inset-0 bg-[#FF2D55] rounded-full blur-sm opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
           <div className="relative bg-[#FF2D55]/10 backdrop-blur-sm px-3 py-1 rounded-full border border-[#FF2D55]/20">

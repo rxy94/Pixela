@@ -16,7 +16,7 @@ const STYLES = {
   noiseEffect: 'noise-effect opacity-5'
 } as const;
 
-const HIGH_RATING_THRESHOLD = 7.5;
+const HIGH_RATING_THRESHOLD = 8.0;
 const INITIALLY_VISIBLE_ITEMS = 3;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 

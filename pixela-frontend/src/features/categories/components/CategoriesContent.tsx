@@ -23,7 +23,7 @@ interface CategoriesContentProps {
 }
 
 const INITIAL_VISIBLE_ITEMS = 6;
-const HIGH_RATING_THRESHOLD = 7.5;
+const HIGH_RATING_THRESHOLD = 8.0;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BATCH_SIZE = 12;
 
