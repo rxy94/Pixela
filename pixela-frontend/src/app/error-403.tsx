@@ -31,7 +31,7 @@ const STYLES = {
   }
 } as const;
 
-export default function NotFound() {
+export default function Error403() {
   const router = useRouter();
 
   const handleGoBack = () => {
@@ -40,6 +40,10 @@ export default function NotFound() {
     } else {
       router.push('/');
     }
+  };
+
+  const handleLogin = () => {
+    window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + '/login';
   };
 
   return (
@@ -71,33 +75,34 @@ export default function NotFound() {
         <div className={STYLES.background.gradient}></div>
         
         <div className={STYLES.content.wrapper}>
-          {/* Código de error 404 */}
+          {/* Código de error 403 */}
           <h1 className={STYLES.content.errorCode}>
-            404
+            403
           </h1>
           
           {/* Título */}
           <h2 className={STYLES.content.title}>
-            ¡Página No Encontrada!
+            ¡Acceso Denegado!
           </h2>
           
           {/* Descripción */}
           <p className={STYLES.content.description}>
-            Parece que la página que buscas se perdió en el multiverso cinematográfico.
-            Tal vez fue cancelada como una secuela que nadie pidió.
+            Parece que intentas acceder a una zona restringida del multiverso cinematográfico.
+            Necesitas las credenciales correctas para continuar tu viaje.
           </p>
           
           {/* Cita cinematográfica */}
           <blockquote className={STYLES.content.quote.container}>
             <p className={STYLES.content.quote.text}>
-              "This place is like somebody's memory of a town, and the memory is fading"
+              "You need to show me your hands. You need to show me your hands right now"
             </p>
             <cite className={STYLES.content.quote.attribution}>
-              - True Detective, página perdida en el tiempo
+              - True Detective, acceso restringido
             </cite>
           </blockquote>
+          
         </div>
       </div>
     </>
   );
-}
+} 
