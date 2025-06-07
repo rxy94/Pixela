@@ -7,12 +7,17 @@ interface PosterImageProps {
   alt: string;
 }
 
+const STYLES = {
+  container: "transform-gpu overflow-hidden rounded-lg shadow-2xl shadow-black/50 group",
+  image: "transition duration-300 group-hover:scale-105 origin-center"
+} as const;
+
 export const PosterImage = ({ src, alt }: PosterImageProps) => (
-  <div className="transform-gpu overflow-hidden rounded-lg shadow-2xl shadow-black/50 group">
+  <div className={STYLES.container}>
     <Image 
       src={src} 
       alt={alt}
-      className="transition duration-300 group-hover:scale-105 origin-center"
+      className={STYLES.image}
       width={800}
       height={1200}
       priority

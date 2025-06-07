@@ -6,12 +6,16 @@ interface ModalBackdropProps {
   children: React.ReactNode;
 }
 
+const STYLES = {
+  backdrop: "fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+} as const;
+
 export const ModalBackdrop = ({ isOpen, onClose, children }: ModalBackdropProps) => {
   if (!isOpen) return null;
   
   return (
     <div 
-      className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+      className={STYLES.backdrop}
       onClick={onClose}
     >
       {children}

@@ -12,6 +12,26 @@ interface GallerySectionProps {
   media: Media;
 }
 
+const STYLES = {
+  container: "mt-12 mb-24",
+  title: "text-2xl font-bold text-white mb-5",
+  loadingContainer: "mt-12 mb-12",
+  loadingSpinner: "flex justify-center py-10",
+  loadingPulse: "animate-pulse flex space-x-4",
+  loadingPlaceholder: "h-48 w-full bg-gray-700 rounded-lg",
+  errorMessage: "mb-4 p-3 bg-red-900/50 text-red-200 rounded-lg",
+  gridContainer: "mt-6",
+  buttonContainer: "flex justify-start mt-4",
+  button: "px-5 py-2 rounded-lg font-semibold bg-pixela-accent hover:bg-pixela-accent-dark text-white shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-pixela-accent-dark focus:ring-offset-2",
+  modal: {
+    overlay: "fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4",
+    container: "relative max-w-4xl max-h-[70vh]",
+    image: "max-h-[70vh] max-w-full object-contain",
+    closeButton: "absolute -top-10 right-0 text-white hover:text-pixela-accent",
+    closeIcon: "w-6 h-6"
+  }
+} as const;
+
 export function GallerySection({ media }: GallerySectionProps) {
   const [images, setImages] = useState<{ backdrops: Wallpaper[], posters: Wallpaper[] }>({
     backdrops: [],
@@ -84,11 +104,11 @@ export function GallerySection({ media }: GallerySectionProps) {
   
   if (isLoading) {
     return (
-      <div className="mt-12 mb-12">
-        <h2 className="text-2xl font-bold text-white mb-5">Galería</h2>
-        <div className="flex justify-center py-10">
-          <div className="animate-pulse flex space-x-4">
-            <div className="h-48 w-full bg-gray-700 rounded-lg"></div>
+      <div className={STYLES.loadingContainer}>
+        <h2 className={STYLES.title}>Galería</h2>
+        <div className={STYLES.loadingSpinner}>
+          <div className={STYLES.loadingPulse}>
+            <div className={STYLES.loadingPlaceholder}></div>
           </div>
         </div>
       </div>
@@ -100,11 +120,11 @@ export function GallerySection({ media }: GallerySectionProps) {
   }
 
   return (
-    <div className="mt-12 mb-24">
-      <h2 className="text-2xl font-bold text-white mb-5">Galería</h2>
+    <div className={STYLES.container}>
+      <h2 className={STYLES.title}>Galería</h2>
       
       {error && (
-        <div className="mb-4 p-3 bg-red-900/50 text-red-200 rounded-lg">
+        <div className={STYLES.errorMessage}>
           {error}
         </div>
       )}
@@ -119,7 +139,7 @@ export function GallerySection({ media }: GallerySectionProps) {
         postersCount={images.posters.length}
       />
       
-      <div className="mt-6">
+      <div className={STYLES.gridContainer}>
         <GalleryGrid
           images={activeGalleryTab === 'backdrops' ? images.backdrops : images.posters}
           type={activeGalleryTab}
@@ -127,9 +147,9 @@ export function GallerySection({ media }: GallerySectionProps) {
           showAll={showAll}
         />
         {(images[activeGalleryTab].length > 4) && (
-          <div className="flex justify-start mt-4">
+          <div className={STYLES.buttonContainer}>
             <button
-              className="px-5 py-2 rounded-lg font-semibold bg-pixela-accent hover:bg-pixela-accent-dark text-white shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-pixela-accent-dark focus:ring-offset-2"
+              className={STYLES.button}
               onClick={() => setShowAll(v => !v)}
             >
               {showAll ? 'Mostrar menos' : `Mostrar todos los ${activeGalleryTab === 'backdrops' ? 'fondos' : 'pósters'}`}
@@ -140,21 +160,21 @@ export function GallerySection({ media }: GallerySectionProps) {
       
       {selectedGalleryImage && (
         <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          className={STYLES.modal.overlay}
           onClick={() => setSelectedGalleryImage(null)}
         >
-          <div className="relative max-w-7xl max-h-[90vh]" onClick={e => e.stopPropagation()}>
+          <div className={STYLES.modal.container} onClick={e => e.stopPropagation()}>
             <img 
               src={selectedGalleryImage} 
               alt="Preview"
-              className="max-h-[90vh] max-w-full object-contain" 
+              className={STYLES.modal.image} 
             />
             <button
-              className="absolute -top-10 right-0 text-white hover:text-pixela-accent"
+              className={STYLES.modal.closeButton}
               onClick={() => setSelectedGalleryImage(null)}
             >
               <svg
-                className="w-6 h-6"
+                className={STYLES.modal.closeIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

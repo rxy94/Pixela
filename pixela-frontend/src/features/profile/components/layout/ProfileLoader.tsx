@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import clsx from 'clsx';
 
 /**
@@ -26,7 +25,7 @@ const STYLES = {
  * Componente que muestra un estado de carga para el perfil
  * @returns {JSX.Element} Componente ProfileLoader
  */
-export const ProfileLoader: FC = () => {
+export const ProfileLoader = () => {
   return (
     <div className={STYLES.container}>
       <div className={STYLES.spinner} />

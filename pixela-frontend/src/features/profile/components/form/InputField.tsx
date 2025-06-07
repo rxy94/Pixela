@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import type { FC } from 'react';
 import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
 import clsx from 'clsx';
 
@@ -43,7 +42,7 @@ interface InputFieldProps {
  * @param {InputFieldProps} props - Props del componente
  * @returns {JSX.Element} Componente InputField
  */
-export const InputField: FC<InputFieldProps> = ({
+export const InputField = ({
   type,
   name,
   placeholder,
@@ -52,7 +51,7 @@ export const InputField: FC<InputFieldProps> = ({
   error,
   helperText,
   labelText = placeholder,
-}) => {
+}: InputFieldProps) => {
   return (
     <div className={STYLES.container}>
       <label htmlFor={name} className={STYLES.label}>

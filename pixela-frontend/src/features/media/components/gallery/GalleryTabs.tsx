@@ -9,6 +9,13 @@ interface GalleryTabsProps {
   postersCount: number;
 }
 
+const STYLES = {
+  container: "flex border-b border-gray-700",
+  tabBase: "py-3 px-6 text-sm font-medium rounded-t-lg focus:outline-none transition-colors",
+  tabActive: "bg-pixela-accent text-gray-900",
+  tabInactive: "text-gray-400 hover:text-white"
+} as const;
+
 export function GalleryTabs({ 
   activeTab, 
   onTabChange, 
@@ -16,13 +23,13 @@ export function GalleryTabs({
   postersCount 
 }: GalleryTabsProps) {
   return (
-    <div className="flex border-b border-gray-700">
+    <div className={STYLES.container}>
       <button
         className={clsx(
-          "py-3 px-6 text-sm font-medium rounded-t-lg focus:outline-none transition-colors",
+          STYLES.tabBase,
           {
-            "bg-pixela-accent text-gray-900": activeTab === 'backdrops',
-            "text-gray-400 hover:text-white": activeTab !== 'backdrops'
+            [STYLES.tabActive]: activeTab === 'backdrops',
+            [STYLES.tabInactive]: activeTab !== 'backdrops'
           }
         )}
         onClick={() => onTabChange('backdrops')}
@@ -32,10 +39,10 @@ export function GalleryTabs({
       
       <button
         className={clsx(
-          "py-3 px-6 text-sm font-medium rounded-t-lg focus:outline-none transition-colors",
+          STYLES.tabBase,
           {
-            "bg-pixela-accent text-gray-900": activeTab === 'posters',
-            "text-gray-400 hover:text-white": activeTab !== 'posters'
+            [STYLES.tabActive]: activeTab === 'posters',
+            [STYLES.tabInactive]: activeTab !== 'posters'
           }
         )}
         onClick={() => onTabChange('posters')}

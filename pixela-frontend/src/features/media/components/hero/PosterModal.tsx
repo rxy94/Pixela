@@ -11,6 +11,11 @@ interface PosterModalProps {
   title: string;
 }
 
+const STYLES = {
+  modalContainer: "relative w-[80vw] h-[80vh] flex items-center justify-center",
+  imageWrapper: "w-full h-full flex items-center justify-center cursor-default"
+} as const;
+
 export function PosterModal({ isOpen, onClose, posterUrl, title }: PosterModalProps) {
   if (!isOpen) return null;
   
@@ -23,9 +28,9 @@ export function PosterModal({ isOpen, onClose, posterUrl, title }: PosterModalPr
   
   return (
     <ModalBackdrop isOpen={isOpen} onClose={handleBackdropClick}>
-      <div className="relative w-[80vw] h-[80vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div className={STYLES.modalContainer} onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} />
-        <div className="w-full h-full flex items-center justify-center cursor-default">
+        <div className={STYLES.imageWrapper}>
           <PosterImage src={posterUrl} alt={title} />
         </div>
       </div>

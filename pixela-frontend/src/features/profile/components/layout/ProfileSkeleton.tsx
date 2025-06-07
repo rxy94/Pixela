@@ -1,6 +1,5 @@
 'use client';
 
-import type { FC } from 'react';
 import clsx from 'clsx';
 
 /**
@@ -35,7 +34,7 @@ const STYLES = {
  * Componente que muestra un esqueleto de carga para el perfil
  * @returns {JSX.Element} Componente ProfileSkeleton
  */
-export const ProfileSkeleton: FC = () => {
+export const ProfileSkeleton = () => {
   return (
     <main className={STYLES.main}>
       <div className={STYLES.container}>

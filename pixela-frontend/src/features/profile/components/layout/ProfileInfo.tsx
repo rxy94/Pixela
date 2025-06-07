@@ -1,6 +1,6 @@
 'use client';
 
-import type { FC } from 'react';
+import { useState, useEffect } from 'react';
 import type { UserResponse } from '@/api/auth/types';
 import { FiUser, FiMail, FiCalendar, FiShield, FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
@@ -38,6 +38,8 @@ interface ProfileInfoProps {
   user: UserResponse;
   /** Función a ejecutar al hacer clic en editar */
   onEdit: () => void;
+  /** Trigger para refrescar datos */
+  refreshTrigger?: number;
 }
 
 /**
@@ -45,7 +47,13 @@ interface ProfileInfoProps {
  * @param {ProfileInfoProps} props - Props del componente
  * @returns {JSX.Element} Componente ProfileInfo
  */
-export const ProfileInfo: FC<ProfileInfoProps> = ({ user, onEdit }) => {
+export const ProfileInfo = ({ user: initialUser, onEdit, refreshTrigger }: ProfileInfoProps) => {
+  const [user, setUser] = useState<UserResponse>(initialUser);
+
+  useEffect(() => {
+    setUser(initialUser);
+  }, [initialUser, refreshTrigger]);
+
   /**
    * Formatea una fecha en formato localizado
    * @param {string} [date] - Fecha a formatear

@@ -7,6 +7,12 @@ interface CreatorInfoProps {
   media: Media;
 }
 
+const STYLES = {
+  container: "mb-4",
+  title: "text-gray-300 text-sm font-medium mb-2",
+  creatorsWrapper: "flex flex-wrap gap-4"
+} as const;
+
 export const CreatorInfo = ({ media }: CreatorInfoProps) => {
   const isSerie = media.tipo === 'serie';
   const serie = media as Serie;
@@ -17,14 +23,14 @@ export const CreatorInfo = ({ media }: CreatorInfoProps) => {
   }
   
   return (
-    <div className="mb-4">
-      <h3 className="text-gray-300 text-sm font-medium mb-2">
+    <div className={STYLES.container}>
+      <h3 className={STYLES.title}>
         {isSerie 
           ? ((serie.creadores?.length ?? 0) > 1 ? 'Creadores' : 'Creador')
           : 'Director'
         }
       </h3>
-      <div className="flex flex-wrap gap-4">
+      <div className={STYLES.creatorsWrapper}>
         {isSerie ? (
           (serie.creadores ?? []).map((creador) => (
             <CreatorAvatar 

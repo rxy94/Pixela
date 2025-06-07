@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
 import { reviewsAPI } from '@/api/reviews/reviews';
 import type { Review } from '@/api/reviews/types';
 import { FiLoader, FiAlertCircle, FiStar, FiEdit, FiCheck, FiX } from 'react-icons/fi';
@@ -93,7 +92,7 @@ interface StarEditProps {
  * @param {StarEditProps} props - Props del componente
  * @returns {JSX.Element} Componente StarEdit
  */
-const StarEdit: FC<StarEditProps> = ({ value, onChange, disabled }) => (
+const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
   <div className="flex items-center gap-1">
     {[1, 2, 3, 4, 5].map((star) => {
       const starValue = star * 2;
@@ -137,7 +136,7 @@ const StarEdit: FC<StarEditProps> = ({ value, onChange, disabled }) => (
  * Componente que muestra la lista de reseñas del usuario
  * @returns {JSX.Element} Componente ProfileReviews
  */
-export const ProfileReviews: FC = () => {
+export const ProfileReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
