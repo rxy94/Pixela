@@ -9,10 +9,15 @@ import { TrendingHeader } from '../ui/TrendingHeader';
  * Props para el componente TrendingSection
  * @property {TrendingSerie[]} series - Lista de series en tendencia
  * @property {TrendingMovie[]} movies - Lista de películas en tendencia
+ * @property {Object} quote - Cita relacionada con la sección de tendencias
  */
 interface TrendingSectionProps {
   series: TrendingSerie[];
   movies: TrendingMovie[];
+  quote: {
+    quote: string;
+    author: string;
+  };
 }
 
 /**
@@ -58,7 +63,7 @@ const useTrendingInitialization = (series: TrendingSerie[], movies: TrendingMovi
  * Componente que maneja la sección de tendencias
  * Inicializa el store con los datos proporcionados y renderiza el header
  */
-export const TrendingSection = ({ series, movies }: TrendingSectionProps) => {
+export const TrendingSection = ({ series, movies, quote }: TrendingSectionProps) => {
   useTrendingInitialization(series, movies);
-  return <TrendingHeader />;
+  return <TrendingHeader quote={quote} />;
 }; 
