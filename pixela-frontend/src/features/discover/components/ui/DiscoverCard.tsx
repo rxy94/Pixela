@@ -34,7 +34,7 @@ const STYLES = {
   noiseEffect: "noise-effect opacity-5"
 } as const;
 
-const HIGH_RATING_THRESHOLD = 7.5;
+const HIGH_RATING_THRESHOLD = 8.0;
 
 /**
  * Type guard para determinar si el contenido es una serie

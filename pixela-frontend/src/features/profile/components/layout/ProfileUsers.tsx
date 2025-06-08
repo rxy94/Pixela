@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
-import { usersAPI } from '@/api/users/users';
 import type { User } from '@/api/users/types';
+import { usersAPI } from '@/api/users/users';
 import { FiLoader, FiAlertCircle, FiEdit, FiCheck, FiX } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
 import { UserAvatar } from '@/features/profile/components/avatar/UserAvatar';
@@ -75,6 +74,8 @@ const STYLES = {
 interface ProfileUsersProps {
   /** Indica si se debe refrescar la lista de usuarios */
   refresh: boolean;
+  /** Callback cuando se actualiza un usuario */
+  onUserUpdated?: (updatedUser: User) => void;
 }
 
 /**
@@ -82,7 +83,7 @@ interface ProfileUsersProps {
  * @param {ProfileUsersProps} props - Props del componente
  * @returns {JSX.Element} Componente ProfileUsers
  */
-export const ProfileUsers: FC<ProfileUsersProps> = ({ refresh }) => {
+export const ProfileUsers = ({ refresh, onUserUpdated }: ProfileUsersProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -148,6 +149,10 @@ export const ProfileUsers: FC<ProfileUsersProps> = ({ refresh }) => {
       await usersAPI.update(userToUpdate);
       const refreshedUsers = await usersAPI.list();
       setUsers(Array.isArray(refreshedUsers) ? refreshedUsers : []);
+      
+      // Notificar al componente padre sobre la actualización
+      onUserUpdated?.(editingUser);
+      
       setEditingId(null);
       setEditingUser(null);
     } catch {

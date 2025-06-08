@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import type { FC } from 'react';
 import clsx from 'clsx';
 
 /**
@@ -39,7 +38,7 @@ interface FormInputProps {
  * @param {FormInputProps} props - Props del componente
  * @returns {JSX.Element} Componente FormInput
  */
-export const FormInput: FC<FormInputProps> = ({
+export const FormInput = ({
   type,
   name,
   value,
@@ -48,7 +47,7 @@ export const FormInput: FC<FormInputProps> = ({
   required = false,
   icon,
   helperText,
-}) => {
+}: FormInputProps) => {
   return (
     <div>
       <div className={STYLES.container}>

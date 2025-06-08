@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import type { FC } from 'react';
 import { favoritesAPI } from '@/api/favorites/favorites';
 import type { FavoriteWithDetails } from '@/api/favorites/types';
 import { FiLoader, FiAlertCircle } from 'react-icons/fi';
@@ -63,7 +62,7 @@ const STYLES = {
  * Componente que muestra la lista de favoritos del usuario
  * @returns {JSX.Element} Componente ProfileFavorites
  */
-export const ProfileFavorites: FC = () => {
+export const ProfileFavorites = () => {
   const [favorites, setFavorites] = useState<FavoriteWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
