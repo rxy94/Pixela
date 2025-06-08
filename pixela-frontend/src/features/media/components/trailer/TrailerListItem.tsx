@@ -42,7 +42,8 @@ const TrailerListItem = ({
         <Image
           src={`https://img.youtube.com/vi/${trailer.key}/default.jpg`}
           alt={trailer.nombre || 'Video thumbnail'}
-          className={`w-full h-full object-cover transition-all duration-300 ${
+          fill
+          className={`object-cover transition-all duration-300 ${
             isSelected ? 'brightness-110 contrast-110' : 'brightness-90'
           }`}
         />
