@@ -38,7 +38,7 @@ export const useCategoriesStore = create<CategoriesState>((set, get) => ({
     categories: [],
     loading: false,
     error: null,
-    selectedMediaType: 'movies' as MediaType,
+    selectedMediaType: 'all' as MediaType,
     selectedCategory: null,
 
     fetchCategories: async (mediaType?: MediaType) => {

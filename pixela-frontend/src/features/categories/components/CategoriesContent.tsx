@@ -59,7 +59,7 @@ const STYLES = {
     placeholderOverlay: 'absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none',
     randomContainer: 'container px-4 mx-auto',
     randomGrid: 'grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[70vh]',
-    textContainer: 'max-w-2xl space-y-8 ml-4',
+    textContainer: 'max-w-2xl space-y-8 ml-8 lg:ml-12',
     textContent: 'space-y-6',
     mainTitle: 'text-4xl font-black leading-tight md:text-5xl lg:text-6xl text-pixela-light',
     accentText: 'text-pixela-accent',
