@@ -2,15 +2,15 @@
 import { FiSettings, FiUsers } from 'react-icons/fi';
 import { TabNavigationButton } from './TabNavigationButton';
 import { FaRegBookmark, FaRegComments } from 'react-icons/fa';
+import { ProfileTabsProps } from '@/features/profile/types/tabs';
 
-type TabType = 'profile' | 'reviews' | 'favorites' | 'users';
 
-interface ProfileTabsProps {
-  activeTab: TabType;
-  onTabChange: (tab: TabType) => void;
-  isAdmin: boolean;
-}
 
+/**
+ * Componente de pestañas de perfil
+ * @param {ProfileTabsProps} props - Props del componente
+ * @returns {JSX.Element} Componente ProfileTabs
+ */
 export const ProfileTabs = ({ activeTab, onTabChange, isAdmin }: ProfileTabsProps) => {
   return (
     <div className="profile-tabs">

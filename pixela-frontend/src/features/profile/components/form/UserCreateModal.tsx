@@ -3,60 +3,55 @@ import { FiX } from 'react-icons/fi';
 import clsx from 'clsx';
 import { usersAPI } from '@/api/users/users';
 import type { User } from '@/api/users/types';
+import { CreateUserData, ApiError, UserCreateModalProps, UserForm } from '@/features/profile/types/form';
 
 /**
- * Interfaz para los datos de creación de usuario
+ * Valores iniciales del formulario
+ * @type {UserForm} 
+ * @property {string} name - Nombre del usuario
+ * @property {string} email - Email del usuario
+ * @property {string} password - Contraseña del usuario
+ * @property {string} password_confirmation - Confirmación de la contraseña
+ * @property {string} is_admin - Rol del usuario
  */
-interface CreateUserData {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-  is_admin: boolean;
-  photo_url: string;
-}
-
-/**
- * Interfaz para el error de la API
- */
-interface ApiError {
-  response?: {
-    data?: {
-      errors?: {
-        email?: string[];
-      };
-    };
-  };
-  data?: {
-    errors?: {
-      email?: string[];
-    };
-  };
-  message?: string;
-}
+const INITIAL_FORM_STATE: UserForm = {
+  name: '',
+  email: '',
+  password: '',
+  password_confirmation: '',
+  is_admin: 'false',
+};
 
 /**
  * Estilos constantes para el componente UserCreateModal
  */
 const STYLES = {
+  // Layout y contenedor principal
   overlay: 'fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-start justify-center',
   container: 'bg-gradient-to-b from-[#1A1A1A] to-[#141414] w-full h-30 border border-white/5 shadow-2xl overflow-y-auto',
+  
+  // Header del modal
   header: 'flex items-center justify-between p-6 border-b border-white/5 sticky top-0 bg-[#1A1A1A] z-10',
   title: 'text-2xl font-bold text-white mb-1',
   subtitle: 'text-sm text-gray-400',
   closeButton: 'text-gray-400 hover:text-white transition-colors',
   closeIcon: 'w-6 h-6 hover:text-pixela-accent',
+  
+  // Layout del formulario
   form: 'p-8',
   formContainer: 'max-w-4xl mx-auto space-y-6',
   grid: 'grid grid-cols-2 gap-6',
   fieldGroup: 'space-y-2',
   label: 'block text-sm font-medium text-gray-300',
+  
+  // Inputs y controles
   input: clsx(
     'w-full bg-[#252525]/50 border border-white/5 rounded-xl p-3',
     'text-white placeholder-gray-500',
     'focus:outline-none focus:border-pixela-accent/50 focus:ring-1 focus:ring-pixela-accent/30',
     'transition-all duration-200'
   ),
+  
   select: clsx(
     'w-full bg-[#252525]/50 border border-white/5 rounded-xl p-3 text-white',
     'focus:outline-none focus:border-pixela-accent/50 focus:ring-1 focus:ring-pixela-accent/30',
@@ -67,7 +62,11 @@ const STYLES = {
     '[&>option]:bg-[#1A1A1A] [&>option]:text-white [&>option]:p-4',
     '[&>option]:hover:bg-[#252525] [&>option]:focus:bg-[#252525] [&>option]:active:bg-[#252525]'
   ),
+  
+  // Feedback y mensajes
   error: 'p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm flex items-center',
+  
+  // Acciones y botones
   actions: 'flex justify-end gap-3 pt-6',
   submitButton: clsx(
     'px-6 py-2.5 bg-pixela-accent hover:bg-pixela-accent/90',
@@ -80,42 +79,6 @@ const STYLES = {
     'text-white rounded-xl font-medium transition-all duration-200'
   )
 } as const;
-
-/**
- * Props para el componente UserCreateModal
- * @interface UserCreateModalProps
- */
-interface UserCreateModalProps {
-  /** Indica si el modal está abierto */
-  isOpen: boolean;
-  /** Función para cerrar el modal */
-  onClose: () => void;
-  /** Función a ejecutar cuando se crea un usuario */
-  onUserCreated: () => void;
-}
-
-/**
- * Datos del formulario de usuario
- * @interface UserForm
- */
-interface UserForm {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-  is_admin: string;
-}
-
-/**
- * Valores iniciales del formulario
- */
-const INITIAL_FORM_STATE: UserForm = {
-  name: '',
-  email: '',
-  password: '',
-  password_confirmation: '',
-  is_admin: 'false',
-};
 
 /**
  * Componente modal para crear un nuevo usuario

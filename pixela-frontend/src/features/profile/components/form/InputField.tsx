@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
-import { FieldError, UseFormRegisterReturn } from 'react-hook-form';
+
 import clsx from 'clsx';
+import { InputFieldProps } from '@/features/profile/types/form';
 
 /**
  * Estilos constantes para el componente InputField
@@ -22,20 +22,6 @@ const STYLES = {
   )
 } as const;
 
-/**
- * Props para el componente InputField
- * @interface InputFieldProps
- */
-interface InputFieldProps {
-  type: string;
-  name: string;
-  placeholder: string;
-  register: UseFormRegisterReturn;
-  icon: ReactNode;
-  error?: FieldError;
-  helperText?: string;
-  labelText?: string;
-}
 
 /**
  * Componente de campo de entrada con integración de react-hook-form

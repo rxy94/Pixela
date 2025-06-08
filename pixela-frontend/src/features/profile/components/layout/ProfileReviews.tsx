@@ -6,6 +6,7 @@ import { FaTrash } from 'react-icons/fa';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { StarEditProps } from '@/features/profile/types/layout';
 
 /**
  * URL base para las imágenes de TMDB
@@ -74,18 +75,7 @@ const STYLES = {
   saveIcon: 'w-5 h-5 text-green-500 hover:text-green-400 transition-colors duration-200'
 } as const;
 
-/**
- * Props para el componente StarEdit
- * @interface StarEditProps
- */
-interface StarEditProps {
-  /** Valor actual de la puntuación */
-  value: number;
-  /** Función para actualizar la puntuación */
-  onChange: (v: number) => void;
-  /** Indica si el componente está deshabilitado */
-  disabled?: boolean;
-}
+
 
 /**
  * Componente para mostrar y editar medias estrellas
@@ -99,11 +89,11 @@ const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
       const isFull = value >= starValue;
       const isHalf = value === starValue - 1;
       return (
-        <span key={star} className="relative group w-6 h-6">
+        <span key={star} className="relative w-6 h-6 group">
           <button
             type="button"
             aria-label={`Puntuar con ${star - 0.5} estrellas`}
-            className="absolute left-0 top-0 w-1/2 h-full z-10"
+            className="absolute top-0 left-0 z-10 w-1/2 h-full"
             style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
             onClick={() => !disabled && onChange(star * 2 - 1)}
             disabled={disabled}
@@ -111,7 +101,7 @@ const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
           <button
             type="button"
             aria-label={`Puntuar con ${star} estrellas`}
-            className="absolute right-0 top-0 w-1/2 h-full z-10"
+            className="absolute top-0 right-0 z-10 w-1/2 h-full"
             style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
             onClick={() => !disabled && onChange(star * 2)}
             disabled={disabled}
@@ -120,7 +110,7 @@ const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
             <FiStar className={`w-6 h-6 absolute top-0 left-0 ${isFull ? 'text-yellow-400' : 'text-gray-400'}`} />
             {isHalf && (
               <FiStar
-                className="w-6 h-6 absolute top-0 left-0 text-yellow-400"
+                className="absolute top-0 left-0 w-6 h-6 text-yellow-400"
                 style={{ clipPath: 'inset(0 50% 0 0)' }}
               />
             )}
@@ -128,7 +118,7 @@ const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
         </span>
       );
     })}
-    <span className="ml-2 text-yellow-400 text-xs">{value % 1 === 0 ? value : value.toFixed(1)}/10</span>
+    <span className="ml-2 text-xs text-yellow-400">{value % 1 === 0 ? value : value.toFixed(1)}/10</span>
   </div>
 );
 

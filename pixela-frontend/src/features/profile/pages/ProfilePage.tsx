@@ -21,6 +21,8 @@ import {
 import { FiLoader } from 'react-icons/fi';
 import { UserCreateModal } from '../components/form/UserCreateModal';
 import { clsx } from 'clsx';
+import { TabType } from '@/features/profile/types/tabs';
+import { ProfileClientProps } from '@/features/profile/types/profileTypes';
 
 import '@/shared/styles/profile/main.scss';
 
@@ -42,12 +44,14 @@ const STYLES = {
   loadingText: 'text-lg font-semibold'
 } as const;
 
-type TabType = 'profile' | 'reviews' | 'favorites' | 'users';
 
-interface ProfileClientProps {
-  user: UserResponse;
-}
 
+
+/**
+ * Componente de perfil del cliente
+ * @param {ProfileClientProps} props - Props del componente
+ * @returns {JSX.Element} Componente ProfileClient
+ */
 const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [isEditing, setIsEditing] = useState(false);
@@ -221,6 +225,10 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   );
 };
 
+/**
+ * Función para obtener los datos del usuario
+ * @returns {Promise<UserResponse>} Datos del usuario
+ */
 async function getUserData(): Promise<UserResponse> {
   try {
     const userData = await authAPI.getUser();
@@ -242,6 +250,10 @@ async function getUserData(): Promise<UserResponse> {
   }
 }
 
+/**
+ * Página de perfil del cliente
+ * @returns {JSX.Element} Componente ProfilePage
+ */
 export default function ProfilePage() {
   const [user, setUser] = useState<UserResponse | null>(null);
   const [loading, setLoading] = useState(true);

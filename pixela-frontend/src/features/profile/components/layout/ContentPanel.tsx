@@ -1,10 +1,7 @@
-import type { ReactNode } from 'react';
 import { FiInfo } from 'react-icons/fi';
 import clsx from 'clsx';
+import { ContentPanelProps } from '@/features/profile/types/layout';
 
-/**
- * Estilos constantes para el componente ContentPanel
- */
 const STYLES = {
   container: 'content-panel',
   header: clsx(
@@ -20,22 +17,7 @@ const STYLES = {
   content: 'content-panel__content'
 } as const;
 
-/**
- * Props para el componente ContentPanel
- * @interface ContentPanelProps
- */
-interface ContentPanelProps {
-  /** Título del panel */
-  title: string;
-  /** Contenido del panel */
-  children?: ReactNode;
-  /** Indica si el panel está vacío */
-  isEmpty?: boolean;
-  /** Mensaje a mostrar cuando el panel está vacío */
-  emptyMessage?: string;
-  /** Acción opcional en el encabezado */
-  headerAction?: ReactNode;
-}
+
 
 /**
  * Componente panel de contenido con soporte para estado vacío

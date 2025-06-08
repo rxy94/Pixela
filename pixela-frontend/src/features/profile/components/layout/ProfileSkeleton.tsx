@@ -2,24 +2,32 @@
 
 import clsx from 'clsx';
 
-/**
- * Estilos constantes para el componente ProfileSkeleton
- */
 const STYLES = {
+  // Layout principal
   main: 'pt-28 px-6 min-h-screen bg-gradient-to-b from-pixela-dark to-black',
   container: 'max-w-6xl mx-auto',
   title: 'h-10 w-48 bg-pixela-dark-opacity rounded-lg animate-pulse mb-8',
+  
+  // Navegación por tabs
   tabsContainer: 'flex flex-wrap gap-2 mb-8',
   tab: 'h-10 w-32 bg-pixela-dark-opacity rounded-full animate-pulse',
+  
+  // Contenedor principal
   contentContainer: clsx(
     'bg-pixela-dark-opacity backdrop-blur-lg',
     'rounded-3xl p-8 shadow-lg'
   ),
+  
+  // Header de sección
   header: 'flex justify-between items-center mb-6',
   headerTitle: 'h-8 w-48 bg-pixela-dark rounded-lg animate-pulse',
   headerButton: 'h-10 w-24 bg-pixela-dark rounded-full animate-pulse',
+  
+  // Perfil y avatar
   profileContainer: 'flex flex-col md:flex-row items-start gap-8',
   avatar: 'w-32 h-32 rounded-full bg-pixela-dark animate-pulse',
+  
+  // Información del perfil
   infoContainer: 'flex-1 space-y-6 py-2',
   infoTitle: 'h-10 w-1/3 bg-pixela-dark rounded-lg animate-pulse',
   infoList: 'space-y-4',

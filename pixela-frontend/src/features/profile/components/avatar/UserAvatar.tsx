@@ -2,22 +2,7 @@
 
 import Image from 'next/image';
 import clsx from 'clsx';
-
-/**
- * Tamaños disponibles para el avatar
- */
-type AvatarSize = 'sm' | 'md' | 'lg';
-
-/**
- * Props del componente UserAvatar
- */
-interface UserAvatarProps {
-
-  profileImage?: string;
-  name: string;
-  size?: AvatarSize;
-  className?: string;
-}
+import { UserAvatarProps, AvatarSize } from '@/features/profile/types/avatar';
 
 /**
  * Estilos del componente
@@ -31,7 +16,7 @@ const STYLES = {
     sm: 'user-avatar__container--sm',
     md: 'user-avatar__container--md',
     lg: 'user-avatar__container--lg',
-  },
+  } as Record<AvatarSize, string>,
 } as const;
 
 /**

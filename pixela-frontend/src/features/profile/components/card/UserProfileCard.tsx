@@ -1,27 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { UserResponse } from '@/api/auth/types';
 import { UserAvatar } from '@/features/profile/components/avatar/UserAvatar';
 import { ProfileInfo } from '@/features/profile/components/layout/ProfileInfo';
 import { UpdateProfileForm } from '@/features/profile/components/form/UpdateProfileForm';
-
-/**
- * Datos del formulario de actualización de perfil
- */
-interface UpdateProfileData {
-  name: string;
-  email: string;
-  photo_url?: string;
-}
-
-/**
- * Props del componente UserProfileCard
- */
-interface UserProfileCardProps {
-  /** Datos del usuario */
-  user: UserResponse;
-}
+import { UserProfileCardProps, UpdateProfileData } from '@/features/profile/types/profile';
 
 /**
  * Estilos del componente
