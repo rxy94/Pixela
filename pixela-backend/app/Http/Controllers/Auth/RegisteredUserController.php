@@ -32,7 +32,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:100', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email:rfc,dns', 'max:100', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -47,6 +47,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return view('auth.verify-email-prompt')->with('status', __('auth.register'));
+        return view('auth.registration-success')->with([
+            'user' => $user,
+            'status' => 'success'
+        ]);
     }
 }
