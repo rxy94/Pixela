@@ -127,11 +127,23 @@ export const DiscoverContent = ({ heading }: DiscoverContentProps) => {
                     <div ref={leftSectionRef} className={STYLES.desktopLeftSection}>
                         <p className={STYLES.discoverLabel}>DESCUBRE</p>
                         <h2 className={STYLES.mainHeadingDesktop}>
-                            {heading.map((line, index) => (
-                                <span key={index} className="block">
-                                    {line}
-                                </span>
-                            ))}
+                            {heading.map((line, index) => {
+                                const words = line.split(' ');
+                                if (words.length > 1) {
+                                    const lastWord = words.pop();
+                                    const restOfLine = words.join(' ');
+                                    return (
+                                        <span key={index} className="block">
+                                            {restOfLine}&nbsp;{lastWord}
+                                        </span>
+                                    );
+                                }
+                                return (
+                                    <span key={index} className="block">
+                                        {line}
+                                    </span>
+                                );
+                            })}
                         </h2>
                         {descriptionContent}
                         <div className={STYLES.desktopActions}>
