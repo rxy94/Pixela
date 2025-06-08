@@ -1,9 +1,9 @@
-import { DiscoverResponse, TrendingSerie, TrendingMovie } from "./type";
+import { DiscoverResponse } from "@/features/discover/types/api";
+import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
 import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
+import { MediaType } from "@/features/discover/types/media";
 
 const DISCOVER_LIMIT = 7;
-
-type MediaType = 'series' | 'movies';
 
 /**
  * Función base para obtener contenido descubierto

@@ -1,36 +1,50 @@
 'use client';
 
-import Image from "next/image";
-import { FaStar } from "react-icons/fa";
-import { MediaContent, MediaType } from "../../type";
-import { TrendingSerie } from "@/features/trending/type";
 import clsx from "clsx";
+import Image from "next/image";
 import { useState } from "react";
+import { FaStar } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+import { MediaContent, MediaType } from "@/features/discover/types/media";
+import { TrendingSerie } from "@/features/trending/type";
 import { Badge } from "@/shared/components/Badge";
 import { ActionButtons } from "@/shared/components/ActionButtons";
-import { useRouter } from 'next/navigation';
+import { DiscoverCardProps } from '@/features/discover/types/components';
 
-interface DiscoverCardProps {
-  media: MediaContent;
-  type: MediaType;
-  index: number;
-  isMobile?: boolean;
-}
 
 const STYLES = {
+  // Contenedor principal
   containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden",
+  
+  // Imagen
   image: "object-cover",
+  
+  // Overlay con gradiente
   overlay: "absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-3 sm:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+  
+  // Contenido del overlay
   overlayContent: "mb-3 sm:mb-4",
+  
+  // Título
   title: "text-pixela-light font-bold text-lg sm:text-xl mb-2 font-outfit",
+  
+  // Contenedor de información
   infoContainer: "flex items-center gap-2 sm:gap-3 mb-3",
+  
+  // Calificación
   rating: {
     container: "flex items-center",
     icon: "text-yellow-400 mr-1",
     value: "text-pixela-light font-semibold text-sm"
   },
+  
+  // Año
   year: "text-pixela-light/80 text-sm",
+  
+  // Badge
   badge: "text-pixela-light/90 bg-pixela-dark/60 px-2 py-0.5 rounded-sm text-xs",
+  
+  // Efecto de ruido
   noiseEffect: "noise-effect opacity-5"
 } as const;
 
