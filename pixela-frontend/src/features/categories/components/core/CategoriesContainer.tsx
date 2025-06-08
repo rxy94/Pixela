@@ -6,18 +6,25 @@ import { CategoriesContent } from './CategoriesContent';
 import { CategoriesHeader } from '../navigation/CategoriesHeader';
 import { Pagination } from '../ui/Pagination';
 import { Category } from '@/api/categories/categories';
-import { useCategoriesStore } from '../../store/categoriesStore';
-import { useContentLoader } from '../../hooks/useContentLoader';
-import { MediaType } from '../../types/media';
+import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
+import { useContentLoader } from '@/features/categories/hooks/useContentLoader';
+import { MediaType } from '@/features/categories/types/media';
 
 const STYLES = {
+    // Layout Principal
     container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',
     contentWrapper: 'container mx-auto px-4 py-8 md:py-12',
     mainContent: 'flex flex-col lg:flex-row gap-6 md:gap-8 items-start',
+    
+    // Barra Lateral de Categorías
     categoriesContainer: 'w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-28 max-w-md mx-auto lg:mx-0 lg:max-w-none hidden lg:block',
+    
+    // Área de Contenido
     contentArea: 'flex-1 w-full max-w-4xl mx-auto lg:mx-0 lg:max-w-none',
+    
+    // Búsqueda y Paginación
+    searchContainer: 'w-full max-w-4xl mx-auto mb-6 lg:max-w-none',
     paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 lg:max-w-none',
-    searchContainer: 'w-full max-w-4xl mx-auto mb-6 lg:max-w-none'
 } as const;
 
 /**

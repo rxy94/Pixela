@@ -17,59 +17,36 @@ La feature **Categories** es un sistema completo de navegación y filtrado de co
 ```
 src/features/categories/
 ├── README.md                    # Este archivo
-├── type.ts                      # Interfaces principales
-├── service.ts                   # Servicios de la API
-├── store.ts                     # Store global (Zustand)
 ├── components/
-│   ├── CategoriesContainer.tsx  # Componente principal
-│   ├── CategoriesList.tsx       # Lista de categorías
-│   ├── CategoriesContent.tsx    # Contenido filtrado
-│   ├── CategoriesHeader.tsx     # Encabezado con controles
-│   ├── CategoriesModal.tsx      # Modal para móvil
-│   ├── MediaTypeSelector.tsx    # Selector de tipo de media
-│   ├── Pagination.tsx           # Componente de paginación
-│   └── ContentSkeleton.tsx      # Loading skeletons
+│   ├── core/
+│   │   └── CategoriesContent.tsx    # Contenido filtrado
+│   ├── navigation/
+│   │   ├── CategoriesList.tsx       # Lista de categorías
+│   │   ├── CategoriesHeader.tsx     # Encabezado con controles
+│   │   └── MediaTypeSelector.tsx    # Selector de tipo de media
+│   └── ui/
+│       ├── CategoriesModal.tsx      # Modal para móvil
+│       ├── Pagination.tsx           # Componente de paginación
+│       └── ContentSkeleton.tsx      # Loading skeletons
 ├── hooks/
 │   ├── useCategories.ts         # Hook para cargar categorías
 │   └── useContentLoader.ts      # Hook principal de contenido
 ├── utils/
 │   └── imageUtils.ts            # Utilidades de imágenes
 ├── types/
-│   └── media.ts                 # Tipos de media
+│   ├── categories.ts            # Interfaces de categorías
+│   ├── components.ts            # Interfaces de componentes
+│   ├── content.ts              # Interfaces de contenido
+│   ├── media.ts                # Tipos de media
+│   └── pagination.ts           # Interfaces de paginación
 └── store/
-    └── index.ts                 # Store adicional
+    └── categoriesStore.ts      # Store global (Zustand)
 ```
 
 ## 🧩 Componentes
 
-### CategoriesContainer
-**Ubicación**: `components/CategoriesContainer.tsx`
-
-Componente principal que orquesta toda la funcionalidad:
-
-- **Gestión de estado**: Maneja categorías, contenido y paginación
-- **Carga inicial**: Inicializa el contenido automáticamente
-- **Navegación**: Controla cambios de categoría y tipo de media
-- **Layout responsivo**: Adapta la interfaz según el dispositivo
-
-#### Características principales:
-- Inicialización automática del contenido
-- Manejo de estados de carga y error
-- Integración con hooks personalizados
-- Layout adaptativo (sidebar en desktop, modal en móvil)
-
-### CategoriesList
-**Ubicación**: `components/CategoriesList.tsx`
-
-Lista de categorías con funcionalidad completa:
-
-- **Vista desktop**: Sidebar fijo con lista vertical
-- **Vista móvil**: Botón que abre modal
-- **Estados**: Loading, error y selección activa
-- **Interactividad**: Selección y feedback visual
-
 ### CategoriesContent
-**Ubicación**: `components/CategoriesContent.tsx`
+**Ubicación**: `components/core/CategoriesContent.tsx`
 
 Renderiza el contenido filtrado:
 
@@ -78,8 +55,18 @@ Renderiza el contenido filtrado:
 - **Estados de carga**: Skeletons y mensajes de error
 - **Optimización**: Lazy loading de imágenes
 
+### CategoriesList
+**Ubicación**: `components/navigation/CategoriesList.tsx`
+
+Lista de categorías con funcionalidad completa:
+
+- **Vista desktop**: Sidebar fijo con lista vertical
+- **Vista móvil**: Botón que abre modal
+- **Estados**: Loading, error y selección activa
+- **Interactividad**: Selección y feedback visual
+
 ### CategoriesHeader
-**Ubicación**: `components/CategoriesHeader.tsx`
+**Ubicación**: `components/navigation/CategoriesHeader.tsx`
 
 Encabezado con controles principales:
 
@@ -90,7 +77,7 @@ Encabezado con controles principales:
 ### Componentes auxiliares:
 
 #### MediaTypeSelector
-- Selector de tipo de contenido (películas/series/todo)
+- Selector de tipo de contenido (películas/series/todo/random)
 - Estados activos y transiciones suaves
 
 #### Pagination
@@ -147,7 +134,38 @@ const { categories, isLoading } = useCategories();
 ## 📊 Gestión de Estado
 
 ### Store Principal (Zustand)
-**Ubicación**: `store.ts`
+**Ubicación**: `store/categoriesStore.ts`
+
+```typescript
+interface CategoriesState {
+  categories: Category[];
+  loading: boolean;
+  error: string | null;
+  selectedMediaType: MediaType;
+  selectedCategory: string | null;
+  fetchCategories: (mediaType?: MediaType) => Promise<void>;
+  setSelectedMediaType: (type: MediaType) => void;
+  setSelectedCategory: (category: string | null) => void;
+}
+```
+
+#### Características:
+- **Estado global**: Categorías y tipo de media seleccionado
+- **Carga asíncrona**: Fetch automático con manejo de errores
+- **Persistencia**: Estado se mantiene durante la navegación
+- **Manejo de categoría seleccionada**: Estado local y global
+
+## 🌐 Tipos y Interfaces
+
+### Tipos de Media
+**Ubicación**: `types/media.ts`
+
+```typescript
+type MediaType = 'all' | 'movies' | 'series' | 'random';
+```
+
+### Interfaces de Categorías
+**Ubicación**: `types/categories.ts`
 
 ```typescript
 interface CategoriesState {
@@ -158,31 +176,68 @@ interface CategoriesState {
   fetchCategories: (mediaType?: MediaType) => Promise<void>;
   setSelectedMediaType: (type: MediaType) => void;
 }
-```
 
-#### Características:
-- **Estado global**: Categorías y tipo de media seleccionado
-- **Carga asíncrona**: Fetch automático con manejo de errores
-- **Persistencia**: Estado se mantiene durante la navegación
-
-## 🌐 Servicios y API
-
-### CategoriesService
-**Ubicación**: `service.ts`
-
-Servicio para interacción con la API:
-
-```typescript
-class CategoriesService {
-  static async getCategories(): Promise<Category[]>
-  static filterCategories(categories: Category[], searchTerm: string): Category[]
+interface CategoriesProps {
+  onCategorySelect?: (category: Category) => void;
+  selectedCategory?: Category | null;
+  mediaType?: 'all' | 'movies' | 'series';
 }
 ```
 
-#### Funcionalidades:
-- **Carga de categorías**: Desde endpoints externos
-- **Filtrado local**: Búsqueda por nombre
-- **Manejo de errores**: Logging y propagación
+### Interfaces de Componentes
+**Ubicación**: `types/components.ts`
+
+```typescript
+interface MediaTypeSelectorProps {
+  selectedType: MediaType | 'random';
+  onTypeChange: (type: MediaType | 'random') => void;
+}
+
+interface CategoriesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  categories: Category[];
+  selectedCategory: Category | null;
+  onCategorySelect: (category: Category) => void;
+}
+
+interface CategoriesHeaderProps {
+  selectedMediaType: MediaType | 'random';
+  onMediaTypeChange: (type: MediaType | 'random') => void;
+}
+```
+
+### Interfaces de Contenido
+**Ubicación**: `types/content.ts`
+
+```typescript
+interface CategoriesContentProps {
+  selectedCategory: Category | null;
+  movies: Pelicula[];
+  series: Serie[];
+  loading: boolean;
+  error: string | null;
+  searchQuery: string;
+  onSearch: (query: string) => void;
+  mediaType: 'all' | 'movies' | 'series' | 'random';
+}
+
+interface ContentSkeletonProps {
+  count?: number;
+}
+```
+
+### Interfaces de Paginación
+**Ubicación**: `types/pagination.ts`
+
+```typescript
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  disabled?: boolean;
+}
+```
 
 ## 🎨 Sistema de Diseño
 
@@ -222,11 +277,6 @@ const PAGINATION_CONFIG = {
   MAX_TMDB_PAGES: 500,
   MIN_PAGE: 1,
 } as const;
-```
-
-### Tipos de Media
-```typescript
-type MediaType = 'all' | 'movies' | 'series';
 ```
 
 ## 📱 Uso
@@ -278,7 +328,7 @@ import { CategoriesContainer } from '@/features/categories';
 ## 📝 Notas Importantes
 
 - **Límites de TMDB**: Máximo 500 páginas por restricción de API
-- **Tipos de media**: Solo soporta movies/series/all
+- **Tipos de media**: Soporta movies/series/all/random
 - **Carga inicial**: Se inicializa automáticamente con 'all'
 - **Error handling**: Mensajes específicos por tipo de error
 - **Concurrencia**: Prevención de cargas múltiples simultáneas

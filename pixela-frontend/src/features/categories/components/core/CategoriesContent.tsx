@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { Category } from '@/api/categories/categories';
 import { Pelicula, Serie } from '@/features/media/types/content';
 import { FaStar } from 'react-icons/fa';
 import { Badge } from '@/shared/components/Badge';
@@ -10,17 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
 import { ContentSkeleton } from '../ui/ContentSkeleton';
-
-interface CategoriesContentProps {
-    selectedCategory: Category | null;
-    movies: Pelicula[];
-    series: Serie[];
-    loading: boolean;
-    error: string | null;
-    searchQuery: string;
-    onSearch: (query: string) => void;
-    mediaType: 'all' | 'movies' | 'series' | 'random';
-}
+import { CategoriesContentProps } from '@/features/categories/types/content';
 
 const INITIAL_VISIBLE_ITEMS = 6;
 const HIGH_RATING_THRESHOLD = 8.0;
@@ -28,16 +17,30 @@ const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BATCH_SIZE = 12;
 
 const STYLES = {
-    card: 'w-full flex flex-col relative group overflow-hidden animate-fade-in',
-    posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
-    noiseEffect: 'noise-effect opacity-5',
+    // Layout y Contenedores Principales
+    mainContainer: 'space-y-8 pb-24',
+    contentWrapper: 'transform-gpu',
     contentGrid: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6',
+    
+    // Estados (Vacío y Error)
     emptyState: 'text-center text-gray-400 py-12',
     errorState: 'text-center text-red-500 py-12',
+
+    // Barra de Búsqueda
     searchContainer: 'relative mb-8',
     searchIcon: 'absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none',
     searchInput: 'w-full pl-10 pr-10 py-3 bg-pixela-dark/30 border border-pixela-accent/20 rounded-xl text-pixela-light placeholder-pixela-light/40 focus:outline-none focus:border-pixela-accent/40 transition-colors duration-300',
     clearButton: 'absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-pixela-light/40 hover:text-pixela-light transition-colors duration-300',
+    searchIconInner: 'h-5 w-5 text-pixela-light/40',
+
+    // Categorías en Móvil
+    mobileCategoriesList: 'lg:hidden mb-6',
+
+    // Tarjeta de Contenido (Película/Serie)
+    card: 'w-full flex flex-col relative group overflow-hidden animate-fade-in',
+    posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
+    poster: 'object-cover',
+    noiseEffect: 'noise-effect opacity-5',
     overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark/95 via-pixela-dark/80 to-transparent flex flex-col justify-end p-3 md:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-lg',
     overlayContent: 'mb-2 md:mb-3',
     title: 'text-pixela-light font-bold text-sm md:text-base lg:text-lg mb-1 md:mb-2 font-outfit overflow-hidden text-ellipsis whitespace-nowrap',
@@ -47,16 +50,15 @@ const STYLES = {
     ratingText: 'text-pixela-light font-semibold text-xs md:text-sm',
     year: 'text-pixela-light/80 text-xs md:text-sm',
     mediaType: 'text-pixela-light/90 bg-pixela-dark/60 px-1.5 py-0.5 rounded-sm text-xs',
-    poster: 'object-cover',
-    mainContainer: 'space-y-8 pb-24',
-    contentWrapper: 'transform-gpu',
-    searchIconInner: 'h-5 w-5 text-pixela-light/40',
-    mobileCategoriesList: 'lg:hidden mb-6',
+
+    // Placeholder para Tarjetas sin Imagen
     placeholderContainer: 'absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex flex-col items-center justify-center p-4 text-center',
     placeholderEmoji: 'text-4xl mb-3 opacity-50',
     placeholderTitle: 'text-white text-sm font-medium leading-tight mb-2 line-clamp-3',
     placeholderNoImage: 'text-xs text-gray-400 opacity-75',
     placeholderOverlay: 'absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none',
+
+    // Sección de Recomendación Aleatoria
     randomContainer: 'container px-4 mx-auto',
     randomGrid: 'grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[70vh]',
     textContainer: 'max-w-2xl space-y-8 ml-8 lg:ml-12',
@@ -70,11 +72,15 @@ const STYLES = {
     decorativeLine: 'flex items-center gap-4',
     lineBar: 'w-16 h-1 rounded-full bg-pixela-accent',
     lineText: 'text-sm font-medium tracking-wider uppercase text-pixela-light/70',
+    
+    // Contenedor de Tarjetas Aleatorias y Botón
     cardsContainer: 'flex justify-center w-full',
     cardsWrapper: 'relative w-full max-w-lg text-center',
     randomButton: 'flex items-center justify-center w-full max-w-lg gap-3 px-6 py-3 mb-4 text-purple-400 transition-all duration-300 border group bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-400/30 rounded-xl hover:from-purple-500/30 hover:to-pink-500/30 hover:scale-105',
     buttonIcon: 'w-5 h-5 transition-transform duration-500 group-hover:rotate-180',
     buttonText: 'font-medium',
+
+    // Tarjetas (Misteriosa y Recomendación)
     cardsGrid: 'grid grid-cols-1 sm:grid-cols-2 gap-6',
     mysteryCard: 'w-full aspect-[2/3] rounded-lg border-2 border-dashed border-pixela-accent/30 bg-pixela-dark/20 flex flex-col items-center justify-center p-6 transition-all duration-300 hover:border-pixela-accent/50 hover:bg-pixela-dark/30',
     mysteryEmoji: 'text-4xl mb-4 opacity-50',
