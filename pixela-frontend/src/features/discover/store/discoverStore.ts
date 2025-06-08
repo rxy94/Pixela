@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TrendingSerie, TrendingMovie } from "../type";
+import { TrendingSerie, TrendingMovie } from "@/features/discover/types/media";
 
 type MediaType = 'series' | 'movies';
 

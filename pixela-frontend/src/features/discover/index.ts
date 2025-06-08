@@ -2,10 +2,10 @@
 export * from './components';
 
 // ===== TYPES =====
-export * from './type';
+export * from './types';
 
 // ===== SERVICES =====
-export * from './service';
+export * from './service/discover';
 
 // ===== STORE =====
 export * from './store/discoverStore';
