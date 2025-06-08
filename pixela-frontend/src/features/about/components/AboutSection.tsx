@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { FaLinkedin } from 'react-icons/fa';
-import { TEAM_MEMBERS, FEATURE_CARDS } from '../data/aboutData';
-import type { TeamMember, FeatureCard } from '../data/aboutData';
+import { TEAM_MEMBERS, FEATURE_CARDS } from '@/features/about/data/aboutData';
+import type { TeamMember, FeatureCard } from '@/features/about/types/components';
 
 /**
  * Estilos constantes para el componente AboutSection
