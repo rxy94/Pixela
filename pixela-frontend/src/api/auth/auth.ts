@@ -47,17 +47,11 @@ export const authAPI = {
                 method: 'POST',
             });
 
-            // Limpiar localStorage
-            localStorage.setItem('forceLogout', 'true');
-
             // Limpiar cookies con dominio correcto
             document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             document.cookie = 'pixela_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             document.cookie = `XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
             document.cookie = `pixela_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
-
-            // Forzar recarga completa para limpiar el estado
-            window.location.replace('/');
 
         } catch (error) {
             console.error('[API] Error en logout:', error);

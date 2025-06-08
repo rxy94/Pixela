@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 import Error403 from '@/app/error-403';
 
@@ -25,21 +26,96 @@ export function ProtectedRoute({
   const { isAuthenticated, user, checkAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
+
+  // Verificación rápida inicial - si claramente no hay sesión, ir directo al 403
+  const hasValidSession = () => {
+    if (typeof window === 'undefined') return true; // SSR safety
+    
+    // Verificar si hay cookies de sesión básicas
+    const hasCookies = document.cookie.includes('pixela_session') || 
+                      document.cookie.includes('XSRF-TOKEN');
+    return hasCookies;
+  };
 
   useEffect(() => {
     const initAuth = async () => {
       try {
-        await checkAuth();
+        // Verificar si hay un logout forzado
+        if (localStorage.getItem('forceLogout')) {
+          setIsLoggingOut(true);
+          localStorage.removeItem('forceLogout');
+          
+          // Timeout más corto para logout (500ms)
+          setTimeout(() => {
+            router.push('/');
+            
+            // Asegurar limpieza después de redirección
+            setTimeout(() => {
+              localStorage.removeItem('forceLogout');
+            }, 100);
+          }, 500);
+          return;
+        }
+        
+        // Si requiere auth y claramente no hay sesión, 403 inmediato
+        if (requireAuth && !hasValidSession()) {
+          setIsLoading(false);
+          setIsChecked(true);
+          return;
+        }
+        
+        // Verificación rápida de auth (máximo 600ms)
+        const authPromise = checkAuth();
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Timeout')), 600)
+        );
+        
+        await Promise.race([authPromise, timeoutPromise]);
+        
       } catch (error) {
         console.error('Error checking auth:', error);
+        
+        // Si hay error y requiere autenticación, mostrar 403 inmediatamente
+        if (requireAuth) {
+          setIsLoading(false);
+          setIsChecked(true);
+          return;
+        }
       } finally {
+        // Sin delay - mostrar resultado inmediatamente
         setIsLoading(false);
         setIsChecked(true);
       }
     };
 
     initAuth();
-  }, [checkAuth]);
+  }, [checkAuth, requireAuth, router]);
+
+  // Verificar si hay un logout en progreso
+  if (typeof window !== 'undefined' && localStorage.getItem('forceLogout')) {
+    return (
+      <div className={STYLES.loadingContainer}>
+        <div className={STYLES.loadingContent}>
+          <div className={STYLES.loadingSpinner}></div>
+          <p className={STYLES.loadingText}>Cerrando sesión...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Mostrar mensaje de logout
+  if (isLoggingOut) {
+    return (
+      <div className={STYLES.loadingContainer}>
+        <div className={STYLES.loadingContent}>
+          <div className={STYLES.loadingSpinner}></div>
+          <p className={STYLES.loadingText}>Cerrando sesión...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Mostrar loading mientras verificamos autenticación
   if (isLoading || !isChecked) {
