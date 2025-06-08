@@ -1,7 +1,8 @@
 import { Pelicula } from '@/features/media/types/content';
 import { Actor } from '@/features/media/types/people';
-import { Trailer } from '@/features/media/types/supplements';
+import { Trailer } from '@/features/media/types/trailer';
 import { ApiActor, ApiPelicula, ApiTrailer } from './types';
+
 
 // URL base para imágenes de TMDb
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/original';
