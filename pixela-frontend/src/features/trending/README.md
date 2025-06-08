@@ -18,8 +18,16 @@ La feature **Trending** es el sistema de contenido en tendencias de Pixela. Mues
 ```
 src/features/trending/
 ├── README.md                       # Este archivo
-├── type.ts                         # Tipos e interfaces
-├── service.ts                      # Servicios de API
+├── types/                          # Tipos e interfaces
+│   ├── api.ts                      # Tipos relacionados con la API
+│   ├── base.ts                     # Interfaces base
+│   ├── common.ts                   # Tipos comunes
+│   ├── components.ts               # Props de componentes
+│   ├── media.ts                    # Tipos de medios
+│   ├── response.ts                 # Tipos de respuesta
+│   └── index.ts                    # Re-exportaciones
+├── services/                       # Servicios de API
+│   └── trendingService.ts         # Servicio principal
 ├── store/                          # Gestión de estado con Zustand
 │   ├── types.ts                    # Tipos del store
 │   └── trendingStore.ts           # Implementación del store
@@ -154,7 +162,7 @@ Información detallada mostrada en overlay de hover:
 ## 📊 Tipos y Interfaces
 
 ### BaseTrendingMedia
-**Ubicación**: `type.ts`
+**Ubicación**: `types/base.ts`
 
 ```typescript
 interface BaseTrendingMedia {
@@ -204,7 +212,7 @@ type MediaType = 'series' | 'movies';
 ## 🌐 Servicios y API
 
 ### fetchTrendingMedia
-**Ubicación**: `service.ts`
+**Ubicación**: `services/trendingService.ts`
 
 Función genérica para obtener contenido en tendencia:
 

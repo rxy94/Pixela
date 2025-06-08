@@ -1,14 +1,14 @@
 'use client';
 import Image from "next/image";
-import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
 import { useState, memo } from "react";
 import { Badge } from "@/shared/components/Badge";
 import { ActionButtons } from "@/shared/components/ActionButtons";
 import { MediaInfoDetails } from "./MediaInfoDetails";
 import { useRouter } from 'next/navigation';
+import type { TrendingMediaCardProps, PosterImageProps, OverlayContentProps } from '@/features/trending/types';
 
 /**
- * Constantes para la configuración del componente
+ * Estilos constantes para el componente TrendingMediaCard
  */
 const STYLES = {
   card: 'w-[280px] md:w-[375px] flex flex-col relative group',
@@ -19,35 +19,6 @@ const STYLES = {
 const HIGH_RATING_THRESHOLD = 8.0;
 const INITIALLY_VISIBLE_ITEMS = 3;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
-
-/**
- * Tipo que representa el tipo de medio (series o películas)
- */
-type MediaType = 'series' | 'movies';
-
-/**
- * Props para el componente TrendingMediaCard
- * @property {TrendingSerie | TrendingMovie} media - Datos del medio a mostrar
- * @property {MediaType} type - Tipo de medio (series o películas)
- * @property {number} [index] - Índice opcional del medio en la lista
- */
-interface TrendingMediaCardProps {
-  media: TrendingSerie | TrendingMovie;
-  type: MediaType;
-  index?: number;
-}
-
-/**
- * Props para el componente PosterImage
- * @property {string} posterPath - Ruta de la imagen del póster
- * @property {string} title - Título del medio
- * @property {boolean} isInitiallyVisible - Indica si el elemento debe cargarse prioritariamente
- */
-interface PosterImageProps {
-  posterPath: string;
-  title: string;
-  isInitiallyVisible: boolean;
-}
 
 /**
  * Componente que renderiza la imagen del póster de un medio
@@ -68,19 +39,6 @@ const PosterImage = memo(({ posterPath, title, isInitiallyVisible }: PosterImage
 
 PosterImage.displayName = 'PosterImage';
 
-/**
- * Props para el componente OverlayContent
- * @property {TrendingSerie | TrendingMovie} media - Datos del medio
- * @property {MediaType} type - Tipo de medio (series o películas)
- * @property {() => void} onFollowClick - Función a ejecutar al hacer clic en seguir
- * @property {() => void} onReviewsClick - Función a ejecutar al hacer clic en reseñas
- */
-interface OverlayContentProps {
-  media: TrendingSerie | TrendingMovie;
-  type: MediaType;
-  onFollowClick: () => void;
-  onReviewsClick: () => void;
-}
 
 /**
  * Componente que renderiza el contenido superpuesto al hacer hover sobre una tarjeta

@@ -1,6 +1,9 @@
-import { useHeroStore } from "../../store/heroStore";
+'use client';
+
+import { useHeroStore } from "@/features/hero/store/heroStore";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import clsx from 'clsx';
+import { NavigationControlsProps, NavigationButtonProps } from "@/features/hero/types/content";
 
 const STYLES = {
   navigation: {
@@ -17,23 +20,7 @@ const STYLES = {
 } as const;
 
 /**
- * Props para el componente NavigationControls
- * @property {number} imagesLength - Número total de imágenes en el carrusel
- */
-interface NavigationControlsProps {
-  imagesLength: number;
-}
-
-/**
- * Props para el componente NavigationButton
- */
-interface NavigationButtonProps {
-  direction: 'prev' | 'next';
-  onClick: () => void;
-}
-
-/**
- * Componente que representa un botón de navegación del carrusel
+ * Componente que renderiza un botón de navegación para el carrusel
  */
 const NavigationButton = ({ direction, onClick }: NavigationButtonProps) => {
   const Icon = direction === 'prev' ? FiChevronLeft : FiChevronRight;

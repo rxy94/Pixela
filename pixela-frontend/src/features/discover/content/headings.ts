@@ -1,3 +1,4 @@
+
 export const headings = [
     ['Tu próximo maratón', 'empieza aquí.'],
     ['Joyas ocultas que', 'te engancharán.'],

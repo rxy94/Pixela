@@ -1,12 +1,11 @@
-import { ReactNode } from 'react';
+import { TabNavigationButtonProps } from "@/features/profile/types/tabs";
 
-interface TabNavigationButtonProps {
-  label: string;
-  icon: ReactNode;
-  isActive: boolean;
-  onClick: () => void;
-}
 
+/**
+ * Componente de botón de navegación de pestañas
+ * @param {TabNavigationButtonProps} props - Props del componente
+ * @returns {JSX.Element} Componente TabNavigationButton
+ */
 export const TabNavigationButton = ({
   label,
   icon,

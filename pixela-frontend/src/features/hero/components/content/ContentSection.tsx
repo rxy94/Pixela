@@ -1,23 +1,30 @@
 import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
-import { HeroContent } from "../../type";
+import { HeroContent, HeroTitleProps, AccentLineProps, SecondaryButtonProps } from "@/features/hero/types/content";
 import clsx from "clsx";
-import { ProgressIndicator } from "../ui/ProgressIndicator";
+import { ProgressIndicator } from "@/features/hero/components/ui/ProgressIndicator";
 
 const STYLES = {
+  // Línea decorativa de acento
   accentLine: {
     base: "w-16 md:w-24 lg:w-24 h-1 bg-pixela-accent",
     withMargin: "mb-4 md:mb-6 lg:mb-8"
   },
+
+  // Título principal del hero
   heroTitle: {
     base: "text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-pixela-light mb-4 md:mb-5 lg:mb-6 tracking-tight leading-[1.1] drop-shadow-sm",
     accent: "text-pixela-accent"
   },
+
+  // Botón secundario con animación
   secondaryButton: {
     base: "group flex items-center transition-all duration-300",
     text: "font-medium text-pixela-light group-hover:text-white group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.7)] transition-all duration-300 mr-2 text-sm sm:text-base lg:text-base",
     icon: "h-5 w-5 sm:h-5 sm:w-5 lg:h-6 lg:w-6 animate-bounce text-pixela-light group-hover:text-pixela-accent opacity-80 group-hover:opacity-100"
   },
+
+  // Sección de contenido principal
   contentSection: {
     base: "absolute inset-x-0 bottom-0 z-10 px-4 sm:px-5 md:px-6 lg:px-0",
     container: "w-full max-w-[95%] sm:max-w-xl md:max-w-2xl lg:max-w-[83.333%] mx-auto pb-20 sm:pb-24 md:pb-28 lg:pb-36",
@@ -29,29 +36,18 @@ const STYLES = {
 } as const;
 
 /**
- * Props para el componente AccentLine
- */
-interface AccentLineProps {
-  className?: string;
-}
-
-/**
- * Componente que muestra una línea de acento decorativa
+ * Componente para la línea de acento
+ * @param {AccentLineProps} props - Propiedades de la línea
+ * @returns {JSX.Element} Componente de línea
  */
 const AccentLine = ({ className }: AccentLineProps) => (
   <div className={clsx(STYLES.accentLine.base, className)} />
 );
 
 /**
- * Props para el componente HeroTitle
- */
-interface HeroTitleProps {
-  title: string;
-  accentTitle: string;
-}
-
-/**
- * Componente que muestra el título principal del hero
+ * Componente para el título del hero
+ * @param {HeroTitleProps} props - Propiedades del título
+ * @returns {JSX.Element} Componente de título
  */
 const HeroTitle = ({ title, accentTitle }: HeroTitleProps) => (
   <h1 className={STYLES.heroTitle.base}>
@@ -61,15 +57,9 @@ const HeroTitle = ({ title, accentTitle }: HeroTitleProps) => (
 );
 
 /**
- * Props para el componente SecondaryButton
- */
-interface SecondaryButtonProps {
-  text: string;
-  href: string;
-}
-
-/**
- * Componente que muestra el botón secundario con animación
+ * Componente para el botón secundario
+ * @param {SecondaryButtonProps} props - Propiedades del botón
+ * @returns {JSX.Element} Componente de botón
  */
 const SecondaryButton = ({ text, href }: SecondaryButtonProps) => (
   <Link 

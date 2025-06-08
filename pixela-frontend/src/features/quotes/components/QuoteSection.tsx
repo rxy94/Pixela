@@ -1,4 +1,4 @@
-import React from 'react';
+import { QuoteSectionProps } from '@/features/quotes/types/quotes';
 
 const STYLES = {
   wrapper: "w-[90%] md:w-[85%] lg:w-[80%] mx-auto px-4 md:px-0",
@@ -7,13 +7,11 @@ const STYLES = {
   author: "text-sm md:text-base mt-3 text-gray-300",
 };
 
-type QuoteSectionProps = {
-  quote: {
-    quote: string;
-    author: string;
-  }
-}
-
+/**
+ * Componente de sección de cita
+ * @param {QuoteSectionProps} props - Props del componente
+ * @returns {JSX.Element} Componente QuoteSection
+ */
 const QuoteSection = ({ quote }: QuoteSectionProps) => {
   return (
     <div className={STYLES.wrapper}>

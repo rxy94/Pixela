@@ -28,7 +28,10 @@ src/features/media/
 │   ├── mediaBase.ts             # Tipos base de Media
 │   ├── people.ts                # Tipos de personas (actores, creadores)
 │   ├── gallery.ts               # Tipos de galería de imágenes
-│   └── supplements.ts           # Tipos de trailers y proveedores
+│   ├── supplements.ts           # Tipos de trailers y proveedores
+│   ├── metadata.ts              # Tipos para metadatos
+│   ├── creators.ts              # Tipos para creadores
+│   └── trailer.ts               # Tipos para trailers
 ├── services/
 │   ├── galleryService.ts        # Servicio de galería de imágenes
 │   ├── movieService.ts          # Servicio de películas
@@ -56,9 +59,12 @@ src/features/media/
     │   ├── GalleryGrid.tsx      # Grid de imágenes
     │   └── GalleryTabs.tsx      # Tabs de navegación
     ├── trailer/                 # Componentes de trailers
-    │   └── TrailersSection.tsx  # Sección de trailers
+    │   ├── TrailersSection.tsx  # Sección de trailers
+    │   ├── TrailerPlayer.tsx    # Reproductor de trailers
+    │   └── TrailerList.tsx      # Lista de trailers
     ├── platforms/               # Componentes de plataformas
-    │   └── StreamingProviders.tsx # Proveedores de streaming
+    │   ├── StreamingProviders.tsx # Proveedores de streaming
+    │   └── platformUtils.ts     # Utilidades de plataformas
     └── review/                  # Componentes de reseñas
         └── ReviewSection.tsx    # Sistema de reseñas
 ```
@@ -84,6 +90,8 @@ Store centralizado con Zustand que maneja:
 - **Sistema de Reseñas**: Estado de carga, datos y errores
 - **Galería**: Navegación entre tabs y selección de imágenes
 - **Trailers**: Control del reproductor de trailers
+- **Gestión de errores**: Manejo de errores en carga de datos
+- **Estados de carga**: Control de estados de loading en componentes
 
 #### Uso del Store
 ```typescript
@@ -91,10 +99,10 @@ Store centralizado con Zustand que maneja:
 const { showPosterModal, setShowPosterModal } = useMediaStore();
 
 // Gestión de reseñas
-const { reviews, loadingReviews, errorReviews } = useMediaStore();
+const { reviews, loadingReviews, errorReviews, setReviews, setLoadingReviews, setErrorReviews } = useMediaStore();
 
 // Control de galería
-const { activeGalleryTab, setActiveGalleryTab } = useMediaStore();
+const { activeGalleryTab, setActiveGalleryTab, selectedGalleryImage, setSelectedGalleryImage } = useMediaStore();
 
 // Control de trailers
 const { selectedTrailerId, setSelectedTrailerId } = useMediaStore();
@@ -334,14 +342,17 @@ const API_TIMEOUT = 10000; // 10 segundos
 
 - ✅ **Hero visual completo**: Backdrop, poster, metadatos y acciones
 - ✅ **Sistema de reseñas**: CRUD completo con autenticación
-- ✅ **Galería multimedia**: Imágenes categorizadas con lazy loading
+- ✅ **Galería multimedia**: Imágenes categorizadas con lazy loading y retry
 - ✅ **Reparto dinámico**: Grid/slider adaptativo según contenido
-- ✅ **Trailers integrados**: Reproducción de contenido promocional
-- ✅ **Proveedores de streaming**: Información de disponibilidad
+- ✅ **Trailers integrados**: Reproducción de contenido promocional con lista
+- ✅ **Proveedores de streaming**: Información de disponibilidad con URLs dinámicas
 - ✅ **Modal de poster**: Vista ampliada de imágenes
 - ✅ **Responsive design**: Adaptación completa a dispositivos
-- ✅ **Estados de carga**: Loading, error y vacío
+- ✅ **Estados de carga**: Loading, error y vacío con retry
 - ✅ **Optimización de imágenes**: Next.js Image con lazy loading
+- ✅ **Manejo de errores**: Sistema robusto de manejo de errores
+- ✅ **Debug logging**: Sistema de logs para debugging
+- ✅ **Timeout handling**: Prevención de requests colgados
 
 ## 🚀 Optimizaciones
 
@@ -368,10 +379,13 @@ const API_TIMEOUT = 10000; // 10 segundos
 - **Autenticación requerida**: Reviews solo para usuarios logueados
 - **Tipos híbridos**: Media base con extensiones para Serie/Pelicula
 - **TMDB compatibility**: Campos opcionales para compatibilidad con TMDB
-- **Error boundaries**: Fallbacks para fallos de API
+- **Error boundaries**: Fallbacks para fallos de API con retry
 - **Device detection**: Lógica para optimizar por dispositivo
 - **Image optimization**: Múltiples formatos y tamaños
 - **Estado global**: Uso de Zustand para estado compartido
+- **Debug logging**: Sistema de logs para facilitar debugging
+- **Timeout handling**: Prevención de requests colgados con AbortController
+- **URL dinámicas**: Sistema de URLs dinámicas para plataformas de streaming
 
 ## 🔧 Extensibilidad
 

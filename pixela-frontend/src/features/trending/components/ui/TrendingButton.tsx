@@ -1,5 +1,6 @@
-import { type ButtonHTMLAttributes, memo } from 'react';
+import { memo } from 'react';    
 import clsx from 'clsx';
+import { TrendingButtonProps } from '@/features/trending/types/components';  
 
 /**
  * Constantes de estilo para los botones de tendencias
@@ -9,17 +10,6 @@ const STYLES = {
   active: 'text-pixela-dark bg-pixela-accent shadow-lg shadow-pixela-accent/20',
   inactive: 'text-white/80 hover:text-white'
 } as const;
-
-/**
- * Props para el componente TrendingButton
- * Extiende las props nativas de un botón HTML
- * @property {boolean} isActive - Indica si el botón está activo
- * @property {React.ReactNode} children - Contenido del botón
- */
-interface TrendingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  isActive: boolean;
-  children: React.ReactNode;
-}
 
 /**
  * Componente que renderiza un botón para la sección de tendencias

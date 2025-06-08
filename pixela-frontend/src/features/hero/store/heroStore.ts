@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { HeroState } from '../type';
+import { HeroState } from '@/features/hero/types/state';
 
 const FADE_ANIMATION_DURATION = 300;
 

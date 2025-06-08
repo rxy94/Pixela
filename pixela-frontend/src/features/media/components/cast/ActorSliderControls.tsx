@@ -2,31 +2,34 @@
 
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { memo } from 'react';
+import { ActorSliderControlsProps } from '@/features/media/types/cast';
 
-interface ActorSliderControlsProps {
-  onPrevClick: () => void;
-  onNextClick: () => void;
-}
-
+/**
+ * Componente que muestra los controles de navegación para el carrusel de actores
+ * @param {ActorSliderControlsProps} props - Propiedades del componente
+ * @param {() => void} props.onPrevClick - Función para navegar al actor anterior
+ * @param {() => void} props.onNextClick - Función para navegar al actor siguiente
+ * @returns {JSX.Element} Componente de controles de navegación
+ */
 export const ActorSliderControls = memo(function ActorSliderControls({ 
   onPrevClick, 
   onNextClick 
 }: ActorSliderControlsProps) {
   return (
-    <div className="flex space-x-2">
-      <button 
+    <div className="flex items-center gap-2">
+      <button
         onClick={onPrevClick}
+        className="p-2 transition-colors rounded-full bg-pixela-dark/80 hover:bg-pixela-dark"
         aria-label="Anterior"
-        className="w-7 h-7 rounded-full flex items-center justify-center bg-pixela-dark/30 text-gray-400 border border-gray-700/30 hover:bg-pixela-dark/50 hover:text-white transition-colors"
       >
-        <FiChevronLeft className="h-4 w-4" />
+        <FiChevronLeft className="w-5 h-5" />
       </button>
-      <button 
+      <button
         onClick={onNextClick}
+        className="p-2 transition-colors rounded-full bg-pixela-dark/80 hover:bg-pixela-dark"
         aria-label="Siguiente"
-        className="w-7 h-7 rounded-full flex items-center justify-center bg-pixela-dark/30 text-gray-400 border border-gray-700/30 hover:bg-pixela-dark/50 hover:text-white transition-colors"
       >
-        <FiChevronRight className="h-4 w-4" />
+        <FiChevronRight className="w-5 h-5" />
       </button>
     </div>
   );

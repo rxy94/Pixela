@@ -5,6 +5,7 @@ import { FiLoader, FiAlertCircle, FiEdit, FiCheck, FiX } from 'react-icons/fi';
 import { FaTrash } from 'react-icons/fa';
 import { UserAvatar } from '@/features/profile/components/avatar/UserAvatar';
 import clsx from 'clsx';
+import { ProfileUsersProps } from '@/features/profile/types/layout';
 
 /**
  * Mensajes de error constantes
@@ -19,20 +20,31 @@ const ERROR_MESSAGES = {
  * Estilos constantes para el componente ProfileUsers
  */
 const STYLES = {
+  // Layout base
   container: 'space-y-1',
+  
+  // Estados de carga y error
   loadingContainer: 'flex items-center justify-center p-8',
   loadingIcon: 'w-8 h-8 text-pixela-primary animate-spin',
   errorContainer: 'flex items-center justify-center p-8 text-red-500',
   errorIcon: 'w-6 h-6 mr-2',
+  
+  // Estado vacío
   emptyContainer: 'flex flex-col items-center justify-center p-8 text-gray-400',
   emptyIcon: 'w-12 h-12 mb-4',
   emptyText: 'text-lg font-outfit',
+  
+  // Item de usuario
   userItem: 'flex items-center bg-pixela-dark-opacity/50 pt-2 px-4 rounded gap-4',
   avatarContainer: 'min-w-[32px] max-w-[32px] flex justify-center',
   contentContainer: 'flex flex-col justify-center flex-2 pl-5',
+  
+  // Formulario de edición
   editForm: 'grid grid-cols-1 sm:grid-cols-3 gap-4 gap-y-2 w-full max-w-lg mx-auto mb-8',
   formGroup: 'flex flex-col',
   label: 'text-xs text-gray-400 mb-1 block',
+  
+  // Inputs y controles
   input: clsx(
     'w-full bg-[#1a1a1a]/70 border border-transparent rounded-md',
     'px-3 py-1.5 text-white text-sm',
@@ -51,6 +63,8 @@ const STYLES = {
     backgroundPosition: 'right 0.75rem center',
     backgroundRepeat: 'no-repeat'
   },
+  
+  // Información del usuario
   userName: 'font-semibold text-white',
   userEmail: 'text-gray-400',
   userRole: (isAdmin: boolean) => clsx(
@@ -59,6 +73,8 @@ const STYLES = {
       ? 'bg-[#ec1b69]/10 text-[#ec1b69] border border-[#ec1b69]/20'
       : 'bg-gray-800/60 text-gray-400 border border-gray-700/50'
   ),
+  
+  // Acciones
   actionsContainer: 'flex items-center gap-2 ml-auto',
   actionButton: (color: string) => clsx(
     'p-2 transition-colors duration-200',
@@ -67,16 +83,6 @@ const STYLES = {
   actionIcon: 'w-5 h-5'
 } as const;
 
-/**
- * Props para el componente ProfileUsers
- * @interface ProfileUsersProps
- */
-interface ProfileUsersProps {
-  /** Indica si se debe refrescar la lista de usuarios */
-  refresh: boolean;
-  /** Callback cuando se actualiza un usuario */
-  onUserUpdated?: (updatedUser: User) => void;
-}
 
 /**
  * Componente que muestra la lista de usuarios

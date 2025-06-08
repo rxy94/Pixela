@@ -1,54 +1,29 @@
 "use client";
 
-import clsx from 'clsx';
-
-interface GalleryTabsProps {
-  activeTab: 'backdrops' | 'posters';
-  onTabChange: (tab: 'backdrops' | 'posters') => void;
-  backdropsCount: number;
-  postersCount: number;
-}
+import { GalleryTabsProps } from '@/features/media/types/gallery';
 
 const STYLES = {
-  container: "flex border-b border-gray-700",
-  tabBase: "py-3 px-6 text-sm font-medium rounded-t-lg focus:outline-none transition-colors",
-  tabActive: "bg-pixela-accent text-gray-900",
-  tabInactive: "text-gray-400 hover:text-white"
+  container: "flex space-x-4 mb-6",
+  tab: "px-4 py-2 rounded-lg font-medium transition-colors duration-200",
+  activeTab: "bg-pixela-accent text-white",
+  inactiveTab: "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
 } as const;
 
-export function GalleryTabs({ 
-  activeTab, 
-  onTabChange, 
-  backdropsCount, 
-  postersCount 
-}: GalleryTabsProps) {
+export const GalleryTabs = ({ activeTab, onTabChange, backdropsCount, postersCount }: GalleryTabsProps) => {
   return (
     <div className={STYLES.container}>
       <button
-        className={clsx(
-          STYLES.tabBase,
-          {
-            [STYLES.tabActive]: activeTab === 'backdrops',
-            [STYLES.tabInactive]: activeTab !== 'backdrops'
-          }
-        )}
+        className={`${STYLES.tab} ${activeTab === 'backdrops' ? STYLES.activeTab : STYLES.inactiveTab}`}
         onClick={() => onTabChange('backdrops')}
       >
         Fondos ({backdropsCount})
       </button>
-      
       <button
-        className={clsx(
-          STYLES.tabBase,
-          {
-            [STYLES.tabActive]: activeTab === 'posters',
-            [STYLES.tabInactive]: activeTab !== 'posters'
-          }
-        )}
+        className={`${STYLES.tab} ${activeTab === 'posters' ? STYLES.activeTab : STYLES.inactiveTab}`}
         onClick={() => onTabChange('posters')}
       >
         Pósters ({postersCount})
       </button>
     </div>
   );
-} 
+}; 

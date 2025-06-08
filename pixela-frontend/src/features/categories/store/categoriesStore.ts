@@ -1,7 +1,7 @@
 import { create } from 'zustand';
-import { MediaType } from '../types/media';
 import { getCategoriesForMediaType } from '@/api/categories/categories';
 import { Category } from '@/api/categories/categories';
+import { MediaType } from '../types/media';
 
 /**
  * Interfaz para el estado de las categorías

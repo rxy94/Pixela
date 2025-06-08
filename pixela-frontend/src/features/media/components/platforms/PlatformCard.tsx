@@ -1,17 +1,18 @@
 "use client";
 
-import { WatchProvider } from '../../types';
-import { openPlatform } from './platformUtils';
 import Image from 'next/image';
+import { openPlatform } from './platformUtils';
 import { formatImageUrl } from '@/api/peliculas/mapPelicula';
+import { PlatformCardProps } from '@/features/media/types/platforms';
 
-interface PlatformCardProps {
-  provider: WatchProvider;
-}
-
+/**
+ * Componente que muestra una tarjeta de plataforma de streaming
+ * @param {PlatformCardProps} props - Propiedades del componente
+ * @param {WatchProvider} props.provider - Proveedor de streaming
+ * @returns {JSX.Element} Componente de tarjeta de plataforma de streaming
+ */
 export function PlatformCard({ provider }: PlatformCardProps) {
   const handleClick = () => {
-    console.log('[DEBUG] PlatformCard - Click en proveedor:', provider);
     openPlatform(provider);
   };
 
@@ -20,8 +21,6 @@ export function PlatformCard({ provider }: PlatformCardProps) {
     ? provider.logo 
     : formatImageUrl(provider.logo);
   
-  console.log('[DEBUG] PlatformCard - Logo URL final:', logoUrl);
-  
   return (
     <div
       onClick={handleClick}
@@ -29,20 +28,22 @@ export function PlatformCard({ provider }: PlatformCardProps) {
       role="button"
       tabIndex={0}
     >
-      <div className="relative w-8 h-8 flex-shrink-0 overflow-hidden rounded-md">
+      <div className="relative flex-shrink-0 w-8 h-8 overflow-hidden rounded-md">
         {logoUrl ? (
-          <img
+          <Image
             src={logoUrl}
             alt={provider.nombre || 'Plataforma'}
-            className="w-full h-full object-contain"
+            className="object-contain w-full h-full"
+            width={32}
+            height={32}
           />
         ) : (
-          <div className="w-full h-full bg-gray-800 flex items-center justify-center text-xs text-gray-400">
+          <div className="flex items-center justify-center w-full h-full text-xs text-gray-400 bg-gray-800">
             {(provider.nombre || '?').substring(0, 2)}
           </div>
         )}
       </div>
-      <span className="text-white font-medium truncate">
+      <span className="font-medium text-white truncate">
         {provider.nombre || provider.id || 'Plataforma'}
       </span>
     </div>

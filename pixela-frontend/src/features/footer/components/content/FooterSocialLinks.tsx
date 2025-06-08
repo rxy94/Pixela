@@ -4,10 +4,15 @@ import Link from 'next/link';
 import { FaInstagram, FaLinkedin, FaGithub } from 'react-icons/fa';
 
 const STYLES = {
+  // Layout y estructura
   container: "w-full flex flex-col space-y-4 md:space-y-5 ipad:space-y-4",
+  socialList: "flex gap-4 md:gap-5 ipad:gap-4",
+
+  // Título y decoración
   title: "text-white font-bold text-base md:text-lg relative inline-block ipad:text-base",
   titleUnderline: "absolute -bottom-1 left-0 w-8 h-0.5 bg-[#ff007f]/50 rounded-full",
-  socialList: "flex gap-4 md:gap-5 ipad:gap-4",
+
+  // Enlaces sociales
   socialLink: "group p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#ff007f]/30 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 backdrop-blur-sm shadow-lg shadow-black/20 hover:shadow-[#ff007f]/10 ipad:p-2.5",
   socialIcon: "text-white/70 group-hover:text-[#ff007f] transition-colors duration-300 text-lg md:text-xl ipad:text-lg",
 } as const;

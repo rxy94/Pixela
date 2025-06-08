@@ -1,21 +1,27 @@
 import { useMemo } from 'react';
-
-type BackgroundEffectProps = {
-  isAnimated: boolean;
-};
+import { BackgroundEffectProps } from "@/features/footer/types/components";
 
 const STYLES = {
+  // Contenedor principal
   container: "absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000",
+  
+  // Gradientes animados
   gradientContainer: "absolute top-[10%] left-[5%] w-64 h-64 rounded-full bg-[#ff007f]/10 filter blur-[80px] animate-pulse-slow",
   gradientContainer2: "absolute bottom-[20%] right-[10%] w-80 h-80 rounded-full bg-purple-500/10 filter blur-[100px] animate-pulse-slow animation-delay-1000",
   gradientContainer3: "absolute top-[40%] right-[25%] w-40 h-40 rounded-full bg-blue-500/10 filter blur-[60px] animate-pulse-slow animation-delay-2000",
+  
+  // Elementos de fondo
   pixelGrid: "absolute inset-0 w-full h-full",
   flowLinesContainer: "absolute inset-0 w-full h-full overflow-hidden",
   flowLine: "absolute bg-gradient-to-r from-[#ff007f]/5 to-transparent",
+  
+  // Elementos decorativos
   bubble: "absolute bottom-0 rounded-full bg-[#ff007f]/20 backdrop-blur-md",
   digitalElementsContainer: "absolute inset-0 overflow-hidden pointer-events-none",
   triangle: "absolute opacity-20",
   pixel: "absolute bg-[#ff007f]",
+  
+  // Texto de fondo
   backgroundText: "pointer-events-none select-none absolute inset-0 w-full h-full hidden md:flex items-center justify-center font-black uppercase tracking-tighter z-0 leading-none text-transparent transition-opacity duration-1000"
 } as const;
 

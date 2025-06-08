@@ -1,12 +1,14 @@
 "use client";
 
-import { WatchProvider } from '../../types';
 import { PlatformCard } from './PlatformCard';
+import { StreamingProvidersProps } from '@/features/media/types/platforms';
 
-interface StreamingProvidersProps {
-  providers: WatchProvider[];
-}
-
+/**
+ * Componente que muestra los proveedores de streaming de una película o serie
+ * @param {StreamingProvidersProps} props - Propiedades del componente
+ * @param {WatchProvider[]} props.providers - Proveedores de streaming
+ * @returns {JSX.Element} Componente de proveedores de streaming
+ */
 export function StreamingProviders({ providers }: StreamingProvidersProps) {
   // Verificación y registro para depuración
   console.log('[DEBUG] StreamingProviders - Proveedores recibidos:', providers);
@@ -17,8 +19,8 @@ export function StreamingProviders({ providers }: StreamingProvidersProps) {
   }
   
   return (
-    <section className="mb-12 mt-24 md:mt-24 lg:mt-0">
-      <h2 className="text-2xl font-bold text-white mb-6">Disponible en</h2>
+    <section className="mt-24 mb-12 md:mt-24 lg:mt-0">
+      <h2 className="mb-6 text-2xl font-bold text-white">Disponible en</h2>
       <div className="flex flex-wrap gap-4">
         {providers.map((provider) => (
           <PlatformCard 

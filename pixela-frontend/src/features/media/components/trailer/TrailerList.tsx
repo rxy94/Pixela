@@ -1,13 +1,7 @@
 "use client";
 
-import { Trailer } from '../../types';
-import { TrailerListItem } from './TrailerListItem';
-
-interface TrailerListProps {
-  trailers: Trailer[];
-  selectedTrailerId: string;
-  onSelectTrailer: (key: string) => void;
-}
+import TrailerListItem from './TrailerListItem';
+import { TrailerListProps } from '@/features/media/types/trailer';
 
 export function TrailerList({
   trailers,
@@ -20,8 +14,8 @@ export function TrailerList({
   const displayTrailers = trailers.slice(0, Math.min(6, trailers.length));
   
   return (
-    <div className="lg:w-1/3 w-full">
-      <div className="flex flex-col space-y-4 pr-3 overflow-visible">
+    <div className="w-full lg:w-1/3">
+      <div className="flex flex-col pr-3 space-y-4 overflow-visible">
         {displayTrailers.map((trailer, index) => (
           <TrailerListItem
             key={trailer.key}

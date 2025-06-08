@@ -1,8 +1,5 @@
 import clsx from 'clsx';
 
-/**
- * Estilos constantes para el componente ProfileLoader
- */
 const STYLES = {
   container: clsx(
     'profile-loader',

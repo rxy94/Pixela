@@ -8,11 +8,7 @@ import { DiscoverSelector } from '../ui/DiscoverSelector';
 import { IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';
 import { DiscoverGrid } from '../layout/DiscoverGrid';
-import { MediaType } from '../../type';
-
-interface DiscoverContentProps {
-    heading: string[];
-}
+import { headings } from '../../content/headings';
 
 const STYLES = {
     container: "relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden",
@@ -45,13 +41,15 @@ const STYLES = {
     buttonHoverEffect: "absolute inset-0 bg-white/20 w-0 group-hover:w-full transition-all duration-300",
 } as const;
 
-export const DiscoverContent = ({ heading }: DiscoverContentProps) => {
+type DiscoverMediaType = 'serie' | 'pelicula';
+
+export const DiscoverContent = () => {
     const isMobile = useMediaQuery('(max-width: 1023px)');
-    const [activeType, setActiveType] = useState<MediaType>('series');
+    const [activeType, setActiveType] = useState<DiscoverMediaType>('serie');
+    const [heading] = useState(() => headings[Math.floor(Math.random() * headings.length)]);
     
     const setSelectedMediaType = useCategoriesStore((state) => state.setSelectedMediaType);
     
-
     const containerRef = useRef<HTMLDivElement>(null);
     const leftSectionRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
@@ -63,7 +61,11 @@ export const DiscoverContent = ({ heading }: DiscoverContentProps) => {
     });
 
     const handleExploreClick = () => {
-        setSelectedMediaType(activeType);
+        if (activeType === 'serie') {
+            setSelectedMediaType('series');
+        } else {
+            setSelectedMediaType('movies');
+        }
     };
 
     const descriptionContent = (
@@ -127,23 +129,11 @@ export const DiscoverContent = ({ heading }: DiscoverContentProps) => {
                     <div ref={leftSectionRef} className={STYLES.desktopLeftSection}>
                         <p className={STYLES.discoverLabel}>DESCUBRE</p>
                         <h2 className={STYLES.mainHeadingDesktop}>
-                            {heading.map((line, index) => {
-                                const words = line.split(' ');
-                                if (words.length > 1) {
-                                    const lastWord = words.pop();
-                                    const restOfLine = words.join(' ');
-                                    return (
-                                        <span key={index} className="block">
-                                            {restOfLine}&nbsp;{lastWord}
-                                        </span>
-                                    );
-                                }
-                                return (
-                                    <span key={index} className="block">
-                                        {line}
-                                    </span>
-                                );
-                            })}
+                            {heading.map((line, index) => (
+                                <span key={index} className="block">
+                                    {line}
+                                </span>
+                            ))}
                         </h2>
                         {descriptionContent}
                         <div className={STYLES.desktopActions}>

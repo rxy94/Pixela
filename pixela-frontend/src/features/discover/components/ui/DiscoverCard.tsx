@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { MediaContent, MediaType } from "../../type";
-import { TrendingSerie } from "@/features/trending/type";
+import { MediaType } from "@/features/media/types";
+import { MediaContent } from "@/features/discover/type";
+import { TrendingSerie } from "@/features/trending/types";
 import clsx from "clsx";
 import { useState } from "react";
 import { Badge } from "@/shared/components/Badge";
@@ -78,17 +79,17 @@ const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
           )}
           
           <span className={STYLES.badge}>
-            {type === 'series' ? 'Serie' : 'Película'}
+            {type === 'serie' ? 'Serie' : 'Película'}
           </span>
         </div>
       </div>
 
       <ActionButtons 
         tmdbId={Number(media.id)}
-        itemType={type === 'series' ? 'series' : 'movie'}
+        itemType={type === 'serie' ? 'series' : 'movie'}
         onFollowClick={onFollowClick}
         onReviewsClick={onReviewsClick}
-        detailsHref={type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`}
+        detailsHref={type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`}
         infoLabel="Más información"
         followLabel="Favoritos"
         reviewsLabel="Reseñas"
@@ -104,7 +105,7 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   
-  const imagePath = type === 'series' 
+  const imagePath = type === 'serie' 
     ? media.poster_path || media.backdrop_path
     : media.backdrop_path || media.poster_path;
   
@@ -116,11 +117,11 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
   );
 
   const handleFollowClick = () => {
-    console.log("Seguir", type === 'series' ? 'serie' : 'película', media.title);
+    console.log("Seguir", type === 'serie' ? 'serie' : 'película', media.title);
   };
 
   const handleReviewsClick = () => {
-    const route = type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`;
+    const route = type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`;
     router.prefetch(route);
     router.push(route);
   };

@@ -1,8 +1,6 @@
 "use client";
 
-interface BackdropImageProps {
-  backdropUrl: string;
-}
+import { BackdropImageProps } from '@/features/media/types/backdrop';
 
 const STYLES = {
   container: "absolute inset-0 bg-cover bg-center",

@@ -17,10 +17,13 @@ La feature **About** es una sección informativa que presenta la identidad, misi
 src/features/about/
 ├── README.md                    # Este archivo
 ├── index.ts                     # Exportaciones principales
+├── types/                       # Tipos y interfaces
+│   ├── components.ts           # Interfaces de componentes
+│   └── index.ts               # Exportaciones centralizadas
 ├── components/
 │   └── AboutSection.tsx         # Componente principal
 └── data/
-    └── aboutData.tsx            # Datos estáticos y interfaces
+    └── aboutData.tsx            # Datos estáticos
 ```
 
 ## 🧩 Componentes
@@ -49,6 +52,7 @@ Componente principal que renderiza toda la sección "Acerca de". Incluye:
 ## 📊 Datos y Configuración
 
 ### Interfaces TypeScript
+**Ubicación**: `types/components.ts`
 
 ```typescript
 interface TeamMember {
@@ -70,6 +74,7 @@ interface FeatureCard {
 ```
 
 ### Datos Estáticos
+**Ubicación**: `data/aboutData.tsx`
 
 #### TEAM_MEMBERS
 - Array con información de los desarrolladores
@@ -107,7 +112,8 @@ interface FeatureCard {
 - `react-icons/fa`: Iconos Font Awesome
 
 ### Internas
-- `../data/aboutData`: Datos estáticos e interfaces
+- `@/features/about/types`: Interfaces y tipos
+- `@/features/about/data`: Datos estáticos
 
 ## 📋 Uso
 
@@ -128,6 +134,10 @@ import { AboutSection } from '@/features/about';
 ### Para modificar características:
 1. Editar el array `FEATURE_CARDS` en `data/aboutData.tsx`
 2. Añadir/quitar tarjetas según necesidad
+
+### Para modificar tipos:
+1. Editar las interfaces en `types/components.ts`
+2. Actualizar las importaciones en los archivos que las usan
 
 ## 🎯 Características Principales
 

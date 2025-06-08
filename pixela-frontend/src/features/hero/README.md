@@ -17,24 +17,33 @@ La feature **Hero** es la sección principal de bienvenida que aparece en la pá
 ```
 src/features/hero/
 ├── README.md                    # Este archivo
-├── type.ts                      # Interfaces principales
-├── content.ts                   # Contenido estático y datos
-├── store.ts                     # Store global (Zustand)
-├── components/
-│   ├── index.ts                 # Exportaciones centralizadas
-│   ├── HeroSection.tsx          # Componente principal
-│   ├── ImageCarousel.tsx        # Carrusel de imágenes
-│   ├── ContentSection.tsx       # Contenido de texto y botones
-│   ├── ProgressIndicator.tsx    # Indicadores y controles
-│   └── NavigationControls.tsx   # Botones de navegación
-└── services/
-    └── heroBackdropService.ts   # Servicio de imágenes destacadas
+├── types/
+│   ├── content.ts              # Interfaces y tipos del hero
+│   └── state.ts                # Tipos del estado global
+├── hooks/
+│   ├── useCarouselAutoPlay.ts  # Hook para reproducción automática
+│   └── useProgressBar.ts       # Hook para barra de progreso
+├── services/
+│   ├── heroBackdropService.ts  # Servicio de imágenes destacadas
+│   └── heroContentService.ts   # Servicio de contenido estático
+├── store/
+│   └── heroStore.ts           # Store global (Zustand)
+└── components/
+    ├── index.ts               # Exportaciones centralizadas
+    ├── core/
+    │   └── HeroSection.tsx    # Componente principal
+    ├── content/
+    │   ├── ImageCarousel.tsx  # Carrusel de imágenes
+    │   └── ContentSection.tsx # Contenido de texto y botones
+    └── ui/
+        ├── ProgressIndicator.tsx    # Indicadores y controles
+        └── NavigationControls.tsx   # Botones de navegación
 ```
 
 ## 🧩 Componentes
 
 ### HeroSection
-**Ubicación**: `components/HeroSection.tsx`
+**Ubicación**: `components/core/HeroSection.tsx`
 
 Componente principal que orquesta toda la funcionalidad del hero:
 
@@ -51,8 +60,6 @@ interface HeroSectionProps {
   description: string;
   secondaryButtonText: string;
   images?: string[];
-  ctaText?: string;
-  ctaLink?: string;
 }
 ```
 
@@ -61,7 +68,7 @@ interface HeroSectionProps {
 - **useProgressBar**: Controla la barra de progreso animada
 
 ### ImageCarousel
-**Ubicación**: `components/ImageCarousel.tsx`
+**Ubicación**: `components/content/ImageCarousel.tsx`
 
 Carrusel de imágenes optimizado con efectos visuales:
 
@@ -71,6 +78,13 @@ Carrusel de imágenes optimizado con efectos visuales:
 - **Fallback**: Estado por defecto si no hay imágenes
 - **Responsive**: Tamaños optimizados por breakpoint
 
+#### Props:
+```typescript
+interface ImageCarouselProps {
+  images: string[];
+}
+```
+
 #### Características:
 - **Calidad máxima**: Quality 100% para alta definición
 - **Priority loading**: Carga eager para primera imagen
@@ -79,7 +93,7 @@ Carrusel de imágenes optimizado con efectos visuales:
 - **Multi-overlay**: Gradientes superiores e inferiores
 
 ### ContentSection
-**Ubicación**: `components/ContentSection.tsx`
+**Ubicación**: `components/content/ContentSection.tsx`
 
 Sección de contenido textual y llamadas a la acción:
 
@@ -89,13 +103,25 @@ Sección de contenido textual y llamadas a la acción:
 - **Botón secundario**: Navegación con ícono animado
 - **Layout responsive**: Adaptación completa móvil/desktop
 
-#### Subcomponentes:
-- **AccentLine**: Línea decorativa de la marca
-- **HeroTitle**: Título con texto acentuado
-- **SecondaryButton**: Botón con animación de hover
+#### Props:
+```typescript
+interface HeroTitleProps {
+  title: string;
+  accentTitle: string;
+}
+
+interface AccentLineProps {
+  className?: string;
+}
+
+interface SecondaryButtonProps {
+  text: string;
+  href: string;
+}
+```
 
 ### ProgressIndicator
-**Ubicación**: `components/ProgressIndicator.tsx`
+**Ubicación**: `components/ui/ProgressIndicator.tsx`
 
 Controles e indicadores del carrusel:
 
@@ -105,13 +131,15 @@ Controles e indicadores del carrusel:
 - **Contador**: Indicador de posición actual (ej: "3/6")
 - **Responsive**: Tamaños adaptados por dispositivo
 
-#### Subcomponentes:
-- **ProgressBar**: Barra de progreso animada
-- **PlaybackControl**: Botón de play/pause
-- **SlideDot**: Puntos de navegación individuales
+#### Props:
+```typescript
+interface ProgressIndicatorProps {
+  images: string[];
+}
+```
 
 ### NavigationControls
-**Ubicación**: `components/NavigationControls.tsx`
+**Ubicación**: `components/ui/NavigationControls.tsx`
 
 Controles de navegación manual del carrusel:
 
@@ -121,10 +149,22 @@ Controles de navegación manual del carrusel:
 - **Accesibilidad**: Labels apropriados y keyboard support
 - **Responsive**: Tamaños y posiciones adaptadas
 
+#### Props:
+```typescript
+interface NavigationControlsProps {
+  imagesLength: number;
+}
+
+interface NavigationButtonProps {
+  direction: 'prev' | 'next';
+  onClick: () => void;
+}
+```
+
 ## 🔧 Gestión de Estado
 
 ### Store (Zustand)
-**Ubicación**: `store.ts`
+**Ubicación**: `store/heroStore.ts`
 
 ```typescript
 interface HeroState {
@@ -145,17 +185,6 @@ interface HeroState {
 }
 ```
 
-#### Características:
-- **Transiciones suaves**: Función auxiliar `transitionToImage` con fade
-- **Navegación circular**: Wrap-around entre primera y última imagen
-- **Control de progreso**: Sistema granular de progreso (0-100%)
-- **Estados de animación**: Control de fade in/out
-
-#### Configuración:
-```typescript
-const FADE_ANIMATION_DURATION = 300; // ms
-```
-
 ## 🌐 Servicios y API
 
 ### heroBackdropService
@@ -164,87 +193,40 @@ const FADE_ANIMATION_DURATION = 300; // ms
 Servicio para obtener imágenes destacadas:
 
 ```typescript
+type MediaItem = {
+  id: string;
+  type: 'movie' | 'serie';
+};
+
+type MediaResponse = {
+  backdrop?: string;
+};
+
 const getFeaturedBackdrops = (): Promise<string[]>
 ```
 
-#### Funcionalidades:
-- **Contenido curado**: Lista predefinida de medios destacados
-- **Peticiones paralelas**: Promise.all para optimización
-- **Manejo de errores**: Fallback a array vacío
-- **Tipo mixto**: Soporta películas y series
-- **Filtrado**: Solo imágenes válidas
+### heroContentService
+**Ubicación**: `services/heroContentService.ts`
 
-#### Medios destacados:
-```typescript
-const featuredMedia: MediaItem[] = [
-  { id: "986056",  type: "movie" },  // Thunderbolts
-  { id: "124364",  type: "serie" },  // From
-  { id: "1084199", type: "movie" },  // La acompañante
-  { id: "680",     type: "movie" },  // Pulp Fiction
-  { id: "95396",   type: "serie" },  // Severance
-  { id: "4607",    type: "serie" },  // Lost
-];
-```
-
-## 📊 Contenido y Datos
-
-### getHeroData Function
-**Ubicación**: `content.ts`
+Servicio para obtener el contenido estático del hero:
 
 ```typescript
+interface HeroData {
+  title: string;
+  accentTitle: string;
+  description: string;
+  secondaryButtonText: string;
+  images: string[];
+}
+
 const getHeroData = (): Promise<HeroData>
 ```
-
-#### Datos estáticos:
-- **Título**: "Explora el universo"
-- **Título acentuado**: "cinematográfico"
-- **Descripción**: Texto promocional de la plataforma
-- **Botón**: "Descubrir más"
-- **Imágenes**: Dinámicas desde heroBackdropService
-
-## 🎨 Sistema de Diseño
-
-### Paleta Visual
-- **Texto principal**: `text-pixela-light`
-- **Texto acentuado**: `text-pixela-accent`
-- **Overlays**: `bg-pixela-dark` con opacidades variables
-- **Gradientes**: Múltiples capas para profundidad visual
-
-### Tipografía
-- **Título principal**: 4xl a 7xl según dispositivo (28px-72px)
-- **Descripción**: Base a xl (16px-20px)
-- **Tracking**: Tight para títulos, normal para descripción
-
-### Efectos Visuales
-- **Grayscale**: Filtro en imágenes para consistencia
-- **Backdrop blur**: En controles y descripción
-- **Drop shadows**: Efectos de profundidad en texto
-- **Gradientes**: Overlays superior e inferior
-
-### Animaciones
-- **Transiciones de imagen**: 500ms ease-in-out
-- **Fade effects**: 300ms para cambios de estado
-- **Progress bar**: Incremento cada 25ms (0.5% por step)
-- **Hover effects**: 300ms en botones y controles
-
-## 🔗 Dependencias
-
-### Externas
-- `zustand`: Gestión de estado global
-- `next/image`: Optimización de imágenes
-- `next/link`: Navegación interna
-- `react-icons/fi`: Iconos Feather
-- `clsx`: Utilidad para clases CSS condicionales
-
-### Internas
-- `@/api/peliculas/peliculas`: API de películas
-- `@/api/series/series`: API de series
 
 ## 📱 Uso
 
 ```tsx
 import { HeroSection } from '@/features/hero';
-import { getHeroData } from '@/features/hero/content';
+import { getHeroData } from '@/features/hero/services/heroContentService';
 
 // En una página
 const heroData = await getHeroData();
@@ -262,27 +244,15 @@ const heroData = await getHeroData();
 
 ### Timing del carrusel:
 ```typescript
-// En HeroSection.tsx
+// En useCarouselAutoPlay.ts
 const AUTO_PLAY_INTERVAL = 5000; // ms
 ```
 
 ### Progreso de la barra:
 ```typescript
-// En HeroSection.tsx
+// En useProgressBar.ts
 const PROGRESS_INCREMENT = 0.5; // % por step
 const PROGRESS_INTERVAL = 25; // ms entre increments
-```
-
-### Optimización de imágenes:
-```typescript
-// En ImageCarousel.tsx
-const IMAGE_CONFIG = {
-  width: 3000,
-  height: 2000,
-  quality: 100,
-  priority: true,
-  sizes: "(max-width: 393px) 393px, (...), 1920px"
-};
 ```
 
 ## 🎯 Características Principales
@@ -334,7 +304,7 @@ const IMAGE_CONFIG = {
 3. Verificar que IDs sean válidos en APIs
 
 ### Para modificar timing del carrusel:
-1. Ajustar `AUTO_PLAY_INTERVAL` en `HeroSection.tsx`
+1. Ajustar `AUTO_PLAY_INTERVAL` en `useCarouselAutoPlay.ts`
 2. Sincronizar con `PROGRESS_INCREMENT` y `PROGRESS_INTERVAL`
 
 ### Para personalizar efectos visuales:
@@ -343,5 +313,5 @@ const IMAGE_CONFIG = {
 3. Customizar filtros CSS (grayscale, blur, etc.)
 
 ### Para cambiar el contenido estático:
-1. Editar función `getHeroData` en `content.ts`
+1. Editar función `getHeroData` en `heroContentService.ts`
 2. Mantener consistencia en tono y longitud de textos 

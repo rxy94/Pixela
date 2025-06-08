@@ -1,15 +1,11 @@
-import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
-import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
+import { TrendingSerie, TrendingMovie } from "@/features/trending/types";
+import { MediaType } from "@/features/trending/types/common";
+import { FetchOptions } from "@/features/trending/types/api";
+import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PROD   UCTION: Cambiar {API_BASE_URL} por {API_URL}
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
-type MediaType = 'series' | 'movies';
-
-interface FetchOptions {
-    limit?: number;
-    offset?: number;
-}
 
 /**
  * Función base para realizar peticiones a la API de tendencias

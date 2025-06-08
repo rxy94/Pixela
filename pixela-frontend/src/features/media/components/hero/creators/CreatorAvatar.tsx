@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState, memo } from 'react';
+import { CreatorAvatarProps } from '@/features/media/types/creators';
 
 const STYLES = {
   container: 'flex items-center gap-2',
@@ -13,13 +14,10 @@ const STYLES = {
   placeholderInitials: 'text-white text-sm font-semibold'
 } as const;
 
-interface CreatorAvatarProps {
-  photo?: string;
-  name: string;
-}
-
 /**
  * Componente placeholder para avatar de director/creador
+ * @param {string} name - Nombre del director/creador
+ * @returns {JSX.Element} Componente de avatar de director/creador
  */
 const AvatarPlaceholder = memo(({ name }: { name: string }) => {
   const initials = name
@@ -41,6 +39,13 @@ const AvatarPlaceholder = memo(({ name }: { name: string }) => {
 
 AvatarPlaceholder.displayName = 'AvatarPlaceholder';
 
+/**
+ * Componente que muestra el avatar de un director/creador
+ * @param {CreatorAvatarProps} props - Propiedades del componente
+ * @param {string} props.photo - URL de la foto del director/creador
+ * @param {string} props.name - Nombre del director/creador
+ * @returns {JSX.Element} Componente de avatar de director/creador
+ */
 export const CreatorAvatar = ({ photo, name }: CreatorAvatarProps) => {
   const [imageError, setImageError] = useState(false);
 

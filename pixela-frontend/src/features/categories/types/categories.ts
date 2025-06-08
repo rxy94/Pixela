@@ -1,5 +1,5 @@
 import { Category } from '@/api/categories/categories';
-import { MediaType } from './types/media';
+import { MediaType } from './media';
 
 /**
  * Interfaz para el estado de las categorías.

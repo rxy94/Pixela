@@ -1,9 +1,11 @@
 import React from 'react';
+import { TrailerPlayerProps } from '@/features/media/types/trailer';
 
-interface TrailerPlayerProps {
-  trailerId: string;
-}
-
+/**
+ * Componente que muestra el player de un trailer
+ * @param {TrailerPlayerProps} props - Propiedades del componente
+ * @returns {JSX.Element} Componente de player de trailer
+ */
 export function TrailerPlayer({ trailerId }: TrailerPlayerProps) {
   if (!trailerId) return null;
   

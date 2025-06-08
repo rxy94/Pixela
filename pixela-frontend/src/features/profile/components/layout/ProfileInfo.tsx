@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import type { UserResponse } from '@/api/auth/types';
 import { FiUser, FiMail, FiCalendar, FiShield, FiEdit } from 'react-icons/fi';
 import clsx from 'clsx';
-
+import { ProfileInfoProps } from '@/features/profile/types/layout';
 /**
  * Estilos constantes para el componente ProfileInfo
  */
@@ -29,18 +29,6 @@ const STYLES = {
   icon: 'profile-info__icon text-gray-500'
 } as const;
 
-/**
- * Props para el componente ProfileInfo
- * @interface ProfileInfoProps
- */
-interface ProfileInfoProps {
-  /** Datos del usuario */
-  user: UserResponse;
-  /** Función a ejecutar al hacer clic en editar */
-  onEdit: () => void;
-  /** Trigger para refrescar datos */
-  refreshTrigger?: number;
-}
 
 /**
  * Componente que muestra la información del perfil del usuario

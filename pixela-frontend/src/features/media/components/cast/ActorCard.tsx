@@ -1,14 +1,16 @@
-import { Actor } from '../../types';
+import { ActorCardProps } from '@/features/media/types/cast';
 import Image from 'next/image';
 import { memo, useState } from 'react';
 import clsx from 'clsx';
 import { FiUser } from 'react-icons/fi';
 
-interface ActorCardProps {
-  actor: Actor;
-  className?: string;
-}
-
+/**
+ * Componente que muestra una tarjeta de actor con su imagen y detalles
+ * @param {ActorCardProps} props - Propiedades del componente
+ * @param {Actor} props.actor - Datos del actor a mostrar
+ * @param {string} [props.className] - Clases CSS opcionales para personalizar el estilo
+ * @returns {JSX.Element} Componente de tarjeta de actor
+ */
 export const ActorCard = memo(function ActorCard({ actor, className = '' }: ActorCardProps) {
   const [imageError, setImageError] = useState(false);
   const hasValidImage = actor.foto && !imageError;
@@ -23,7 +25,7 @@ export const ActorCard = memo(function ActorCard({ actor, className = '' }: Acto
       <div className="relative aspect-[2/3] overflow-hidden">
         {hasValidImage ? (
           <Image 
-            src={actor.foto} 
+            src={actor.foto || ''} 
             alt={actor.nombre}
             fill
             sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, 180px"
@@ -32,20 +34,20 @@ export const ActorCard = memo(function ActorCard({ actor, className = '' }: Acto
             onError={() => setImageError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-800">
-            <FiUser className="text-gray-400 w-1/3 h-1/3" />
+          <div className="flex items-center justify-center w-full h-full bg-gray-800">
+            <FiUser className="w-1/3 text-gray-400 h-1/3" />
           </div>
         )}
       </div>
       <div className="p-3">
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">Nombre:</span>
-          <h3 className="text-white font-medium text-sm truncate">{actor.nombre}</h3>
+          <h3 className="text-sm font-medium text-white truncate">{actor.nombre}</h3>
         </div>
         {actor.personaje && (
           <div className="flex flex-col mt-1">
             <span className="text-xs text-gray-500">Personaje:</span>
-            <p className="text-gray-300 text-xs font-medium truncate">{actor.personaje}</p>
+            <p className="text-xs font-medium text-gray-300 truncate">{actor.personaje}</p>
           </div>
         )}
       </div>

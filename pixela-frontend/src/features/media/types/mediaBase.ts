@@ -1,7 +1,8 @@
 export type MediaType = 'serie' | 'pelicula';
 
 import { Actor } from './people';
-import { Trailer, WatchProvider, Image } from './supplements';
+import { WatchProvider, Image } from './supplements';
+import { Trailer } from './trailer';
 
 /**
  * Media

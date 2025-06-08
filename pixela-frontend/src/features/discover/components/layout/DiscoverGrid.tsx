@@ -2,7 +2,7 @@
 
 import { useDiscoverStore } from '../../store/discoverStore';
 import { DiscoverCard } from '../ui/DiscoverCard';
-import { MediaType } from '../../type';
+import { MediaType } from '@/features/media/types';
 import clsx from 'clsx';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
@@ -32,7 +32,7 @@ const STYLES = {
  */
 export const DiscoverGrid = ({ type }: DiscoverGridProps) => {
     const { series, movies } = useDiscoverStore();
-    const contentToDisplay = type === 'series' ? series : movies;
+    const contentToDisplay = type === 'serie' ? series : movies;
     const isMobile = useMediaQuery('(max-width: 768px)'); 
 
     const limit = isMobile ? (DISCOVER_LIMIT % 2 !== 0 ? DISCOVER_LIMIT - 1 : DISCOVER_LIMIT) : DISCOVER_LIMIT;

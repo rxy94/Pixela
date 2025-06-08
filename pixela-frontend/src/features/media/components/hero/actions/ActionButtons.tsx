@@ -4,14 +4,9 @@ import { FaBookmark, FaPen } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { favoritesAPI } from '@/api/favorites/favorites';
-import { ReviewModal } from '../../review/ReviewModal';
+import { ReviewModal } from '@/features/media/components/review/ReviewModal';
+import { ActionButtonsProps } from '@/features/media/types/actions';
 
-interface ActionButtonsProps {
-  tmdbId: number;
-  itemType: 'movie' | 'series';
-  title: string;
-  refreshReviews?: () => void;
-}
 
 const STYLES = {
   container: 'flex gap-4',
@@ -21,6 +16,15 @@ const STYLES = {
   penIcon: 'w-5 h-5',
 };
 
+/** 
+ * Componente que muestra los botones de acción para una película o serie
+ * @param {ActionButtonsProps} props - Propiedades del componente
+ * @param {number} props.tmdbId - ID de la película o serie
+ * @param {'movie' | 'series'} props.itemType - Tipo de película o serie
+ * @param {string} props.title - Título de la película o serie
+ * @param {() => void} [props.refreshReviews] - Función para refrescar las reseñas
+ * @returns {JSX.Element} Componente de botones de acción
+ */
 export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: ActionButtonsProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
@@ -28,6 +32,10 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
   const [showReviewModal, setShowReviewModal] = useState(false);
   const { isAuthenticated, checkAuth } = useAuthStore();
 
+  /**
+   * Efecto para verificar el estado de favoritos
+   * @returns {void}
+   */
   useEffect(() => {
     const checkFavoriteStatus = async () => {
       if (!isAuthenticated) return;
@@ -47,12 +55,20 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
     checkFavoriteStatus();
   }, [isAuthenticated, tmdbId, itemType]);
 
+  /**
+   * Maneja el evento de agregar o eliminar un favorito
+   * @returns {Promise<void>}
+   */
   const handleFavorite = async () => {
     if (!isAuthenticated) {
       window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + '/login';
       return;
     }
 
+    /**
+     * Establece el estado de carga y maneja el evento de agregar o eliminar un favorito
+     * @returns {Promise<void>}
+     */
     setIsLoading(true);
     try {
       if (isFavorited && favoriteId) {
@@ -83,6 +99,10 @@ export const ActionButtons = ({ tmdbId, itemType, title, refreshReviews }: Actio
     }
   };
 
+  /**
+   * Maneja el evento de hacer una reseña
+   * @returns {void}
+   */
   const handleReview = () => {
     if (!isAuthenticated) {
       window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + '/login';

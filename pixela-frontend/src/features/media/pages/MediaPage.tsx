@@ -3,7 +3,7 @@
 import { Media } from '../types';
 import { useEffect, useCallback } from 'react';
 import { reviewsAPI } from '@/api/reviews/reviews';
-import { useMediaStore } from '../store/mediaStore';
+import { useMediaStore } from '@/features/media/store/mediaStore';
 
 import {   
   HeroSection, 
@@ -13,17 +13,31 @@ import {
   TrailersSection, 
   GallerySection,
   ReviewSection,
-} from '../components';
+} from '@/features/media/components';
 
 interface MediaPageProps {
   media: Media;
 }
 
+/**
+ * Página de media
+ * @param {MediaPageProps} props - Propiedades de la página
+ * @returns {JSX.Element} Página de media
+ */
 export const MediaPage = ({ media }: MediaPageProps) => {
   const tmdbId = Number(media.id);
   const itemType = media.tipo === 'pelicula' ? 'movie' : 'series';
 
-  // Obtener estado y acciones del store
+  /**
+   * Estado y acciones del store
+   * @type {Object}
+   * @property {boolean} showPosterModal - Indica si el modal de la imagen está abierto
+   * @property {() => void} setShowPosterModal - Función que se ejecuta al cerrar el modal de la imagen
+   * @property {Review[]} reviews - Lista de reseñas
+   * @property {boolean} loadingReviews - Indica si se está cargando las reseñas
+   * @property {string | null} errorReviews - Indica si hay un error en las reseñas
+   * @property {() => void} setReviews - Función que se ejecuta al actualizar las reseñas
+   */
   const {
     showPosterModal,
     setShowPosterModal,
@@ -35,6 +49,11 @@ export const MediaPage = ({ media }: MediaPageProps) => {
     setErrorReviews
   } = useMediaStore();
 
+  /**
+   * Función que actualiza las reseñas
+   * @returns {void}
+   * @description Función que actualiza las reseñas
+   */
   const refreshReviews = useCallback(() => {
     setLoadingReviews(true);
     setErrorReviews(null);
@@ -46,6 +65,10 @@ export const MediaPage = ({ media }: MediaPageProps) => {
       .finally(() => setLoadingReviews(false));
   }, [tmdbId, itemType, setReviews, setLoadingReviews, setErrorReviews]);
 
+  /**
+   * Efecto que actualiza las reseñas
+   * @description Efecto que actualiza las reseñas
+   */
   useEffect(() => {
     refreshReviews();
   }, [refreshReviews]);

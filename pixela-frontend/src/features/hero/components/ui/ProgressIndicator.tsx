@@ -1,6 +1,9 @@
+'use client';
+
 import clsx from 'clsx';
-import { useHeroStore } from "../../store/heroStore";
+import { useHeroStore } from "@/features/hero/store/heroStore";
 import { FiPlay, FiPause } from "react-icons/fi";
+import { ProgressIndicatorProps } from "@/features/hero/types/content";
 
 const STYLES = {
   progress: {
@@ -23,14 +26,6 @@ const STYLES = {
     icon: "h-3 w-3 sm:h-3 sm:w-3 md:h-3.5 md:w-3.5 lg:h-4 lg:w-4"
   }
 } as const;
-
-/**
- * Props para el componente ProgressIndicator
- * @property {string[]} images - Array de URLs de imágenes para el carrusel
- */
-interface ProgressIndicatorProps {
-  images: string[];
-}
 
 /**
  * Componente que muestra un punto de control para una imagen específica

@@ -1,3 +1,4 @@
+import { UserResponse } from "@/api/auth/types";
 /**
  * Interfaz para los datos del formulario de perfil
  * @interface ProfileFormData
@@ -47,3 +48,12 @@ export interface UpdateProfileFormProps {
 export interface ProfileErrorProps {
   message?: string;
 } 
+
+/**
+ * Props para el componente ProfileClient
+ * @interface ProfileClientProps
+ * @property {UserResponse} user - Usuario
+ */
+export interface ProfileClientProps {
+  user: UserResponse;
+}

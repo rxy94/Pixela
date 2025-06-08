@@ -1,9 +1,9 @@
 "use client";
 
-import { Trailer } from '../../types';
-import { useMediaStore } from '../../store/mediaStore';
+import { useMediaStore } from '@/features/media/store/mediaStore';
+import { TrailersSectionProps } from '@/features/media/types/trailer';
 import { TrailerPlayer } from './TrailerPlayer';
-import { TrailerList } from './TrailerList';
+import { TrailerList } from './TrailerList';  
 
 const STYLES = {
   container: {
@@ -13,10 +13,12 @@ const STYLES = {
   }
 } as const;
 
-interface TrailersSectionProps {
-  trailers: Trailer[];
-}
 
+/**
+ * Componente que muestra la sección de trailers
+ * @param {TrailersSectionProps} props - Propiedades del componente
+ * @returns {JSX.Element} Componente de sección de trailers
+ */
 export function TrailersSection({ trailers }: TrailersSectionProps) {
   // Filtrar solo trailers de YouTube válidos
   const youtubeTrailers = trailers.filter(trailer => 
