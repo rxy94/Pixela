@@ -6,6 +6,7 @@ import { TrendingMediaCarousel } from '../layout/TrendingMediaCarousel';
 import { TrendingButton } from './TrendingButton';
 import { TrendingSerie, TrendingMovie } from '@/features/trending/type';
 import clsx from 'clsx';
+import QuoteSection from '@/features/quotes/components/QuoteSection';
 
 // Constantes
 const STYLES = {
@@ -103,11 +104,16 @@ LoadingState.displayName = 'LoadingState';
  * @property {MediaType} activeButton - El tipo de medio actualmente seleccionado
  * @property {TrendingSerie[] | TrendingMovie[]} activeContent - Contenido actual a mostrar
  * @property {(type: MediaType) => void} onButtonChange - Función para cambiar el tipo de medio
+ * @property {object} quote - La cita actual a mostrar
  */
 interface ContentStateProps {
   activeButton: MediaType;
   activeContent: TrendingSerie[] | TrendingMovie[];
   onButtonChange: (type: MediaType) => void;
+  quote: {
+    quote: string;
+    author: string;
+  };
 }
 
 /**
@@ -115,7 +121,7 @@ interface ContentStateProps {
  * @param {ContentStateProps} props - Props del componente
  * @returns {JSX.Element} Contenido principal
  */
-const ContentState = memo(({ activeButton, activeContent, onButtonChange }: ContentStateProps) => (
+const ContentState = memo(({ activeButton, activeContent, onButtonChange, quote }: ContentStateProps) => (
   <div id="tendencias" className={STYLES.container}>
     <div className={STYLES.content}>
       <div className={STYLES.contentWrapperWithToggle}>
@@ -130,6 +136,8 @@ const ContentState = memo(({ activeButton, activeContent, onButtonChange }: Cont
         content={activeContent} 
         type={activeButton}
       />
+
+      <QuoteSection quote={quote} />
     </div>
   </div>
 ));
@@ -141,7 +149,7 @@ ContentState.displayName = 'ContentState';
  * Gestiona el estado del tipo de medio seleccionado y renderiza el contenido correspondiente
  * @returns {JSX.Element} Sección de tendencias
  */
-export const TrendingHeader = () => {
+export const TrendingHeader = ({ quote }: { quote: { quote: string; author: string; } }) => {
   const series = useTrendingStore(state => state.series);
   const movies = useTrendingStore(state => state.movies);
   const [activeButton, setActiveButton] = useState<MediaType>('series');
@@ -157,6 +165,7 @@ export const TrendingHeader = () => {
       activeButton={activeButton}
       activeContent={activeContent}
       onButtonChange={setActiveButton}
+      quote={quote}
     />
   );
 }; 

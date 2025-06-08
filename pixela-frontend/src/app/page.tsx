@@ -5,6 +5,9 @@ import { DiscoverSection } from "@/features/discover/components";
 import { getTrendingSeries, getTrendingMovies } from "@/features/trending/service";
 import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service";
 import AboutSection from "@/features/about/components/AboutSection";
+import { getRandomQuote } from "@/features/quotes/service";
+
+export const dynamic = 'force-dynamic';
 
 const STYLES = {
   main: "flex-grow",
@@ -27,11 +30,13 @@ export default async function Home() {
     getDiscoveredMovies()
   ]);
 
+  const randomQuote = getRandomQuote();
+
   return (
     <main className={STYLES.main}>
       <HeroSection {...heroData} />
       <div id="trending" className={STYLES.section}>
-        <TrendingSection series={trendingSeries} movies={trendingMovies} />
+        <TrendingSection series={trendingSeries} movies={trendingMovies} quote={randomQuote} />
       </div>
       <div id="discover" className={STYLES.section}>
         <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />
