@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
+import { TrendingSerie, TrendingMovie } from "@/features/trending/types";
 import { MediaType } from "@/features/discover/types/media";
 
 /**

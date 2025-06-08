@@ -1,4 +1,4 @@
-import { TrendingSerie, TrendingMovie } from '@/features/trending/type';
+import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
 import { MediaType, MediaContent } from './media';
 
 /**

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { MediaContent, MediaType } from "@/features/discover/types/media";
-import { TrendingSerie } from "@/features/trending/type";
+import { TrendingSerie } from "@/features/trending/types";
 import { Badge } from "@/shared/components/Badge";
 import { ActionButtons } from "@/shared/components/ActionButtons";
 import { DiscoverCardProps } from '@/features/discover/types/components';

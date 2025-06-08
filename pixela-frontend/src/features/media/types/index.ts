@@ -1,6 +1,7 @@
 export * from './mediaBase';
 export * from './people';
 export * from './supplements';
+export * from './trailer';
 export * from './content'; 
 export * from './genres';
 export * from './creators';
