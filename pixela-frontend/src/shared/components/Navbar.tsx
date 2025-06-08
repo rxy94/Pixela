@@ -132,11 +132,27 @@ export const Navbar = () => {
 
   const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    
+    // Marcar inmediatamente que estamos haciendo logout
+    localStorage.setItem('forceLogout', 'true');
+    setMobileMenuOpen(false);
+    
+    // Redirección casi inmediata (100ms para suavidad)
+    setTimeout(() => {
+      router.push('/');
+      
+      // Limpiar forceLogout después de la redirección
+      setTimeout(() => {
+        localStorage.removeItem('forceLogout');
+      }, 1000);
+    }, 100);
+    
+    // Hacer logout en background
     try {
       await logout();
-      setMobileMenuOpen(false);
     } catch (error) {
       console.error('Error durante el logout:', error);
+      // No importa si falla, ya redirigimos
     }
   };
 

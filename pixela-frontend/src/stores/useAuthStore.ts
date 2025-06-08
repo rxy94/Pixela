@@ -22,8 +22,17 @@ export const useAuthStore = create<AuthState>((set) => ({
   checkAuth: async () => {
     try {
       set({ isLoading: true, error: null });
+      
+      // Limpiar cualquier forceLogout residual
       localStorage.removeItem('forceLogout');
-      const user = await authAPI.getUser();
+      
+      // Timeout de 500ms para verificación rápida
+      const authPromise = authAPI.getUser();
+      const timeoutPromise = new Promise<UserResponse>((_, reject) => 
+        setTimeout(() => reject(new Error('Timeout de autenticación')), 500)
+      );
+      
+      const user = await Promise.race([authPromise, timeoutPromise]);
       set({ user, isAuthenticated: true, isLoading: false, error: null });
 
     } catch (error) {
@@ -40,7 +49,14 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: async () => {
     try {
       set({ isLoading: true, error: null });
-      await authAPI.logout();
+      
+      // Timeout de 3 segundos para logout
+      const logoutPromise = authAPI.logout();
+      const timeoutPromise = new Promise<void>((resolve) => 
+        setTimeout(() => resolve(), 1500)
+      );
+      
+      await Promise.race([logoutPromise, timeoutPromise]);
 
       // Actualizar el estado inmediatamente
       set({
@@ -50,13 +66,21 @@ export const useAuthStore = create<AuthState>((set) => ({
         error: null
       });
 
+      // Limpiar localStorage después de logout exitoso
+      setTimeout(() => {
+        localStorage.removeItem('forceLogout');
+      }, 2000);
+
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
+      
+      // Incluso si hay error, limpiar el estado local
       set({
+        user: null,
+        isAuthenticated: false,
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Error al cerrar sesión'
+        error: null // No mostrar error en logout
       });
-      throw error; // Propagar el error para manejarlo en el componente
     }
   },
 }));
