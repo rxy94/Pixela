@@ -4,9 +4,11 @@ import { useState, memo } from 'react';
 import { useTrendingStore } from '@/features/trending/store/trendingStore';
 import { TrendingMediaCarousel } from '../layout/TrendingMediaCarousel';
 import { TrendingButton } from './TrendingButton';
-import { TrendingSerie, TrendingMovie } from '@/features/trending/type';
+import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
 import clsx from 'clsx';
 import QuoteSection from '@/features/quotes/components/QuoteSection';
+import { MediaType } from '@/features/trending/types/common';
+import type { TrendingToggleProps } from '@/features/trending/types/components';  
 
 // Constantes
 const STYLES = {
@@ -30,11 +32,6 @@ const BUTTON_OPTIONS = [
 ] as const;
 
 /**
- * Tipo que representa el tipo de medio (series o películas)
- */
-type MediaType = 'series' | 'movies';
-
-/**
  * Componente que renderiza el título principal de la sección de tendencias
  * @returns {JSX.Element} Título estilizado
  */
@@ -46,16 +43,6 @@ const TrendingTitle = memo(() => (
 ));
 
 TrendingTitle.displayName = 'TrendingTitle';
-
-/**
- * Props para el componente TrendingToggle
- * @property {MediaType} activeButton - El tipo de medio actualmente seleccionado
- * @property {(type: MediaType) => void} onButtonChange - Función para cambiar el tipo de medio
- */
-interface TrendingToggleProps {
-  activeButton: MediaType;
-  onButtonChange: (type: MediaType) => void;
-}
 
 /**
  * Componente que renderiza los botones de alternancia entre series y películas

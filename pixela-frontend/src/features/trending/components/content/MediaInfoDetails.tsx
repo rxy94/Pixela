@@ -1,8 +1,9 @@
 import { FaStar } from "react-icons/fa";
-import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
+import { TrendingSerie, TrendingMovie } from "@/features/trending/types";
 import { memo } from "react";
+import { MediaInfoDetailsProps } from "@/features/trending/types/components";
+import { MediaType } from "@/features/trending/types/common";
 
-// Constantes
 const STYLES = {
   container: 'mb-4',
   title: 'text-pixela-light font-bold text-xl mb-2 font-outfit',
@@ -21,15 +22,11 @@ const MEDIA_TYPE_LABELS = {
   movies: 'Película'
 } as const;
 
-// Tipos
-type MediaType = 'series' | 'movies';
-
-interface MediaInfoDetailsProps {
-  media: TrendingSerie | TrendingMovie;
-  type: MediaType;
-}
-
-// Componentes internos
+/**
+ * Componente de visualización de puntuación
+ * @param {number} rating - Puntuación del medio
+ * @returns {JSX.Element} Componente RatingDisplay
+ */
 const RatingDisplay = memo(({ rating }: { rating: number }) => (
   <div className={STYLES.rating.container}>
     <FaStar className={STYLES.rating.icon} />
@@ -41,6 +38,11 @@ const RatingDisplay = memo(({ rating }: { rating: number }) => (
 
 RatingDisplay.displayName = 'RatingDisplay';
 
+/**
+ * Componente de etiqueta de tipo de medio
+ * @param {MediaType} type - Tipo de medio
+ * @returns {JSX.Element} Componente MediaTypeBadge
+ */
 const MediaTypeBadge = memo(({ type }: { type: MediaType }) => (
   <span className={STYLES.badge}>
     {MEDIA_TYPE_LABELS[type]}
@@ -49,6 +51,11 @@ const MediaTypeBadge = memo(({ type }: { type: MediaType }) => (
 
 MediaTypeBadge.displayName = 'MediaTypeBadge';
 
+/**
+ * Componente de detalles de medio
+ * @param {MediaInfoDetailsProps} props - Props del componente
+ * @returns {JSX.Element} Componente MediaInfoDetails
+ */
 export const MediaInfoDetails = memo(({ media, type }: MediaInfoDetailsProps) => {
   const releaseDate = type === 'series' 
     ? (media as TrendingSerie).first_air_date 

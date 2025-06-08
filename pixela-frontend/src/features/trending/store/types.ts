@@ -1,4 +1,4 @@
-import { TrendingSerie, TrendingMovie } from '../type';
+import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
 
 /**
  * Tipo que representa el tipo de medio (series o películas)
