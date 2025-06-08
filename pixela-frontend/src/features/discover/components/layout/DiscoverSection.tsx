@@ -8,13 +8,14 @@ import { DiscoverContent } from '../core/DiscoverContent';
 interface DiscoverSectionProps {
     series: TrendingSerie[];
     movies: TrendingMovie[];
+    heading: string[];
 }
 
 /**
  * Componente principal de la sección de descubrimiento
  * Maneja el estado global de series y películas
  */
-export const DiscoverSection = ({ series, movies }: DiscoverSectionProps) => {
+export const DiscoverSection = ({ series, movies, heading }: DiscoverSectionProps) => {
     const { setSeries, setMovies } = useDiscoverStore();
 
     useEffect(() => {
@@ -25,5 +26,5 @@ export const DiscoverSection = ({ series, movies }: DiscoverSectionProps) => {
         if (hasValidMovies) setMovies(movies);
     }, [series, movies, setSeries, setMovies]);
 
-    return <DiscoverContent />;
+    return <DiscoverContent heading={heading} />;
 }; 
