@@ -43,4 +43,9 @@ return [
     'verify_email_prompt' => 'Thank you for registering!',
     'verify_email_prompt_msg' => 'Please check your email and click on the verification link to activate your account.',
     'go_to_login' => 'Go to login',
+
+    # Registration success
+    'registration_thanks_msg' => 'Thank you for registering!',
+    'registration_success' => 'Your account has been created successfully. You can start exploring series and movies now.',
+    'start_exploring' => 'Start exploring',
 ];

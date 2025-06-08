@@ -42,5 +42,10 @@ return [
     'verify_email_prompt' => '¡Gracias por registrarte!',
     'verify_email_prompt_msg' => 'Por favor, revisa tu correo electrónico y haz clic en el enlace de verificación para activar tu cuenta.',
     'go_to_login' => 'Ir al login',
+
+    # Registration success
+    'registration_thanks_msg' => '¡Gracias por registrarte!',
+    'registration_success' => 'Tu cuenta ha sido creada exitosamente. Ya puedes comenzar a descubrir series y películas increíbles.',
+    'start_exploring' => 'Comienza a explorar',
     
 ];
