@@ -1,8 +1,16 @@
 "use client";
 
 import { FaPlay } from "react-icons/fa";
-import { Trailer } from '../../types';
+import { Trailer } from '@/features/media/types/trailer';
+import Image from 'next/image';
 
+/**
+ * Propiedades del componente TrailerListItem
+ * @interface TrailerListItemProps
+ * @property {Trailer} trailer - Trailer a mostrar
+ * @property {boolean} isSelected - Indica si el trailer está seleccionado
+ * @property {() => void} onSelect - Función que se ejecuta al seleccionar el trailer
+ */
 interface TrailerListItemProps {
   trailer: Trailer;
   isSelected: boolean;
@@ -11,13 +19,13 @@ interface TrailerListItemProps {
   isLarge?: boolean;
 }
 
-export function TrailerListItem({ 
+const TrailerListItem = ({ 
   trailer, 
   isSelected, 
   onSelect,
   index,
   isLarge = false
-}: TrailerListItemProps) {
+}: TrailerListItemProps) => {
   return (
     <button
       onClick={onSelect}
@@ -31,7 +39,7 @@ export function TrailerListItem({
     >
       {/* Miniatura */}
       <div className={`relative ${isLarge ? 'w-36' : 'w-28'} h-full flex-shrink-0`}>
-        <img
+        <Image
           src={`https://img.youtube.com/vi/${trailer.key}/default.jpg`}
           alt={trailer.nombre || 'Video thumbnail'}
           className={`w-full h-full object-cover transition-all duration-300 ${
@@ -64,4 +72,6 @@ export function TrailerListItem({
       </div>
     </button>
   );
-} 
+};
+
+export default TrailerListItem; 

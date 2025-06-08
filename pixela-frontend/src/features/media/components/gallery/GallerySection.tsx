@@ -1,37 +1,55 @@
 "use client";
 
-import { Media } from '../../types';
-import { Wallpaper } from '../../types/gallery';
-import { getMediaImages } from '../../services/galleryService';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Wallpaper } from '@/features/media/types/gallery';
+import { GallerySectionProps } from '@/features/media/types/gallery';
+import { getMediaImages } from '@/features/media/services/galleryService';
 import { GalleryGrid } from './GalleryGrid';
 import { GalleryTabs } from './GalleryTabs';
-import { useMediaStore } from '../../store/mediaStore';
-import { useState, useEffect } from 'react';
+import { useMediaStore } from '@/features/media/store/mediaStore';
 
-interface GallerySectionProps {
-  media: Media;
-}
 
 const STYLES = {
+  // Contenedor principal y título
   container: "mt-12 mb-24",
   title: "text-2xl font-bold text-white mb-5",
+
+  // Estados de carga y animaciones
   loadingContainer: "mt-12 mb-12",
   loadingSpinner: "flex justify-center py-10",
   loadingPulse: "animate-pulse flex space-x-4",
   loadingPlaceholder: "h-48 w-full bg-gray-700 rounded-lg",
+
+  // Mensajes de error
   errorMessage: "mb-4 p-3 bg-red-900/50 text-red-200 rounded-lg",
+
+  // Contenedor de la cuadrícula y botones
   gridContainer: "mt-6",
   buttonContainer: "flex justify-start mt-4",
   button: "px-5 py-2 rounded-lg font-semibold bg-pixela-accent hover:bg-pixela-accent-dark text-white shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-pixela-accent-dark focus:ring-offset-2",
+
+  // Estilos del modal de vista previa
   modal: {
+    // Overlay del modal
     overlay: "fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4",
+    // Contenedor de la imagen
     container: "relative max-w-4xl max-h-[70vh]",
+    // Imagen dentro del modal
     image: "max-h-[70vh] max-w-full object-contain",
+    // Botón de cierre
     closeButton: "absolute -top-10 right-0 text-white hover:text-pixela-accent",
+    // Icono del botón de cierre
     closeIcon: "w-6 h-6"
   }
 } as const;
 
+/**
+ * Componente que muestra la sección de galería de una película o serie
+ * @param {GallerySectionProps} props - Propiedades del componente
+ * @param {Media} props.media - Datos de la película o serie
+ * @returns {JSX.Element} Componente de sección de galería
+ */
 export function GallerySection({ media }: GallerySectionProps) {
   const [images, setImages] = useState<{ backdrops: Wallpaper[], posters: Wallpaper[] }>({
     backdrops: [],
@@ -164,10 +182,13 @@ export function GallerySection({ media }: GallerySectionProps) {
           onClick={() => setSelectedGalleryImage(null)}
         >
           <div className={STYLES.modal.container} onClick={e => e.stopPropagation()}>
-            <img 
+            <Image 
               src={selectedGalleryImage} 
               alt="Preview"
-              className={STYLES.modal.image} 
+              className={STYLES.modal.image}
+              width={1920}
+              height={1080}
+              priority
             />
             <button
               className={STYLES.modal.closeButton}

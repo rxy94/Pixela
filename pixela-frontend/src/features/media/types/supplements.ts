@@ -1,19 +1,3 @@
-/**
- * Trailer
- * @interface Trailer
- * @property {string} id - ID del trailer
- * @property {string} nombre - Nombre del trailer
- * @property {string} key - Clave del trailer
- * @property {string} site - Sitio web del trailer
- * @property {string} tipo - Tipo de trailer
- */
-export interface Trailer {
-  id: string;
-  nombre: string;
-  key: string;
-  site: string;
-  tipo: string;
-}
 
 /**
  * Proveedor de streaming

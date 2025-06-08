@@ -2,3 +2,7 @@ export * from './mediaBase';
 export * from './people';
 export * from './supplements';
 export * from './content'; 
+export * from './genres';
+export * from './creators';
+export * from './backdrop';
+export * from './actions';

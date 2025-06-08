@@ -1,12 +1,13 @@
 import { API_ENDPOINTS } from '@/api/shared/apiEndpoints';
 import { DEFAULT_FETCH_OPTIONS } from '@/api/shared/apiHelpers';
-import { WallpapersResponse } from '../types/gallery';
+import { WallpapersResponse, ApiResponse, ApiImageResponse } from '@/features/media/types/gallery';
+
 
 /**
- * Fetches images (posters and backdrops) for a specific media item
- * @param mediaId ID of the movie or series
- * @param mediaType Type of media ('movie' or 'series')
- * @returns Promise with images data
+ * Obtiene las imágenes de una película o serie
+ * @param {string} mediaId - ID de la película o serie
+ * @param {'movie' | 'series'} mediaType - Tipo de media
+ * @returns {Promise<WallpapersResponse>} Respuesta con las imágenes
  */
 export async function getMediaImages(
   mediaId: string, 
@@ -20,7 +21,7 @@ export async function getMediaImages(
   console.log(`[DEBUG] getMediaImages - Fetching from: ${apiUrl}`);
 
   try {
-    // Create a simple AbortController to handle timeouts
+    
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
     
@@ -42,7 +43,7 @@ export async function getMediaImages(
       return { backdrops: [], posters: [], logos: [] };
     }
 
-    const data = await response.json();
+    const data = await response.json() as ApiResponse;
     console.log('[DEBUG] getMediaImages - Response data:', data);
     
     if (!data.success) {
@@ -50,15 +51,18 @@ export async function getMediaImages(
       return { backdrops: [], posters: [], logos: [] };
     }
 
-    // Check if data structure is as expected
     if (!data.data || (!data.data.backdrops && !data.data.posters)) {
       console.error('[ERROR] getMediaImages - Unexpected data structure:', data);
       return { backdrops: [], posters: [], logos: [] };
     }
 
-    // Transform the response to match our expected format
+    /**
+     * Transforma la respuesta para que coincida con el formato esperado
+     * @param {ApiResponse} data - Respuesta de la API
+     * @returns {WallpapersResponse} Respuesta transformada
+     */
     const result: WallpapersResponse = {
-      backdrops: Array.isArray(data.data.backdrops) ? data.data.backdrops.map((backdrop: any) => ({
+      backdrops: Array.isArray(data.data.backdrops) ? data.data.backdrops.map((backdrop: ApiImageResponse) => ({
         file_path: backdrop.url,
         width: backdrop.ancho || 0,
         height: backdrop.alto || 0,
@@ -66,7 +70,7 @@ export async function getMediaImages(
         vote_average: 0,
         vote_count: 0
       })) : [],
-      posters: Array.isArray(data.data.posters) ? data.data.posters.map((poster: any) => ({
+      posters: Array.isArray(data.data.posters) ? data.data.posters.map((poster: ApiImageResponse) => ({
         file_path: poster.url,
         width: poster.ancho || 0,
         height: poster.alto || 0,

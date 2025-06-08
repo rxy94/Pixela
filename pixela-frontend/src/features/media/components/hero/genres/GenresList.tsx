@@ -1,8 +1,6 @@
 "use client";
 
-interface GenresListProps {
-  genres: string[];
-}
+import { GenresListProps } from '@/features/media/types/genres';
 
 const STYLES = {
   container: "flex flex-wrap gap-2 mb-4",

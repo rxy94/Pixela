@@ -31,6 +31,8 @@ export const PLATFORM_URLS: Record<string, string> = {
 
 /**
  * Función para obtener la URL de una plataforma de streaming
+ * @param {WatchProvider} provider - Proveedor de streaming
+ * @returns {string} URL de la plataforma de streaming
  */
 export function getPlatformUrl(provider: WatchProvider): string {
     

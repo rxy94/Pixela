@@ -1,11 +1,9 @@
 "use client";
 
-import { Media, Serie } from '../../../types';
 import { CreatorAvatar } from './CreatorAvatar';
+import { CreatorInfoProps } from '@/features/media/types/creators';
+import { Serie } from '@/features/media/types/content';
 
-interface CreatorInfoProps {
-  media: Media;
-}
 
 const STYLES = {
   container: "mb-4",
@@ -13,6 +11,12 @@ const STYLES = {
   creatorsWrapper: "flex flex-wrap gap-4"
 } as const;
 
+/**
+ * Componente que muestra la información de los creadores de una película o serie
+ * @param {CreatorInfoProps} props - Propiedades del componente
+ * @param {Media} props.media - Media
+ * @returns {JSX.Element} Componente de información de creadores
+ */
 export const CreatorInfo = ({ media }: CreatorInfoProps) => {
   const isSerie = media.tipo === 'serie';
   const serie = media as Serie;
