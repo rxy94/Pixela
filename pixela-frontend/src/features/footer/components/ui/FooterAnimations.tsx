@@ -1,6 +1,6 @@
 'use client';
 
-import './footer-animations.css';
+import '../footer-animations.css';
 
 export const FooterAnimations = () => {
   return null;

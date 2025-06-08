@@ -9,7 +9,7 @@ import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
-import { ContentSkeleton } from './ContentSkeleton';
+import { ContentSkeleton } from '../ui/ContentSkeleton';
 
 interface CategoriesContentProps {
     selectedCategory: Category | null;

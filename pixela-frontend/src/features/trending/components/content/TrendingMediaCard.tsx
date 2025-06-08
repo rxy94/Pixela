@@ -88,8 +88,7 @@ interface OverlayContentProps {
  * @returns {JSX.Element} Contenido superpuesto
  */
 const OverlayContent = memo(({ media, type, onFollowClick, onReviewsClick }: OverlayContentProps) => (
-  <div className="absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent 
-                 flex flex-col justify-end p-5 transition-opacity duration-300">
+  <div className="absolute inset-0 flex flex-col justify-end p-5 transition-opacity duration-300 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent">
     <MediaInfoDetails media={media} type={type} />
     <ActionButtons 
       tmdbId={Number(media.id)}

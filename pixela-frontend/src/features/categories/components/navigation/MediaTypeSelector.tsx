@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaType } from '../types/media';
+import { MediaType } from '../../types/media';
 import { FiShuffle } from 'react-icons/fi';
 
 interface MediaTypeSelectorProps {

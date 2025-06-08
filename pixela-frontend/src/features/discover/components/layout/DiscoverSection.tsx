@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useDiscoverStore } from '../store/discoverStore';
-import { TrendingSerie, TrendingMovie } from '../type';
-import { DiscoverContent } from './DiscoverContent';
+import { useDiscoverStore } from '../../store/discoverStore';
+import { TrendingSerie, TrendingMovie } from '../../type';
+import { DiscoverContent } from '../core/DiscoverContent';
 
 interface DiscoverSectionProps {
     series: TrendingSerie[];

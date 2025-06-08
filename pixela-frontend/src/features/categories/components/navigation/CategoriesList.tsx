@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CategoriesProps } from '../type';
-import { useCategoriesStore } from '../store/categoriesStore';
+import { CategoriesProps } from '../../type';
+import { useCategoriesStore } from '../../store/categoriesStore';
 import { FiGrid, FiChevronDown } from 'react-icons/fi';
-import { CategoriesModal } from './CategoriesModal';
+import { CategoriesModal } from '../ui/CategoriesModal';
 import { Category } from '@/api/categories/categories';
 
 const STYLES = {

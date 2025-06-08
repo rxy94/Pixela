@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { MediaContent, MediaType } from "../type";
+import { MediaContent, MediaType } from "../../type";
 import { TrendingSerie } from "@/features/trending/type";
 import clsx from "clsx";
 import { useState } from "react";

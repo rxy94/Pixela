@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { CategoriesList } from './CategoriesList';
+import { CategoriesList } from '../navigation/CategoriesList';
 import { CategoriesContent } from './CategoriesContent';
-import { CategoriesHeader } from './CategoriesHeader';
-import { Pagination } from './Pagination';
+import { CategoriesHeader } from '../navigation/CategoriesHeader';
+import { Pagination } from '../ui/Pagination';
 import { Category } from '@/api/categories/categories';
-import { useCategoriesStore } from '../store/categoriesStore';
-import { useContentLoader } from '../hooks/useContentLoader';
-import { MediaType } from '../types/media';
+import { useCategoriesStore } from '../../store/categoriesStore';
+import { useContentLoader } from '../../hooks/useContentLoader';
+import { MediaType } from '../../types/media';
 
 const STYLES = {
     container: 'min-h-screen bg-gradient-to-br from-pixela-dark via-[#1a1a1a] to-pixela-dark pt-24',

@@ -1,7 +1,7 @@
 'use client';
 import { MediaCarousel } from '@/shared/components/MediaCarousel';
-import { TrendingMediaCard } from './TrendingMediaCard';
-import { TrendingSerie, TrendingMovie } from '../type';
+import { TrendingMediaCard } from '../content/TrendingMediaCard';
+import { TrendingSerie, TrendingMovie } from '@/features/trending/type';
 
 
 /**
