@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import FooterNewsletter from './FooterNewsletter';
-import FooterSocialLinks from './FooterSocialLinks';
+import FooterNewsletter from '../content/FooterNewsletter';
+import FooterSocialLinks from '../content/FooterSocialLinks';
 
 // Definición de enlaces para menús
 type FooterLink = {

@@ -1,4 +1,4 @@
-import { useHeroStore } from "../store/heroStore";
+import { useHeroStore } from "../../store/heroStore";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import clsx from 'clsx';
 

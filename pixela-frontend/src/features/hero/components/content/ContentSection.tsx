@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { FiChevronDown } from "react-icons/fi";
-import { HeroContent } from "../type";
+import { HeroContent } from "../../type";
 import clsx from "clsx";
-import { ProgressIndicator } from "./ProgressIndicator";
+import { ProgressIndicator } from "../ui/ProgressIndicator";
 
 const STYLES = {
   accentLine: {

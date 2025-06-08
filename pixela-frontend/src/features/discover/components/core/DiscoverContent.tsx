@@ -1,11 +1,11 @@
 'use client';
 
-import { useDiscoverStore } from '../store/discoverStore';
-import { DiscoverSelector } from './DiscoverSelector';
+import { useDiscoverStore } from '../../store/discoverStore';
+import { DiscoverSelector } from '../ui/DiscoverSelector';
 import { IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';
 import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
-import { DiscoverGrid } from './DiscoverGrid';
+import { DiscoverGrid } from '../layout/DiscoverGrid';
 
 const STYLES = {
     container: "relative w-full min-h-screen bg-pixela-dark flex flex-col mt-8",

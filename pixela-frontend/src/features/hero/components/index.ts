@@ -1,11 +1,11 @@
-/**
- * Archivo de barril (barrel file) que exporta todos los componentes del Hero.
- * Este archivo centraliza las exportaciones para facilitar las importaciones
- * y mantener un punto único de entrada para los componentes del Hero.
- */
 
-// Componentes principales del Hero
-export { ImageCarousel } from './ImageCarousel';
-export { NavigationControls } from './NavigationControls';
-export { ProgressIndicator } from './ProgressIndicator';
-export { ContentSection } from './ContentSection'; 
+// ===== CORE COMPONENTS =====
+export { HeroSection } from './core/HeroSection';
+
+// ===== CONTENT COMPONENTS =====
+export { ContentSection } from './content/ContentSection';
+export { ImageCarousel } from './content/ImageCarousel';
+
+// ===== UI COMPONENTS =====
+export { NavigationControls } from './ui/NavigationControls';
+export { ProgressIndicator } from './ui/ProgressIndicator'; 

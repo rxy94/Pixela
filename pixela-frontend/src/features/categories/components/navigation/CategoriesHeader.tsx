@@ -1,5 +1,5 @@
 import { MediaTypeSelector } from './MediaTypeSelector';
-import { MediaType } from '../types/media';
+import { MediaType } from '../../types/media';
 
 const STYLES = {
     container: 'flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8',
@@ -8,13 +8,32 @@ const STYLES = {
 } as const;
 
 interface CategoriesHeaderProps {
-    selectedMediaType: MediaType;
-    onMediaTypeChange: (type: MediaType) => void;
+    selectedMediaType: MediaType | 'random';
+    onMediaTypeChange: (type: MediaType | 'random') => void;
 }
 
 /**
+ * Obtiene el título correspondiente según el tipo de medio seleccionado
+ * @param mediaType - El tipo de medio seleccionado
+ * @returns El título a mostrar
+ */
+const getTitleByMediaType = (mediaType: MediaType | 'random'): string => {
+    switch (mediaType) {
+        case 'movies':
+            return 'Películas';
+        case 'series':
+            return 'Series';
+        case 'random':
+            return 'Sorpréndeme';
+        case 'all':
+        default:
+            return 'Categorías';
+    }
+};
+
+/**
  * Componente de encabezado para la sección de categorías.
- * Muestra el título y el selector de tipo de medio.
+ * Muestra el título dinámico y el selector de tipo de medio.
  * 
  * @component
  * @param {CategoriesHeaderProps} props - Propiedades del componente
@@ -23,7 +42,7 @@ interface CategoriesHeaderProps {
 export const CategoriesHeader = ({ selectedMediaType, onMediaTypeChange }: CategoriesHeaderProps) => {
     return (
         <div className={STYLES.container}>
-            <h1 className={STYLES.title}>Categorías</h1>
+            <h1 className={STYLES.title}>{getTitleByMediaType(selectedMediaType)}</h1>
             <div className={STYLES.controls}>
                 <MediaTypeSelector 
                     selectedType={selectedMediaType}

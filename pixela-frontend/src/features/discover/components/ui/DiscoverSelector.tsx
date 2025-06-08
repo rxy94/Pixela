@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaType } from '../type';
+import { MediaType } from '../../type';
 import clsx from 'clsx';
 
 interface DiscoverSelectorProps {

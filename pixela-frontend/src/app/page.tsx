@@ -1,7 +1,7 @@
 import { getHeroData } from "@/features/hero/content";
-import { HeroSection } from "@/features/hero/components/HeroSection";
-import { TrendingSection } from "@/features/trending/components/TrendingSection";
-import { DiscoverSection } from "@/features/discover/components/DiscoverSection";
+import { HeroSection } from "@/features/hero/components";
+import { TrendingSection } from "@/features/trending/components";
+import { DiscoverSection } from "@/features/discover/components";
 import { getTrendingSeries, getTrendingMovies } from "@/features/trending/service";
 import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service";
 import AboutSection from "@/features/about/components/AboutSection";
