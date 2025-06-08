@@ -30,7 +30,7 @@ const STYLES = {
 
     mobileContainer: "flex-col items-stretch gap-8 px-4 py-12",
 
-    discoverLabel: "text-base font-semibold text-pixela-accent uppercase tracking-widest mb-4",
+    discoverLabel: "text-lg font-semibold text-pixela-accent uppercase tracking-widest mb-4",
     mainHeadingDesktop: "text-6xl font-black text-white leading-tight mb-8",
     mainHeadingMobile: "text-6xl font-black text-pixela-accent font-outfit tracking-tighter uppercase leading-none text-left",
     description: "text-pixela-light/80 text-base max-w-full text-left",
