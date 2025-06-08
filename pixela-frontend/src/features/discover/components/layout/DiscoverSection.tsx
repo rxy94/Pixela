@@ -1,15 +1,18 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useDiscoverStore } from '@/features/discover/store/discoverStore';
-import { DiscoverContent } from '@/features/discover/components/core/DiscoverContent';
-import { DiscoverSectionProps } from '@/features/discover/types/components';
+import { useDiscoverStore } from '../../store/discoverStore';
+import { TrendingSerie, TrendingMovie } from '../../type';
+import { DiscoverContent } from '../core/DiscoverContent';
+
+interface DiscoverSectionProps {
+    series: TrendingSerie[];
+    movies: TrendingMovie[];
+}
 
 /**
- * Componente que muestra la sección de descubrimiento
- * @component
- * @param {DiscoverSectionProps} props - Propiedades del componente
- * @returns {JSX.Element} Componente de sección de descubrimiento
+ * Componente principal de la sección de descubrimiento
+ * Maneja el estado global de series y películas
  */
 export const DiscoverSection = ({ series, movies }: DiscoverSectionProps) => {
     const { setSeries, setMovies } = useDiscoverStore();

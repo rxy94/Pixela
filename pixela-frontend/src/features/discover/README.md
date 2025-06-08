@@ -17,11 +17,7 @@ La feature **Discover** es una sección de descubrimiento de contenido que prese
 ```
 src/features/discover/
 ├── README.md                    # Este archivo
-├── types/                       # Tipos y interfaces
-│   ├── media.ts                # Tipos relacionados con contenido multimedia
-│   ├── api.ts                  # Tipos de respuestas de API
-│   ├── components.ts           # Interfaces de componentes
-│   └── index.ts               # Exportaciones centralizadas
+├── type.ts                      # Interfaces y tipos
 ├── service.ts                   # Servicios de API
 ├── store.ts                     # Store global (Zustand)
 └── components/
@@ -80,12 +76,9 @@ Grid responsivo que organiza las tarjetas de contenido:
 - **Estados de carga**: Skeletons mientras cargan datos
 - **Límite de contenido**: Máximo 7 elementos
 
-#### Props:
-```typescript
-interface DiscoverGridProps {
-  type: MediaType;
-}
-```
+#### Layouts:
+- **Desktop**: 2 tarjetas + 3 tarjetas + 2 tarjetas
+- **Móvil**: 2 columnas adaptativas
 
 ### DiscoverCard
 **Ubicación**: `components/DiscoverCard.tsx`
@@ -99,15 +92,12 @@ Tarjeta individual de contenido con interactividad:
 - **Badge**: Indicador "TOP PIXELA" para contenido mejor valorado
 - **Navegación**: Enlaces a páginas de detalle
 
-#### Props:
-```typescript
-interface DiscoverCardProps {
-  media: MediaContent;
-  type: MediaType;
-  index: number;
-  isMobile?: boolean;
-}
-```
+#### Características:
+- **Type guard**: Diferencia entre series y películas
+- **Rating visual**: Estrellas con ThemeDB score
+- **Animaciones**: Transiciones suaves
+- **Lazy loading**: Optimización de imágenes
+- **Responsive**: Adaptación móvil/desktop
 
 ### DiscoverSelector
 **Ubicación**: `components/DiscoverSelector.tsx`
@@ -119,21 +109,13 @@ Selector tipo toggle para cambiar entre series y películas:
 - **Transiciones**: Animaciones suaves
 - **Responsive**: Adaptación de ancho
 
-#### Props:
-```typescript
-interface DiscoverSelectorProps {
-  activeType: MediaType;
-  onTypeChange: (type: MediaType) => void;
-}
-```
-
 ## 🔧 Gestión de Estado
 
 ### Store (Zustand)
 **Ubicación**: `store.ts`
 
 ```typescript
-interface DiscoverState {
+interface DiscoverStoreState {
   series: TrendingSerie[];
   movies: TrendingMovie[];
   activeType: MediaType;
@@ -145,7 +127,7 @@ interface DiscoverState {
 
 #### Características:
 - **Estado global**: Series, películas y tipo activo
-- **Tipo por defecto**: 'movies'
+- **Tipo por defecto**: 'series'
 - **Mutadores**: Funciones para actualizar cada estado
 - **Persistencia**: Estado se mantiene durante la navegación
 
@@ -172,53 +154,24 @@ const DISCOVER_LIMIT = 7;
 
 ## 📊 Tipos y Interfaces
 
-### Estructura de Tipos
-**Ubicación**: `types/`
+### Tipos Principales
+**Ubicación**: `type.ts`
 
-#### media.ts
 ```typescript
 type MediaType = 'series' | 'movies';
-type MediaContent = TrendingSerie | TrendingMovie;
-```
 
-#### api.ts
-```typescript
 interface DiscoverResponse {
   success: boolean;
   data: (TrendingSerie | TrendingMovie)[];
 }
+
+type MediaContent = TrendingSerie | TrendingMovie;
 ```
 
-#### components.ts
-```typescript
-interface DiscoverSectionProps {
-  series: TrendingSerie[];
-  movies: TrendingMovie[];
-}
-
-interface DiscoverGridProps {
-  type: MediaType;
-}
-
-interface DiscoverCardProps {
-  media: MediaContent;
-  type: MediaType;
-  index: number;
-  isMobile?: boolean;
-}
-
-interface DiscoverSelectorProps {
-  activeType: MediaType;
-  onTypeChange: (type: MediaType) => void;
-}
-```
-
-#### index.ts
-```typescript
-export * from './media';
-export * from './api';
-export * from './components';
-```
+#### Herencia:
+- Reutiliza tipos de la feature `trending`
+- Compatibilidad con tipos existentes
+- Type guards para diferenciación
 
 ## 🎨 Sistema de Diseño
 
@@ -341,7 +294,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 3. Revisar responsive behavior para números pares/impares
 
 ### Para añadir nuevos tipos de media:
-1. Extender `MediaType` en `types/media.ts`
+1. Extender `MediaType` en `type.ts`
 2. Actualizar selector en `DiscoverSelector.tsx`
 3. Añadir lógica en store y servicios
 

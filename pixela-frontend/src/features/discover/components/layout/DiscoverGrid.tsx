@@ -1,30 +1,24 @@
 'use client';
 
+import { useDiscoverStore } from '../../store/discoverStore';
+import { DiscoverCard } from '../ui/DiscoverCard';
+import { MediaType } from '../../type';
 import clsx from 'clsx';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { useDiscoverStore } from '@/features/discover/store/discoverStore';
-import { DiscoverCard } from '@/features/discover/components/ui/DiscoverCard';
-import { DiscoverGridProps } from '@/features/discover/types/components';
 
+interface DiscoverGridProps {
+    type: MediaType;
+}
 
 const DISCOVER_LIMIT = 7;
 
 const STYLES = {
-    // Layout principal
     container: "flex flex-col items-center gap-4",
     row: "flex gap-4",
-
-    // Grid móvil
     mobileGridContainer: "grid grid-cols-2 gap-2 px-1 sm:gap-3 sm:px-2 w-full",
-
-    // Cards y contenedores
-    cardContainer: "flex flex-col items-center gap-4 relative",
-
-    // Skeletons
     skeletonCard: "bg-gray-800/50 animate-pulse rounded-2xl w-[200px] h-[281px]",
     mobileSkeletonCard: "bg-gray-800/50 animate-pulse rounded-2xl w-full h-[240px] xs:h-[220px] sm:h-[240px]",
-
-    // Animaciones por fila
+    cardContainer: "flex flex-col items-center gap-4 relative",
     firstRow: "[&>*]:animate-float",
     secondRow: "[&>*]:animate-float [&>*:nth-child(2)]:animation-delay-200",
     thirdRow: "[&>*]:animate-float [&>*:nth-child(2)]:animation-delay-200"

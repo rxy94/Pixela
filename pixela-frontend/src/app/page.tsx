@@ -7,6 +7,7 @@ import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/se
 import AboutSection from "@/features/about/components/AboutSection";
 import { getRandomQuote } from "@/features/quotes/service";
 
+
 export const dynamic = 'force-dynamic';
 
 const STYLES = {
