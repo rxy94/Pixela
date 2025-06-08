@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { CategoriesList } from '../navigation/CategoriesList';
-import { CategoriesContent } from './CategoriesContent';
-import { CategoriesHeader } from '../navigation/CategoriesHeader';
-import { Pagination } from '../ui/Pagination';
+import { CategoriesList } from '@/features/categories/components/navigation/CategoriesList';
+import { CategoriesContent } from '@/features/categories/components/core/CategoriesContent';
+import { CategoriesHeader } from '@/features/categories/components/navigation/CategoriesHeader';
+import { Pagination } from '@/features/categories/components/ui/Pagination';
 import { Category } from '@/api/categories/categories';
 import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
 import { useContentLoader } from '@/features/categories/hooks/useContentLoader';

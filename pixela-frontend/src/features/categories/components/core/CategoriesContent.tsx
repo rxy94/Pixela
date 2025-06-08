@@ -8,7 +8,7 @@ import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
-import { ContentSkeleton } from '../ui/ContentSkeleton';
+import { ContentSkeleton } from '@/features/categories/components/ui/ContentSkeleton';
 import { CategoriesContentProps } from '@/features/categories/types/content';
 
 const INITIAL_VISIBLE_ITEMS = 6;

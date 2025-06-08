@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { CategoriesProps } from '@/features/categories/types/categories';
 import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
 import { FiGrid, FiChevronDown } from 'react-icons/fi';
-import { CategoriesModal } from '../ui/CategoriesModal';
+import { CategoriesModal } from '@/features/categories/components/ui/CategoriesModal';
 import { Category } from '@/api/categories/categories';
 
 const STYLES = {
