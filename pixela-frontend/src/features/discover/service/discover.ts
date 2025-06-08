@@ -1,4 +1,4 @@
-import { DiscoverResponse, TrendingSerie, TrendingMovie } from "./type";
+import { DiscoverResponse, TrendingSerie, TrendingMovie } from "@/features/discover/types/media";
 import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 
 const DISCOVER_LIMIT = 7;

@@ -1,12 +1,7 @@
 'use client';
 
-import { MediaType } from '@/features/media/types';
 import clsx from 'clsx';
-
-interface DiscoverSelectorProps {
-    activeType: MediaType;
-    onTypeChange: (type: MediaType) => void;
-}
+import { DiscoverSelectorProps } from '@/features/discover/types/components';
 
 const STYLES = {
     container: "flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 w-full sm:w-auto ipad:w-full",
@@ -27,14 +22,14 @@ const MEDIA_TYPES = {
 export const DiscoverSelector = ({ activeType, onTypeChange }: DiscoverSelectorProps) => {
     return (
         <div className={STYLES.container}>
-            {(Object.keys(MEDIA_TYPES) as (keyof typeof MEDIA_TYPES)[]).map((type) => (
+            {(Object.keys(MEDIA_TYPES) as ('serie' | 'pelicula')[]).map((type) => (
                 <button
                     key={type}
                     className={clsx(STYLES.button, {
                         [STYLES.activeButton]: activeType === type,
                         [STYLES.inactiveButton]: activeType !== type
                     })}
-                    onClick={() => onTypeChange(type as MediaType)}
+                    onClick={() => onTypeChange(type)}
                 >
                     {MEDIA_TYPES[type]}
                 </button>

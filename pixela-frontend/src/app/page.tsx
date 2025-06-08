@@ -3,7 +3,7 @@ import { HeroSection } from "@/features/hero/components";
 import { TrendingSection } from "@/features/trending/components";
 import { DiscoverSection } from "@/features/discover/components";
 import { getTrendingSeries, getTrendingMovies } from "@/features/trending/services/trendingService";
-import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service";
+import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service/discover";
 import AboutSection from "@/features/about/components/AboutSection";
 import { getRandomQuote } from "@/features/quotes/service";
 

@@ -3,20 +3,22 @@
 import { useState, useRef } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
-import { useDiscoverAnimation } from '../../hooks/useDiscoverAnimation';
-import { DiscoverSelector } from '../ui/DiscoverSelector';
+import { useDiscoverAnimation } from '@/features/discover/hooks/useDiscoverAnimation';
+import { DiscoverSelector } from '@/features/discover/components/ui/DiscoverSelector';
 import { IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';
-import { DiscoverGrid } from '../layout/DiscoverGrid';
-import { headings } from '../../content/headings';
+import { DiscoverGrid } from '@/features/discover/components/layout/DiscoverGrid';
+import { headings } from '@/features/discover/content/headings';
+import { DiscoverMediaType } from '@/features/discover/types/media';    
 
 const STYLES = {
+    // --- Contenedor y Degradados ---
     container: "relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden",
     gradientContainer: "absolute inset-0 w-full h-full z-0 pointer-events-none",
-
     mainGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] lg:w-[80vw] lg:h-[80vw] lg:left-[75%] rounded-full",
     secondaryGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] lg:w-[60vw] lg:h-[60vw] lg:left-[75%] rounded-full",
 
+    // --- Layout de Escritorio ---
     desktopContainer: "min-h-screen mt-8",
     desktopContent: "w-[90%] xl:w-[85%] mx-auto flex flex-row items-center gap-16",
     desktopLeftSection: "w-5/12 text-left",
@@ -24,8 +26,10 @@ const STYLES = {
     desktopActions: "flex flex-row items-center justify-start gap-8 mt-10",
     desktopDivider: "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-px h-64 bg-gradient-to-b from-transparent via-pixela-accent/30 to-transparent blur-sm",
 
+    // --- Layout Móvil ---
     mobileContainer: "flex-col items-stretch gap-8 px-4 py-12",
 
+    // --- Tipografía y Contenido ---
     discoverLabel: "text-lg font-semibold text-pixela-accent uppercase tracking-widest mb-4",
     mainHeadingDesktop: "text-6xl font-black text-white leading-tight mb-8",
     mainHeadingMobile: "text-6xl font-black text-pixela-accent font-outfit tracking-tighter uppercase leading-none text-left",
@@ -34,6 +38,7 @@ const STYLES = {
     descriptionMobile: "py-8",
     accentText: "text-pixela-light font-semibold",
 
+    // --- Botones y Acciones ---
     exploreButton: "group bg-gradient-to-r from-pixela-accent to-pixela-accent/80 text-pixela-dark px-8 py-3 rounded-full font-bold text-base transition-all duration-300 hover:shadow-xl hover:shadow-pixela-accent/30 relative overflow-hidden transform hover:-translate-y-px hover:scale-[1.02]",
     buttonContent: "relative z-10 flex items-center justify-center",
     buttonIcon: "w-4 h-4 ml-2 transition-transform duration-300",
@@ -41,8 +46,19 @@ const STYLES = {
     buttonHoverEffect: "absolute inset-0 bg-white/20 w-0 group-hover:w-full transition-all duration-300",
 } as const;
 
-type DiscoverMediaType = 'serie' | 'pelicula';
-
+/**
+ * Componente principal de la sección de descubrimiento
+ * Maneja el estado global de series y películas
+ * @returns {JSX.Element} - Elemento JSX que representa el contenido de la sección de descubrimiento  
+ * @param {DiscoverMediaType} activeType - Tipo de contenido activo (serie o película)
+ * @param {Function} setActiveType - Función para actualizar el tipo de contenido activo
+ * @param {string} heading - Encabezado de la sección de descubrimiento
+ * @param {boolean} isMobile - Indica si la vista es móvil
+ * @param {Function} handleExploreClick - Función para manejar el clic en el botón de explorar catálogo
+ * @param {React.RefObject<HTMLDivElement>} containerRef - Referencia al contenedor principal
+ * @param {React.RefObject<HTMLDivElement>} leftSectionRef - Referencia a la sección izquierda
+ * @param {React.RefObject<HTMLDivElement>} gridRef - Referencia al grid de tarjetas
+ */
 export const DiscoverContent = () => {
     const isMobile = useMediaQuery('(max-width: 1023px)');
     const [activeType, setActiveType] = useState<DiscoverMediaType>('serie');
@@ -68,6 +84,17 @@ export const DiscoverContent = () => {
         }
     };
 
+    /**
+     * Contenido de la descripción de la sección de descubrimiento
+     * @returns {JSX.Element} - Elemento JSX que representa el contenido de la descripción
+     * @param {boolean} isMobile - Indica si la vista es móvil
+     * @param {string} STYLES.description - Estilos de la descripción
+     * @param {string} STYLES.descriptionMobile - Estilos de la descripción para móvil
+     * @param {string} STYLES.descriptionDesktop - Estilos de la descripción para escritorio
+     * @param {string} STYLES.accentText - Estilos del texto de acento
+     * @param {string} STYLES.exploreButton - Estilos del botón de explorar catálogo
+     * @param {string} STYLES.buttonContent - Estilos del contenido del botón
+     */
     const descriptionContent = (
         <div className={`${STYLES.description} ${isMobile ? STYLES.descriptionMobile : STYLES.descriptionDesktop}`}>
             <p>
@@ -79,7 +106,7 @@ export const DiscoverContent = () => {
         </div>
     );
 
-    return (
+        return (
         <div className={`${STYLES.container} ${isMobile ? STYLES.mobileContainer : STYLES.desktopContainer}`}>
             {/* --- Degradado de Fondo para ESCRITORIO --- */}
             {!isMobile && (

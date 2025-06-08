@@ -1,5 +1,5 @@
 import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
-import { MediaType, MediaContent } from './media';
+import { MediaContent, DiscoverMediaType as MediaType } from "./media";
 
 /**
  * Props del componente DiscoverSection
@@ -14,7 +14,9 @@ export interface DiscoverSectionProps {
 
 /**
  * Propiedades para el componente DiscoverSelector
- * @interface
+ * @interface DiscoverSelectorProps
+ * @property {MediaType} activeType - El tipo de medio activo ('serie' o 'pelicula')
+ * @property {(type: MediaType) => void} onTypeChange - Función para cambiar el tipo de medio activo
  */
 export interface DiscoverSelectorProps {
     activeType: MediaType;
@@ -23,7 +25,11 @@ export interface DiscoverSelectorProps {
 
 /**
  * Propiedades para el componente DiscoverCard
- * @interface
+ * @interface DiscoverCardProps
+ * @property {MediaContent} media - El objeto de medio a mostrar
+ * @property {MediaType} type - El tipo de medio ('serie' o 'pelicula')
+ * @property {number} index - El índice de la tarjeta, usado para optimización de carga de imágenes
+ * @property {boolean} [isMobile] - Indica si la tarjeta se muestra en una vista móvil
  */
 export interface DiscoverCardProps {
     media: MediaContent;
@@ -34,7 +40,8 @@ export interface DiscoverCardProps {
 
 /**
  * Propiedades para el componente DiscoverGrid
- * @interface
+ * @interface DiscoverGridProps
+ * @property {MediaType} type - El tipo de medio a mostrar ('serie' o 'pelicula')
  */
 export interface DiscoverGridProps {
     type: MediaType;

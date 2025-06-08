@@ -1,14 +1,10 @@
 'use client';
 
-import { useDiscoverStore } from '../../store/discoverStore';
-import { DiscoverCard } from '../ui/DiscoverCard';
-import { MediaType } from '@/features/media/types';
+import { useDiscoverStore } from '@/features/discover/store/discoverStore';
+import { DiscoverCard } from '@/features/discover/components/ui/DiscoverCard';  
 import clsx from 'clsx';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-
-interface DiscoverGridProps {
-    type: MediaType;
-}
+import { DiscoverGridProps } from '@/features/discover/types/components';
 
 const DISCOVER_LIMIT = 7;
 

@@ -2,21 +2,15 @@
 
 import Image from "next/image";
 import { FaStar } from "react-icons/fa";
-import { MediaType } from "@/features/media/types";
-import { MediaContent } from "@/features/discover/type";
+import { MediaContent } from "@/features/discover/types/media";
 import { TrendingSerie } from "@/features/trending/types";
 import clsx from "clsx";
 import { useState } from "react";
 import { Badge } from "@/shared/components/Badge";
 import { ActionButtons } from "@/shared/components/ActionButtons";
 import { useRouter } from 'next/navigation';
-
-interface DiscoverCardProps {
-  media: MediaContent;
-  type: MediaType;
-  index: number;
-  isMobile?: boolean;
-}
+import { DiscoverCardProps } from "@/features/discover/types/components";
+import { MediaType } from "@/features/media/types";
 
 const STYLES = {
   containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden",
