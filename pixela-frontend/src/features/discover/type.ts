@@ -1,13 +1,4 @@
-import { TrendingSerie, TrendingMovie } from "@/features/trending/type";
-
-/**
- * Tipo de contenido multimedia
- * @type {string}
- * @enum {string}
- * @property {string} series - Series
- * @property {string} movies - Películas
- */
-export type MediaType = 'series' | 'movies';
+import { TrendingSerie, TrendingMovie } from "@/features/trending/types";
 
 /**
  * Respuesta de la API para el endpoint de descubrimiento

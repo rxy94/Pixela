@@ -8,7 +8,6 @@ import { DiscoverSelector } from '../ui/DiscoverSelector';
 import { IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';
 import { DiscoverGrid } from '../layout/DiscoverGrid';
-import { MediaType } from '../../type';
 import { headings } from '../../content/headings';
 
 const STYLES = {
@@ -42,9 +41,11 @@ const STYLES = {
     buttonHoverEffect: "absolute inset-0 bg-white/20 w-0 group-hover:w-full transition-all duration-300",
 } as const;
 
+type DiscoverMediaType = 'serie' | 'pelicula';
+
 export const DiscoverContent = () => {
     const isMobile = useMediaQuery('(max-width: 1023px)');
-    const [activeType, setActiveType] = useState<MediaType>('series');
+    const [activeType, setActiveType] = useState<DiscoverMediaType>('serie');
     const [heading] = useState(() => headings[Math.floor(Math.random() * headings.length)]);
     
     const setSelectedMediaType = useCategoriesStore((state) => state.setSelectedMediaType);
@@ -60,7 +61,11 @@ export const DiscoverContent = () => {
     });
 
     const handleExploreClick = () => {
-        setSelectedMediaType(activeType);
+        if (activeType === 'serie') {
+            setSelectedMediaType('series');
+        } else {
+            setSelectedMediaType('movies');
+        }
     };
 
     const descriptionContent = (

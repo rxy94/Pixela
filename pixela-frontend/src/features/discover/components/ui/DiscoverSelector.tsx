@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaType } from '../../type';
+import { MediaType } from '@/features/media/types';
 import clsx from 'clsx';
 
 interface DiscoverSelectorProps {
@@ -16,8 +16,8 @@ const STYLES = {
 } as const;
 
 const MEDIA_TYPES = {
-    series: 'Series',
-    movies: 'Películas'
+    serie: 'Series',
+    pelicula: 'Películas'
 } as const;
 
 /**
@@ -27,14 +27,14 @@ const MEDIA_TYPES = {
 export const DiscoverSelector = ({ activeType, onTypeChange }: DiscoverSelectorProps) => {
     return (
         <div className={STYLES.container}>
-            {(Object.keys(MEDIA_TYPES) as MediaType[]).map((type) => (
+            {(Object.keys(MEDIA_TYPES) as (keyof typeof MEDIA_TYPES)[]).map((type) => (
                 <button
                     key={type}
                     className={clsx(STYLES.button, {
                         [STYLES.activeButton]: activeType === type,
                         [STYLES.inactiveButton]: activeType !== type
                     })}
-                    onClick={() => onTypeChange(type)}
+                    onClick={() => onTypeChange(type as MediaType)}
                 >
                     {MEDIA_TYPES[type]}
                 </button>
