@@ -47,6 +47,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return view('auth.verify-email-prompt')->with('status', __('auth.register'));
+        return view('auth.registration-success')->with([
+            'user' => $user,
+            'status' => 'success'
+        ]);
     }
 }
