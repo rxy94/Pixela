@@ -17,7 +17,6 @@ export type BackgroundEffectProps = {
  * @returns {ParticleOptions}
  * @description Tipos relacionados con las partículas animadas del footer
  */
-
 export type Particle = {
   id: number;
   size: number;

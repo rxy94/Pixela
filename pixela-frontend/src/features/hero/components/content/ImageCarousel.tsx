@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import clsx from 'clsx';
-import { useHeroStore } from "../../store/heroStore";
+import { useHeroStore } from "@/features/hero/store/heroStore";
+import { ImageCarouselProps } from "@/features/hero/types/content";
 
 const STYLES = {
+  // Contenedor principal del carrusel
   carousel: {
     base: "absolute inset-0 w-full h-full",
     imageContainer: {
@@ -13,6 +15,8 @@ const STYLES = {
       fadeOut: "opacity-0"
     }
   },
+
+  // Capas de superposición y efectos visuales
   overlays: {
     base: "absolute inset-0",
     darkOverlay: "bg-pixela-dark/300",
@@ -20,19 +24,13 @@ const STYLES = {
     topGradient: "absolute top-0 left-0 w-full h-32 sm:h-48 md:h-56 lg:h-64 bg-gradient-to-b from-pixela-dark via-pixela-dark/50 to-transparent",
     bottomGradient: "absolute bottom-0 left-0 w-full h-48 sm:h-64 md:h-80 lg:h-96 bg-gradient-to-t from-pixela-dark via-pixela-dark/50 to-transparent"
   },
+
+  // Estilos de la imagen
   image: {
     container: "relative w-full h-full lg:pt-16",
     base: "w-full h-full object-cover grayscale"
   }
 } as const;
-
-/**
- * Props para el componente ImageCarousel
- * @property {string[]} images - Array de URLs de imágenes para el carrusel
- */
-interface ImageCarouselProps {
-  images: string[];
-}
 
 /**
  * Componente que maneja los overlays visuales del carrusel

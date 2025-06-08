@@ -11,7 +11,7 @@ import { MediaType } from '../types/media';
  * @property {string | null} error - El mensaje de error si ocurre
  * @property {MediaType} selectedMediaType - El tipo de medio seleccionado
  * @property {string | null} selectedCategory - La categoría seleccionada
- * @property {function} fetchCategories - Función para cargar las categorías
+ * @property {function} fetchCategories - Función para cargar las categorías      
  * @property {function} setSelectedMediaType - Función para establecer el tipo de medio seleccionado
  * @property {function} setSelectedCategory - Función para establecer la categoría seleccionada
  */

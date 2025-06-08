@@ -1,23 +1,4 @@
 /**
- * Interfaz que define la estructura del contenido del hero
- * @interface HeroContent
- * @property {string} title - Título del hero
- * @property {string} accentTitle - Título del hero
- * @property {string} description - Descripción del hero
- * @property {string} secondaryButtonText - Texto del botón secundario
- * @property {string[]} images - Imágenes del hero
- * @property {number} currentImageIndex - Índice de la imagen actual
- */
-export interface HeroContent {
-    title: string;
-    accentTitle: string;
-    description: string;
-    secondaryButtonText: string;
-    images: string[];
-    currentImageIndex?: number;
-  }
-  
-/**
  * Estado global manejado por Zustand
  * @interface HeroState
  * @property {number} currentImageIndex - Índice de la imagen actual
@@ -35,7 +16,6 @@ export interface HeroContent {
  * @property {function} resetProgress - Función para reiniciar el progreso de la reproducción
  */
 export interface HeroState {
-
   currentImageIndex: number;
   fadeIn: boolean;
   isPlaying: boolean;
@@ -50,4 +30,4 @@ export interface HeroState {
   nextImage: (imagesLength: number) => void;
   handleSlideChange: (index: number) => void;
   resetProgress: () => void;
-}
+} 

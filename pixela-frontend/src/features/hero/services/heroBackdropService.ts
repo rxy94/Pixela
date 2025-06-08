@@ -1,15 +1,6 @@
 import { getPeliculaById } from "@/api/peliculas/peliculas";
 import { getSerieById } from "@/api/series/series";
-
-/**
- * Tipo que representa un medio audiovisual (película o serie)
- * @property {string} id - Identificador único del medio
- * @property {'movie' | 'serie'} type - Tipo de medio (película o serie)
- */
-export type MediaItem = {
-  id: string;
-  type: 'movie' | 'serie';
-};
+import { MediaItem, MediaResponse } from "@/features/hero/types/content";
 
 /**
  * Lista de medios destacados cuyas imágenes se mostrarán en el Hero.
@@ -25,18 +16,8 @@ export const featuredMedia: MediaItem[] = [
 ];
 
 /**
- * Tipo que representa la respuesta de la API para un medio
- */
-type MediaResponse = {
-  backdrop?: string;
-};
-
-/**
- * Obtiene las imágenes de fondo de los medios especificados en featuredMedia.
- * Realiza las peticiones en paralelo para optimizar el rendimiento.
- * 
- * @returns {Promise<string[]>} Array de URLs de imágenes de fondo
- * @throws {Error} Si ocurre un error al obtener los medios
+ * Obtiene los fondos destacados para el hero
+ * @returns {Promise<string[]>} Array de URLs de imágenes
  */
 export async function getFeaturedBackdrops(): Promise<string[]> {
   try {

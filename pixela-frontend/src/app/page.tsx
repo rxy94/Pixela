@@ -1,4 +1,4 @@
-import { getHeroData } from "@/features/hero/content";
+import { getHeroData } from "@/features/hero/services/heroContentService";
 import { HeroSection } from "@/features/hero/components";
 import { TrendingSection } from "@/features/trending/components";
 import { DiscoverSection } from "@/features/discover/components";
