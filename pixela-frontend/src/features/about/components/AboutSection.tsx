@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef } from 'react';
 import Image from 'next/image';
 import { FaLinkedin } from 'react-icons/fa';
 import { TEAM_MEMBERS, FEATURE_CARDS } from '@/features/about/data/aboutData';
 import type { TeamMember, FeatureCard } from '@/features/about/types/components';
+import { useAboutAnimation } from '../hooks/useAboutAnimation';
 
 /**
  * Estilos constantes para el componente AboutSection
@@ -24,7 +26,7 @@ const STYLES = {
   subtitle: "text-xl max-sm:text-base text-white/80 text-left ipad:text-left lg:text-center xl:text-center",
 
   // Tarjeta de característica
-  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float-smooth hover:-translate-y-2 ipad:p-6",
+  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 hover:-translate-y-2 ipad:p-6",
   cardIcon: "text-4xl text-pixela-accent ipad:text-3xl",
   cardIconContainer: "mb-6",
   cardTitle: "text-2xl font-semibold text-white mb-4 group-hover:text-pixela-accent transition-colors duration-300 flex items-center ipad:text-xl ipad:mb-3 mt-1",
@@ -46,7 +48,7 @@ const STYLES = {
   teamTitleDesktopEquipo: "hidden sm:block",
 
   // Tarjeta de miembro del equipo
-  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 animate-float-smooth hover:-translate-y-2 cursor-pointer ipad:p-5",
+  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 hover:-translate-y-2 cursor-pointer ipad:p-5",
   teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300 ipad:w-28 ipad:h-28",
   teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6 ipad:flex-row ipad:gap-4",
   teamCardImageContainer: "flex-shrink-0 max-sm:w-full max-sm:flex max-sm:justify-start sm:w-auto",
@@ -74,10 +76,6 @@ const STYLES = {
 const FeatureCard = ({ icon, title, description, isComingSoon }: FeatureCard) => (
   <div 
     className={STYLES.card}
-    style={{ 
-      animationDelay: isComingSoon ? '0.3s' : '0s',
-      animationDuration: '8s'
-    }}
   >
     <div className={STYLES.cardIconContainer}>
       <div className={STYLES.cardIcon}>{icon}</div>
@@ -149,25 +147,43 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => (
  * @returns {JSX.Element} Sección "Acerca de"
  */
 const AboutSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const featuresGridRef = useRef<HTMLDivElement>(null);
+  const teamTitleRef = useRef<HTMLHeadingElement>(null);
+  const teamTextRef = useRef<HTMLDivElement>(null);
+  const teamCardsRef = useRef<HTMLDivElement>(null);
+
+  useAboutAnimation({
+    sectionRef,
+    titleRef,
+    subtitleRef,
+    featuresGridRef,
+    teamTitleRef,
+    teamTextRef,
+    teamCardsRef,
+  });
+
   return (
-    <section className={STYLES.section}>
+    <section className={STYLES.section} ref={sectionRef}>
       <div className={STYLES.container}>
         {/* Título y Subtítulo */}
         <div className={STYLES.teamHeader}>
-          <h1 className={STYLES.title}>
+          <h1 className={STYLES.title} ref={titleRef}>
             <span className={STYLES.titleMobile}>QUIÉ-<br/>NES SOMOS</span>
             <span className={STYLES.titleDesktop}>Quiénes Somos</span>
             <span className={STYLES.titleUnderline}></span>
           </h1>
           <div className={STYLES.teamHeaderText}>
-            <p className={STYLES.subtitle}>
+            <p className={STYLES.subtitle} ref={subtitleRef}>
               Somos apasionados del cine y la televisión. Por eso creamos una plataforma única, donde quienes aman las historias pueden descubrir, compartir y celebrar lo que los hace soñar.
             </p>
           </div>
         </div>
 
         {/* Tarjetas */}
-        <div className={STYLES.teamCardsGrid}>
+        <div className={STYLES.teamCardsGrid} ref={featuresGridRef}>
           {FEATURE_CARDS.map((card, index) => (
             <FeatureCard key={index} {...card} />
           ))}
@@ -178,12 +194,12 @@ const AboutSection = () => {
           <div className={STYLES.teamGrid}>
             {/* Columna de texto */}
             <div className={STYLES.teamTextColumn}>
-              <h2 className={STYLES.title}>
+              <h2 className={STYLES.title} ref={teamTitleRef}>
                 <span className={STYLES.teamTitleMobileEquipo}>NUES-<br/>TRO EQUIPO</span>
                 <span className={STYLES.teamTitleDesktopEquipo}>Nuestro Equipo</span>
                 <span className={STYLES.titleUnderline}></span>
               </h2>
-              <div className={STYLES.teamTextContainer}>
+              <div className={STYLES.teamTextContainer} ref={teamTextRef}>
                 <p className={STYLES.teamDescription}>
                   En Pixela, unimos talento y pasión por el cine. Somos desarrolladores, diseñadores y cinéfilos comprometidos con una misión: crear una plataforma donde descubrir historias sea tan emocionante como vivirlas.
                   Cada día trabajamos para mejorar y ofrecer la mejor experiencia posible a nuestra comunidad.
@@ -195,7 +211,7 @@ const AboutSection = () => {
             </div>
 
             {/* Columna de cards */}
-            <div className={STYLES.teamCardsColumn}>
+            <div className={STYLES.teamCardsColumn} ref={teamCardsRef}>
               {TEAM_MEMBERS.map((member, index) => (
                 <TeamMemberCard key={index} member={member} />
               ))}
