@@ -3,43 +3,30 @@
 import Link from 'next/link';
 import FooterNewsletter from '../content/FooterNewsletter';
 import FooterSocialLinks from '../content/FooterSocialLinks';
-
-// Definición de enlaces para menús
-type FooterLink = {
-  name: string;
-  href: string;
-};
-
-// Enlaces para las columnas - Extraídos como constantes para evitar re-creación en cada render
-const explorerLinks: FooterLink[] = [
-  { name: "Inicio", href: "/" },
-  { name: "Tendencias", href: "/" },
-  { name: "Categorías", href: "/" },
-
-];
-
-const companyLinks: FooterLink[] = [
-  { name: "Sobre nosotros", href: "/sobre-nosotros" },
-  { name: "Privacidad", href: "/privacidad" },
-  { name: "Términos", href: "/terminos" },
-  { name: "Contacto", href: "/contacto" }
-];
+import { DISCOVER_LINKS, LEGAL_LINKS } from '@/features/footer/constants/links';
 
 const STYLES = {
+  // Layout principal
   container: "relative z-10 w-full",
   mainContainer: "w-[83.33%] max-w-7xl mx-auto transition-all duration-700 ipad:w-[90%]",
   gridMain: "grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-8 md:gap-y-16 py-8 md:py-16 ipad:gap-x-8 ipad:gap-y-6 ipad:py-12 ipad:grid-cols-3",
+
+  // Logo y descripción
   logoColumn: "flex flex-col space-y-4 md:space-y-6 md:col-span-4 ipad:space-y-4 ipad:col-span-3",
   logoContainer: "flex items-center",
   logoWrapper: "relative",
   logoText: "tracking-tight font-black font-outfit text-3xl md:text-5xl ipad:text-4xl",
   description: "text-white/80 text-sm md:text-base max-w-md lg:max-w-2xl xl:max-w-xl leading-relaxed mt-2 ipad:text-sm ipad:leading-relaxed ipad:max-w-full",
+
+  // Información de contacto
   contactContainer: "flex flex-wrap gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-4 mt-2 md:mt-3 ipad:gap-x-4 ipad:gap-y-2",
   contactGroup: "flex flex-col group",
   contactLabel: "text-white/50 text-xs uppercase tracking-widest group-hover:text-[#ff007f]/80 transition-colors duration-300",
   contactLink: "text-white hover:text-[#ff007f] transition flex items-center group",
   contactArrow: "ml-1 transform translate-x-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300",
   contactText: "text-white group-hover:text-[#ff007f]/90 transition-colors duration-300",
+
+  // Navegación y enlaces
   mobileSeparator: "h-px w-full bg-white/5 md:hidden my-4",
   linksContainer: "grid grid-cols-2 gap-25 md:contents ipad:contents",
   explorerColumn: "md:col-span-2 md:col-start-6 text-left ipad:col-span-1",
@@ -50,7 +37,11 @@ const STYLES = {
   linkItem: "transform hover:translate-x-1 transition-transform duration-300",
   linkAnchor: "text-white/70 hover:text-[#ff007f] transition flex items-center justify-start group ipad:text-sm",
   linkIndicator: "w-0 h-0.5 bg-[#ff007f] mr-0 opacity-0 group-hover:w-2 group-hover:mr-2 group-hover:opacity-100 transition-all duration-300",
+
+  // Newsletter
   newsletterColumn: "flex flex-col space-y-6 md:space-y-8 md:col-span-4 md:col-start-10 mt-6 md:mt-0 ipad:space-y-5 ipad:mt-0 ipad:col-span-1",
+
+  // Footer inferior
   copyrightSection: "pb-8 md:pb-12 transition-all duration-700 delay-100 ipad:pb-8",
   copyrightContainer: "flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 ipad:flex-col ipad:gap-3",
   copyrightText: "text-white/60 text-xs md:text-sm text-center sm:text-left ipad:text-xs ipad:text-center",
@@ -117,7 +108,7 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
                 Explorar
               </h3>
               <ul className={STYLES.linksList}>
-                {explorerLinks.map((item, index) => (
+                {DISCOVER_LINKS.map((item, index) => (
                   <li key={index} className={STYLES.linkItem}>
                     <Link 
                       href={item.href}
@@ -138,7 +129,7 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
                 Compañía
               </h3>
               <ul className={STYLES.linksList}>
-                {companyLinks.map((item, index) => (
+                {LEGAL_LINKS.map((item, index) => (
                   <li key={index} className={STYLES.linkItem}>
                     <Link 
                       href={item.href}

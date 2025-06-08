@@ -1,10 +1,7 @@
 'use client';
 
 import { IoIosArrowUp } from "react-icons/io";
-
-type ScrollTopButtonProps = {
-  showScrollButton: boolean;
-};
+import { ScrollTopButtonProps } from "@/features/footer/types/components";
 
 const STYLES = {
   button: "fixed md:absolute right-6 bottom-6 md:bottom-8 z-20 border border-[#ff007f]/50 bg-black/60 backdrop-blur-md hover:bg-[#ff007f] text-white rounded-full p-3 shadow-lg shadow-[#ff007f]/10 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-[#ff007f] overflow-hidden",

@@ -1,32 +1,18 @@
-import React, { useMemo } from 'react';
-
-// Tipos para las partículas
-type Particle = {
-  id: number;
-  size: number;
-  top: number;
-  left: number;
-  delay: number;
-  duration: number;
-  opacity: number;
-};
-
-type ParticleOptions = {
-  minSize: number;
-  maxSize: number;
-  minDuration: number;
-  maxDuration: number;
-  opacity?: number;
-};
+import { useMemo } from 'react';
+import { Particle, ParticleOptions } from "@/features/footer/types/components";
 
 const STYLES = {
-  container: "absolute inset-0 w-full h-full overflow-hidden",
-  smallParticle: "absolute rounded-full bg-[#ff007f]",
-  mediumParticle: "absolute rounded-full bg-gradient-to-r from-[#ff007f]/60 to-[#ff00ff]/60",
-  glowParticle: "absolute rounded-full"
+  container: "absolute inset-0 w-full h-full overflow-hidden pointer-events-none",
+  particle: "absolute rounded-full bg-[#ff007f] animate-float"
 } as const;
 
-// Componente para partículas sutiles
+
+/**
+ * Componente para partículas sutiles del footer
+ * @type
+ * @returns {FooterParticles}
+ * @description Componente para partículas sutiles
+ */
 export const FooterParticles = () => {
   // Función optimizada para generar partículas
   const generateParticles = (count: number, options: ParticleOptions): Particle[] => {
@@ -61,7 +47,7 @@ export const FooterParticles = () => {
         {smallParticles.map(particle => (
           <div 
             key={`small-${particle.id}`}
-            className={STYLES.smallParticle}
+            className={STYLES.particle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
@@ -79,7 +65,7 @@ export const FooterParticles = () => {
         {mediumParticles.map(particle => (
           <div 
             key={`medium-${particle.id}`}
-            className={STYLES.mediumParticle}
+            className={STYLES.particle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
@@ -97,7 +83,7 @@ export const FooterParticles = () => {
         {glowParticles.map(particle => (
           <div 
             key={`glow-${particle.id}`}
-            className={STYLES.glowParticle}
+            className={STYLES.particle}
             style={{
               width: `${particle.size}px`,
               height: `${particle.size}px`,
