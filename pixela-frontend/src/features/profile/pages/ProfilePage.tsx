@@ -31,6 +31,7 @@ const STYLES = {
   container: 'profile-page',
   content: 'profile-page__content',
   profileContainer: 'profile-page__container',
+  headerContainer: 'relative',
   
   // Títulos y texto
   title: 'profile-page__title',
@@ -71,6 +72,7 @@ const STYLES = {
   
   // Notificaciones
   notification: 'fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in backdrop-blur-sm border',
+  notificationInline: 'absolute top-0 right-0 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 border max-w-sm',
   notificationSuccess: 'bg-pixela-accent/90 border-pixela-accent/50 text-white',
   notificationError: 'bg-red-500/90 border-red-400/50 text-white',
   notificationIcon: 'w-5 h-5 flex-shrink-0',
@@ -159,7 +161,7 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
       setIsEditing(false);
 
       // Mostrar notificación de éxito para cambios sin contraseña
-      setSuccessMessage('¡Perfil guardado correctamente!');
+      setSuccessMessage('¡Perfil actualizado correctamente!');
 
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
@@ -192,13 +194,13 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   };
 
   // Componente de notificación
-  const NotificationMessage = () => {
+  const NotificationMessage = ({ inline = false }: { inline?: boolean }) => {
     if (!successMessage) return null;
     
     const isError = successMessage.toLowerCase().includes('error');
     
     return (
-      <div className={`${STYLES.notification} ${
+      <div className={`${inline ? STYLES.notificationInline : STYLES.notification} ${
         isError ? STYLES.notificationError : STYLES.notificationSuccess
       }`}>
         {isError ? (
@@ -270,9 +272,11 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
 
   return (
     <main className={STYLES.container}>
-      <NotificationMessage />
       <div className={STYLES.profileContainer}>
-        <h1 className={STYLES.title}>Mi Cuenta</h1>
+        <div className={STYLES.headerContainer}>
+          <h1 className={STYLES.title}>Mi Cuenta</h1>
+          <NotificationMessage inline />
+        </div>
         <p className={STYLES.welcome}>
           ¡Bienvenido/a, <span className={STYLES.welcomeAccent}>{user.name}</span>! Aquí puedes gestionar tu perfil y preferencias.
         </p>

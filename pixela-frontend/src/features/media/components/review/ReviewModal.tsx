@@ -32,7 +32,8 @@ const STYLES = {
       textarea: "w-full h-32 bg-[#252525] border border-white/10 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-pixela-accent transition-colors resize-none"
     },
     error: "p-3 mb-4 text-sm text-red-400 border rounded-lg bg-red-500/10 border-red-500/20",
-    success: "p-3 mb-4 text-sm text-green-400 border rounded-lg bg-green-500/10 border-green-500/20",
+    errorSimple: "mb-2 text-sm text-pixela-accent italic",
+    success: "mb-2 text-sm text-green-400 italic",
     submit: {
       container: "flex justify-end",
       button: "flex items-center gap-2 px-6 py-2 font-medium text-white transition-colors rounded-lg bg-pixela-accent hover:bg-pixela-accent/90 disabled:opacity-50 disabled:cursor-not-allowed",
@@ -76,9 +77,30 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
   const [review, setReview] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [simpleError, setSimpleError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
+  /**
+   * Función que resetea el estado del modal
+   */
+  const resetModalState = () => {
+    setRating(6);
+    setReview('');
+    setError(null);
+    setSimpleError(null);
+    setSuccess(null);
+    setIsSubmitting(false);
+  };
+
+  /**
+   * Función que cierra el modal y resetea el estado
+   */
+  const handleClose = () => {
+    resetModalState();
+    onClose();
+  };
 
   /**
    * Función que se ejecuta al hacer clic en una estrella
@@ -100,6 +122,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    setSimpleError(null);
     setSuccess(null);
 
     try {
@@ -111,23 +134,25 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
       };
       await reviewsAPI.add(reviewData);
       
-      // Mostrar mensaje de éxito
+      // Mostrar mensaje de éxito y limpiar el campo
       setSuccess('¡Reseña creada correctamente!');
+      setReview(''); // Limpiar el campo de reseña
       
       // Esperar un poco para que el usuario vea el mensaje antes de cerrar
       setTimeout(() => {
+        resetModalState(); // Resetear estado completo del modal
         onClose();
         if (refreshReviews) refreshReviews();
       }, 1500);
 
     } catch (error: unknown) {
-      let errorMsg = 'No se pudo guardar la reseña. Por favor, inténtalo de nuevo.';
       console.log(error);
 
       if (error instanceof Error && error.message.includes('Review already exists')) {
-        errorMsg = 'El usuario ya tiene una reseña para esta ficha.';
+        setSimpleError('El usuario ya tiene una reseña para esta ficha.');
+      } else {
+        setError('No se pudo guardar la reseña. Por favor, inténtalo de nuevo.');
       }
-      setError(errorMsg);
 
     } finally {
       setIsSubmitting(false);
@@ -138,7 +163,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
     <div 
       className={STYLES.modal.overlay}
       onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
+        if (e.target === e.currentTarget) handleClose();
       }}
     >
       <div 
@@ -149,7 +174,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
         <div className={STYLES.header.container}>
           <h2 className={STYLES.header.title}>Escribir Reseña</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className={STYLES.header.closeButton}
             type="button"
           >
@@ -201,7 +226,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
             </div>
 
             {/* Review Text */} 
-            <div className="mb-6">
+            <div className="mb-2">
               <label className={STYLES.content.review.label}>
                 Reseña
               </label>
@@ -217,6 +242,12 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
             {error && (
               <div className={STYLES.content.error}>
                 {error}
+              </div>
+            )}
+
+            {simpleError && (
+              <div className={STYLES.content.errorSimple}>
+                {simpleError}
               </div>
             )}
 
