@@ -15,8 +15,8 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const STYLES = {
   
   // Seccion general
-  section: "py-36 px-4 max-sm:px-2 bg-pixela-dark",
-  container: "max-w-7xl mx-auto max-sm:w-5/6 ipad:w-[90%]",
+  section: "py-36 2k:py-24 px-4 max-sm:px-2 bg-pixela-dark",
+  container: "max-w-7xl 2k:max-w-6xl mx-auto max-sm:w-5/6 ipad:w-[90%] 2k:w-[70%]",
 
   // Titulos
   title: "text-6xl max-sm:text-4xl font-black mb-8 text-pixela-accent font-outfit relative inline-block max-sm:text-[64px] max-sm:leading-[0.95] max-sm:break-words",
@@ -35,10 +35,10 @@ const STYLES = {
   comingSoon: "px-2 py-1 text-xs font-bold uppercase tracking-wider bg-pixela-accent/20 text-pixela-accent rounded-full border border-pixela-accent/30 ipad:px-1.5 ipad:py-0.5 ipad:text-[10px] ipad:self-start ",
   
   // Seccion de equipo
-  teamSection: "py-20 ipad:py-12",
-  teamHeader: "text-left ipad:text-left lg:text-center xl:text-center mb-16",
-  teamHeaderText: "space-y-4 max-w-3xl max-sm:mx-0 ipad:mx-0 lg:mx-auto xl:mx-auto",
-  teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16 ipad:flex-col ipad:gap-8",
+  teamSection: "py-20 2k:py-16 ipad:py-12",
+  teamHeader: "text-left ipad:text-left lg:text-center xl:text-center mb-16 2k:mb-12",
+  teamHeaderText: "space-y-4 2k:space-y-3 max-w-3xl max-sm:mx-0 ipad:mx-0 lg:mx-auto xl:mx-auto",
+  teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16 2k:gap-12 ipad:flex-col ipad:gap-8",
   teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16 ipad:w-full ipad:pt-0",
   teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8 ipad:w-full ipad:gap-6",
   teamTextContainer: "mt-8 max-sm:mt-2 ipad:mt-6",

@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       screens: {
         'ipad': {'raw': '(width: 768px) and (height: 1024px)'},
+        '2k': {'raw': '(min-width: 2048px)'},
       },
       fontFamily: {
         sans: ["var(--font-sans)"],

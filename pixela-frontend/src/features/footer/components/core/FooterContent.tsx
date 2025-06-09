@@ -10,8 +10,8 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const STYLES = {
   // Layout principal
   container: "relative z-10 w-full",
-  mainContainer: "w-[83.33%] max-w-7xl mx-auto transition-all duration-700 ipad:w-[90%]",
-  gridMain: "grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-8 md:gap-y-16 py-8 md:py-16 ipad:gap-x-8 ipad:gap-y-6 ipad:py-12 ipad:grid-cols-3",
+  mainContainer: "w-[83.33%] max-w-7xl 2k:max-w-6xl 2k:w-[70%] mx-auto transition-all duration-700 ipad:w-[90%]",
+  gridMain: "grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-8 md:gap-y-16 2k:gap-y-12 py-8 md:py-16 2k:py-12 ipad:gap-x-8 ipad:gap-y-6 ipad:py-12 ipad:grid-cols-3",
 
   // Logo y descripción
   logoColumn: "flex flex-col space-y-4 md:space-y-6 md:col-span-4 ipad:space-y-4 ipad:col-span-3",

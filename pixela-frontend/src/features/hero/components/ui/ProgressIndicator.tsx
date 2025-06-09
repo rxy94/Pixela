@@ -7,7 +7,7 @@ import { ProgressIndicatorProps } from "@/features/hero/types/content";
 
 const STYLES = {
   progress: {
-    container: "absolute bottom-6 sm:bottom-14 md:bottom-20 lg:bottom-28 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-xl px-4 lg:px-0",
+    container: "absolute bottom-6 sm:bottom-14 md:bottom-20 lg:bottom-28 2k:bottom-16 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-xl px-4 lg:px-0",
     content: "flex flex-col items-center gap-3 sm:gap-3 md:gap-3 lg:gap-4",
     controls: "flex items-center justify-between w-full",
     counter: "text-pixela-light/70 text-xs sm:text-xs md:text-sm lg:text-sm font-medium"
