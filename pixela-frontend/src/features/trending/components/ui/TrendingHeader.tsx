@@ -1,6 +1,6 @@
 'use client';
 import '../trending.css';
-import { useState, memo } from 'react';
+import { useState, memo, useRef } from 'react';
 import { useTrendingStore } from '@/features/trending/store/trendingStore';
 import { TrendingMediaCarousel } from '../layout/TrendingMediaCarousel';
 import { TrendingButton } from './TrendingButton';
@@ -8,7 +8,8 @@ import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
 import clsx from 'clsx';
 import QuoteSection from '@/features/quotes/components/QuoteSection';
 import { MediaType } from '@/features/trending/types/common';
-import type { TrendingToggleProps } from '@/features/trending/types/components';  
+import type { TrendingToggleProps } from '@/features/trending/types/components';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Constantes
 const STYLES = {
@@ -108,26 +109,54 @@ interface ContentStateProps {
  * @param {ContentStateProps} props - Props del componente
  * @returns {JSX.Element} Contenido principal
  */
-const ContentState = memo(({ activeButton, activeContent, onButtonChange, quote }: ContentStateProps) => (
-  <div id="tendencias" className={STYLES.container}>
-    <div className={STYLES.content}>
-      <div className={STYLES.contentWrapperWithToggle}>
-        <TrendingTitle />
-        <TrendingToggle 
-          activeButton={activeButton}
-          onButtonChange={onButtonChange}
-        />
-      </div>
-      
-      <TrendingMediaCarousel 
-        content={activeContent} 
-        type={activeButton}
-      />
+const ContentState = memo(({ activeButton, activeContent, onButtonChange, quote }: ContentStateProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const toggleRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
 
-      <QuoteSection quote={quote} />
+  useScrollAnimation({
+    trigger: containerRef,
+    triggerStart: 'top 80%',
+    initialY: 30,
+    elements: [
+      { ref: titleRef, duration: 0.8, ease: 'power2.out' },
+      { ref: toggleRef, duration: 0.6, ease: 'power2.out', delay: "-=0.4" },
+      { ref: carouselRef, duration: 0.8, ease: 'power2.out', delay: "-=0.3" },
+      { ref: quoteRef, duration: 0.6, ease: 'power2.out', delay: "-=0.2" }
+    ]
+  });
+
+  return (
+    <div id="tendencias" className={STYLES.container} ref={containerRef}>
+      <div className={STYLES.content}>
+        <div className={STYLES.contentWrapperWithToggle}>
+          <div ref={titleRef}>
+            <TrendingTitle />
+          </div>
+          <div ref={toggleRef}>
+            <TrendingToggle 
+              activeButton={activeButton}
+              onButtonChange={onButtonChange}
+            />
+          </div>
+        </div>
+        
+        <div ref={carouselRef}>
+          <TrendingMediaCarousel 
+            content={activeContent} 
+            type={activeButton}
+          />
+        </div>
+
+        <div ref={quoteRef}>
+          <QuoteSection quote={quote} />
+        </div>
+      </div>
     </div>
-  </div>
-));
+  )
+});
 
 ContentState.displayName = 'ContentState';
 

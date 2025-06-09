@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { FaLinkedin } from 'react-icons/fa';
 import { TEAM_MEMBERS, FEATURE_CARDS } from '@/features/about/data/aboutData';
 import type { TeamMember, FeatureCard } from '@/features/about/types/components';
-import { useAboutAnimation } from '../hooks/useAboutAnimation';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 /**
  * Estilos constantes para el componente AboutSection
@@ -26,7 +26,7 @@ const STYLES = {
   subtitle: "text-xl max-sm:text-base text-white/80 text-left ipad:text-left lg:text-center xl:text-center",
 
   // Tarjeta de característica
-  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 hover:-translate-y-2 ipad:p-6",
+  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float ipad:p-6",
   cardIcon: "text-4xl text-pixela-accent ipad:text-3xl",
   cardIconContainer: "mb-6",
   cardTitle: "text-2xl font-semibold text-white mb-4 group-hover:text-pixela-accent transition-colors duration-300 flex items-center ipad:text-xl ipad:mb-3 mt-1",
@@ -48,7 +48,7 @@ const STYLES = {
   teamTitleDesktopEquipo: "hidden sm:block",
 
   // Tarjeta de miembro del equipo
-  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 hover:-translate-y-2 cursor-pointer ipad:p-5",
+  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 cursor-pointer animate-float-smooth ipad:p-5",
   teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300 ipad:w-28 ipad:h-28",
   teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6 ipad:flex-row ipad:gap-4",
   teamCardImageContainer: "flex-shrink-0 max-sm:w-full max-sm:flex max-sm:justify-start sm:w-auto",
@@ -155,14 +155,23 @@ const AboutSection = () => {
   const teamTextRef = useRef<HTMLDivElement>(null);
   const teamCardsRef = useRef<HTMLDivElement>(null);
 
-  useAboutAnimation({
-    sectionRef,
-    titleRef,
-    subtitleRef,
-    featuresGridRef,
-    teamTitleRef,
-    teamTextRef,
-    teamCardsRef,
+  // DEBUG: Configuración simple sin stagger
+  useScrollAnimation({
+    trigger: sectionRef,
+    elements: [
+      { ref: titleRef, duration: 0.8 },
+      { ref: subtitleRef, duration: 0.6, delay: "-=0.4" },
+      { ref: featuresGridRef, duration: 0.6, delay: "-=0.2" }
+    ]
+  });
+
+  useScrollAnimation({
+    trigger: teamTitleRef,
+    elements: [
+      { ref: teamTitleRef, duration: 0.8 },
+      { ref: teamTextRef, duration: 0.6, delay: "-=0.4" },
+      { ref: teamCardsRef, duration: 0.6, delay: "-=0.2" }
+    ]
   });
 
   return (

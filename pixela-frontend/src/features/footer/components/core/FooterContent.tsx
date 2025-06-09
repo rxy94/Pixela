@@ -1,9 +1,11 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
 import FooterNewsletter from '../content/FooterNewsletter';
 import FooterSocialLinks from '../content/FooterSocialLinks';
 import { DISCOVER_LINKS, LEGAL_LINKS } from '@/features/footer/constants/links';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 const STYLES = {
   // Layout principal
@@ -50,18 +52,33 @@ const STYLES = {
   copyrightSeparator: "text-white/20 hidden sm:inline ipad:hidden",
 } as const;
 
-type FooterContentProps = {
-  isAnimated: boolean;
-};
+export const FooterContent = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+  const newsletterRef = useRef<HTMLDivElement>(null);
+  const copyrightRef = useRef<HTMLDivElement>(null);
 
-export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
+  // Aplicar animaciones del footer - configuración mejorada
+  useScrollAnimation({
+    trigger: containerRef,
+    triggerStart: 'top 85%',
+    initialY: 40,
+    elements: [
+      { ref: logoRef, duration: 0.8 },
+      { ref: linksRef, duration: 0.6, delay: "-=0.6" },
+      { ref: newsletterRef, duration: 0.6, delay: "-=0.4" },
+      { ref: copyrightRef, duration: 0.5, delay: "-=0.3" }
+    ]
+  });
+
   return (
-    <div className={STYLES.container}>
-      <div className={`${STYLES.mainContainer} ${isAnimated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+    <div className={STYLES.container} ref={containerRef}>
+      <div className={STYLES.mainContainer}>
         {/* Grids principales */}
         <div className={STYLES.gridMain}>
           {/* Columna 1: Logo y descripción */}
-          <div className={STYLES.logoColumn}>
+          <div className={STYLES.logoColumn} ref={logoRef}>
             <div className={STYLES.logoContainer}>
               <span
                 className={STYLES.logoText}
@@ -100,7 +117,7 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
           <div className={STYLES.mobileSeparator}></div>
 
           {/* Contenedor para Explorar y Compañía */}
-          <div className={STYLES.linksContainer}>
+          <div className={STYLES.linksContainer} ref={linksRef}>
             {/* Columna 2: Links de exploración */}
             <div className={STYLES.explorerColumn}>
               <h3 className={STYLES.sectionTitle}>
@@ -148,14 +165,14 @@ export const FooterContent: React.FC<FooterContentProps> = ({ isAnimated }) => {
           <div className={STYLES.mobileSeparator}></div>
 
           {/* Columna 4: Newsletter + redes sociales */}
-          <div className={STYLES.newsletterColumn}>
+          <div className={STYLES.newsletterColumn} ref={newsletterRef}>
             <FooterNewsletter />
             <FooterSocialLinks />
           </div>
         </div>
 
         {/* Copyright */}
-        <div className={STYLES.copyrightSection}>
+        <div className={STYLES.copyrightSection} ref={copyrightRef}>
           <div className={STYLES.copyrightContainer}>
             <p className={STYLES.copyrightText}>
               © 2025 Pixela.io. Todos los derechos reservados.

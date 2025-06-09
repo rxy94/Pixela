@@ -65,7 +65,7 @@ export default function Footer() {
         </>
       )}
       
-      <FooterContent isAnimated={isAnimated} />
+      <FooterContent />
       
       <FooterScrollTopButton showScrollButton={showScrollButton} />
     </footer>
