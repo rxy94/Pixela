@@ -22,36 +22,173 @@ Dado el avance del proyecto, el vídeo necesitaba superar los 5 minutos para cub
 
 
 
+# Documentación Técnica del Proyecto: Pixela
 
-# Documentación habitual <br/>
+## 1. Resumen General del Proyecto
 
-| Frontend                                           | Backend                                                                 |
-|----------------------------------------------------|-------------------------------------------------------------------------|
-| [NEXTJS](https://nextjs.org/learn)                | [LARAVEL (Sanctum CORS)](https://laravel.com/docs/12.x/sanctum#cors-and-cookies) |
-| [REACT](https://es.react.dev/learn)               | [LARAVEL (Auth)](https://laravel.com/docs/12.x/authentication#authenticating-users) |
-| [REACT WIKI](https://www.reactjs.wiki/)           | [MEDIUM](https://rezakhademix.medium.com/laravel-11-no-http-kernel-no-casts-no-console-kernel-721c62adb6ef) |
-| [TAILWINDCSS](https://tailwindcss.com/)           | [LARACASTS](https://laracasts.com/)                                    |
-| [FRONTEND MASTERS](https://frontendmasters.com/)  | [LARAVEL 12](https://laravel.com/docs/12.x/installation)               |
-| [DEVTALLES](https://cursos.devtalles.com/)        | [LARAVEL REDIS](https://laravel.com/docs/12.x/redis)                   |
-                     
-# Tecnologías y herramientas usadas en Pixela  <br/>
+**Propósito**: `Pixela` es una aplicación web moderna diseñada para que los usuarios puedan descubrir, explorar, guardar como favoritos y escribir reseñas de películas y series. Actúa como una interfaz de usuario sofisticada que consume datos de una fuente externa (probablemente The Movie Database - TMDB) y gestiona los datos propios de los usuarios (perfiles, favoritos, etc.).
 
-| 🧩 Frontend                                 | 🧩 Backend                                                   |
-|--------------------------------------------|--------------------------------------------------------------|
-| Next.js 15 – App Router y Server Components | Laravel 12 – API REST desacoplada                            |
-| React 19 – UI con componentes               | Laravel Sanctum – Autenticación con API tokens               |
-| TypeScript – Tipado estricto                | Laravel CORS – Permite consumo desde el frontend             |
-| Tailwind CSS – Utilidades de estilos        | Laravel Breeze kit - Scaffolding                             |
-| Sass (SCSS) – Preprocesador CSS             | Laravel HTTP Session - Control de sesiones                   |
-| Zustand – Estado global                     | Blade Templates - vistas Login y Register                    |
-| React Hook Form – Formularios eficientes    | Guzzle (PHP HTTP Client) - Peticiones API                    |
-| fetch API – Consumo de API REST             | Tailwind CSS - Diseño de las vistas Blade                    |
+**Arquitectura General**: El proyecto sigue una arquitectura de **API Headless + SPA (Single Page Application)** desacoplada.
+
+*   **Backend**: Una API RESTful robusta construida con **Laravel 12 (PHP)**. Es responsable de la lógica de negocio, la autenticación de usuarios y de actuar como un proxy seguro para la API externa de películas/series.
+*   **Frontend**: Una SPA dinámica y reactiva construida con **Next.js 15 (React 19)** y escrita en **TypeScript**. Es responsable de toda la interfaz de usuario y la experiencia de navegación.
+*   **Base de Datos**: El backend utiliza un sistema de base de datos relacional gestionado a través del ORM de Laravel, **Eloquent**. Los modelos indican una base de datos con tablas para `users`, `favorites` y `reviews`.
+*   **Contenerización**: Todo el entorno de desarrollo está completamente contenerizado con **Docker**, lo que facilita enormemente la configuración y la consistencia entre desarrolladores.
+
+**Tecnologías Principales**:
+
+| Área | Tecnología | Propósito |
+| :--- | :--- | :--- |
+| **Backend** | Laravel 12, PHP 8.2 | Framework principal de la API |
+| | Laravel Sanctum | Autenticación de API para la SPA |
+| | Eloquent ORM | Interacción con la base de datos |
+| | l5-swagger | Potencial para documentación de API (OpenAPI) |
+| **Frontend**| Next.js 15, React 19 | Framework principal de la SPA |
+| | TypeScript | Tipado estático para robustez del código |
+| | Zustand | Gestión de estado global |
+| | Tailwind CSS | Estilizado de la interfaz (Utility-first) |
+| | React Hook Form | Gestión de formularios |
+| **DevOps** | Docker, Docker Compose | Contenerización y orquestación del entorno |
+| | Laravel Sail | Abstracción sobre Docker para Laravel |
+| | GitHub | Control de versiones |
+
+## 2. Estructura del Proyecto
+
+El proyecto es un monorepo con una separación clara entre el cliente y el servidor:
+
+```
+pixela/
+├── pixela-backend/      # Proyecto de la API en Laravel
+│   ├── app/             # Núcleo de la aplicación: Modelos, Controladores, etc.
+│   │   ├── Http/
+│   │   │   └── Controllers/ # Lógica para manejar las peticiones HTTP
+│   │   └── Models/        # Modelos de Eloquent (User, Favorite, Review)
+│   ├── config/          # Archivos de configuración de Laravel
+│   ├── database/        # Migraciones y seeders de la base de datos
+│   ├── routes/          # Definición de las rutas (api.php, auth.php)
+│   ├── composer.json    # Dependencias de PHP
+│   └── Dockerfile.dev   # Definición del contenedor de desarrollo
+│
+└── pixela-frontend/     # Proyecto de la SPA en Next.js
+    ├── src/             # Código fuente del frontend
+    │   ├── app/         # Enrutado basado en carpetas (App Router)
+    │   │   └── (rutas)/ # Grupo de rutas principal de la aplicación
+    │   ├── api/         # Lógica para comunicarse con el backend
+    │   ├── features/    # Componentes y lógica agrupados por funcionalidad
+    │   ├── stores/      # Stores de Zustand para el estado global
+    │   └── shared/      # Componentes y utilidades reutilizables
+    ├── package.json     # Dependencias de JavaScript
+    └── next.config.js   # Configuración de Next.js
+```
+
+## 3. Documentación por Módulos
+
+### Backend (`pixela-backend`)
+
+*   **Rutas (`routes/`)**: Definen todos los endpoints de la aplicación. `api.php` contiene los endpoints de los recursos (películas, reseñas), mientras que `auth.php` maneja las rutas de autenticación (login, registro).
+*   **Controladores (`app/Http/Controllers/Api/`)**: Contienen la lógica de negocio para cada petición. Actúan como intermediarios entre las rutas y los modelos. Hay controladores dedicados para `User`, `Favorite`, `Review`, y para interactuar con la API de TMDB.
+*   **Modelos (`app/Models/`)**: Representan las tablas de la base de datos (`users`, `favorites`, `reviews`) y definen las relaciones entre ellas (un usuario tiene muchos favoritos y reseñas).
+*   **Middleware (`auth:sanctum`, `isAdmin`)**: Filtros que se ejecutan antes de los controladores. `auth:sanctum` protege las rutas que requieren autenticación, y el middleware `isAdmin` (inferido de las rutas) protege las rutas exclusivas para administradores.
+
+### Frontend (`pixela-frontend`)
+
+*   **Enrutado (`src/app/`)**: Utiliza el App Router de Next.js. La estructura de carpetas dentro de `src/app/(rutas)` define las páginas de la aplicación de forma intuitiva (`/movies`, `/profile`, etc.). Las carpetas con corchetes (ej. `[id]`) son rutas dinámicas.
+*   **Comunicación API (`src/api/`)**: Módulo responsable de realizar las llamadas HTTP al backend de Laravel. Centraliza la lógica de fetching de datos, manejo de errores y autenticación.
+*   **Gestión de Estado (`src/stores/`)**: Usa Zustand para crear "stores" ligeros y reactivos. Probablemente exista un `userStore` para guardar la información del usuario autenticado y un `authStore` para el estado de autenticación.
+*   **Features (`src/features/`)**: La arquitectura está orientada a funcionalidades. Cada carpeta en `features` contiene los componentes, hooks y lógica necesarios para una característica específica de la aplicación (ej. `features/authentication`, `features/movie-details`).
+*   **Componentes Compartidos (`src/shared/`)**: Contiene componentes de UI genéricos y reutilizables en toda la aplicación, como botones, inputs, layouts, etc.
+
+## 4. Endpoints de la API
+
+Las rutas base son `/api` y las de autenticación no tienen prefijo.
+
+### Autenticación (Público)
+
+| Método | Ruta | Controlador | Propósito |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/register` | `RegisteredUserController@store`| Crear una nueva cuenta de usuario. |
+| `POST` | `/login` | `AuthenticatedSessionController@store`| Iniciar sesión y crear la sesión de Sanctum. |
+| `POST`|`/forgot-password`| `PasswordResetLinkController@store`| Enviar email para resetear contraseña. |
+
+### Sesión de Usuario (Requiere Auth)
+
+| Método | Ruta | Controlador | Propósito |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/user` | `AuthController@user` | Obtener los datos del usuario autenticado. |
+| `POST` | `/api/logout` | `AuthController@logout` | Cerrar la sesión del usuario. |
+
+### Gestión de Usuarios (Requiere Auth)
+
+| Método | Ruta | Middleware | Propósito |
+| :--- | :--- | :--- | :--- |
+| `GET`| `/api/users` | `isAdmin` | Listar todos los usuarios. |
+| `POST` | `/api/users` | `isAdmin` | Crear un nuevo usuario. |
+| `PUT` | `/api/users/{user}` | - | Actualizar los datos de un usuario. |
+| `DELETE`| `/api/users/{user}` | - | Eliminar un usuario. |
+
+### Favoritos y Reseñas (Requiere Auth)
+
+| Método | Ruta | Propósito |
+| :--- | :--- | :--- |
+| `POST` | `/api/favorites` | Añadir una película/serie a favoritos. |
+| `DELETE`| `/api/favorites/{id}`| Eliminar de favoritos. |
+| `GET` | `/api/favorites/details`| Listar los favoritos del usuario con sus detalles. |
+| `POST` | `/api/reviews` | Añadir una reseña. |
+| `PUT` | `/api/reviews/{id}` | Actualizar una reseña. |
+| `DELETE`| `/api/reviews/{id}` | Eliminar una reseña. |
+
+### TMDB, Películas y Series (Público)
+
+Estas rutas actúan como un proxy a la API de TMDB.
+
+*   `GET /api/tmdb/categories`: Obtiene todos los géneros.
+*   `GET /api/tmdb/trending`: Obtiene las tendencias generales.
+*   `GET /api/movies/trending`: Obtiene las películas en tendencia.
+*   `GET /api/movies/{id}`: Obtiene los detalles de una película.
+*   `GET /api/movies/{id}/cast`: Obtiene el reparto de una película.
+*   `GET /api/movies/search?query=...`: Busca películas.
+*   ...y rutas análogas para `/api/series/...`.
+
+## 5. Flujos Principales de la Aplicación
+
+1.  **Flujo de Autenticación**:
+    1.  El usuario rellena el formulario de login/registro en el frontend de Next.js.
+    2.  El frontend envía una petición `POST` a `/login` o `/register` en el backend de Laravel.
+    3.  Laravel valida los datos, crea el usuario o la sesión, y devuelve una respuesta exitosa, estableciendo una cookie de sesión segura (HTTPOnly).
+    4.  El frontend recibe la respuesta, pide los datos del usuario a `/api/user` y los guarda en el store de Zustand, marcando al usuario como autenticado.
+    5.  La UI reacciona al cambio de estado, mostrando el perfil del usuario y ocultando los botones de "Login".
+
+2.  **Flujo de Añadir a Favoritos**:
+    1.  El usuario está en la página de detalles de una película y hace clic en "Añadir a Favoritos".
+    2.  El componente de React, al ser una acción que requiere autenticación, comprueba el estado en Zustand.
+    3.  Si está autenticado, se envía una petición `POST` a `/api/favorites` con el ID de la película/serie (`tmdb_id`) y su tipo (`item_type`).
+    4.  El `FavoriteController` de Laravel crea un nuevo registro en la tabla `favorites`, asociándolo con el `user_id` del usuario autenticado.
+    5.  El frontend actualiza la UI para reflejar que el elemento ya es un favorito.
 
 
+## 6. Convenciones de Código
 
+*   **Backend**: Se utiliza **Laravel Pint**, la herramienta oficial de formateo de Laravel, lo que garantiza un estilo de código PHP consistente y profesional.
+*   **Frontend**: Se utiliza **ESLint** con la configuración de Next.js, lo que asegura un código TypeScript/React limpio, consistente y libre de errores comunes.
 
-![datos_1](https://github.com/user-attachments/assets/9809f359-e4a4-4c77-8144-7fc5a4b55a58)
-![grind_colour](https://github.com/user-attachments/assets/c3194929-c906-4cc7-9d4f-9e1912a0121c)
-![login](https://github.com/user-attachments/assets/99c60e1c-8005-4969-bfc0-30450f318a02)
-![registro_login](https://github.com/user-attachments/assets/f712c74f-cc8b-4bb6-9541-e89ace61786c)
+## 7. Puntos para Onboarding de Nuevos Desarrolladores
+
+Para empezar a trabajar en el proyecto, un nuevo desarrollador debería seguir estos pasos:
+
+1.  Clonar el repositorio de GitHub.
+2.  Asegurarse de tener Docker y Docker Compose instalados.
+3.  Navegar a la carpeta `pixela-backend` y crear el archivo `.env` a partir de `.env.example`.
+4.  Ejecutar `docker-compose up -d` (o el script personalizado si existe, como `make up` o `sail up`). Esto levantará todos los servicios (PHP, Nginx, base de datos).
+5.  Una vez levantado, ejecutar las migraciones de la base de datos con `docker-compose exec app php artisan migrate`.
+6.  Instalar las dependencias del frontend: navegar a `pixela-frontend` y ejecutar `npm install`.
+7.  Ejecutar el servidor de desarrollo del frontend con `npm run dev`.
+
+## 8. Glosario de Términos
+
+*   **Eloquent**: El ORM (Object-Relational Mapper) de Laravel. Permite interactuar con la base de datos usando objetos y clases de PHP en lugar de SQL crudo.
+*   **Sanctum**: El sistema de autenticación de Laravel para SPAs y APIs.
+*   **Next.js App Router**: El nuevo sistema de enrutado de Next.js basado en la estructura de carpetas dentro de `/app`.
+*   **Zustand**: Una librería de gestión de estado para React, conocida por su simplicidad y bajo peso.
+*   **TMDB**: The Movie Database, una popular API externa con información sobre películas y series.
+*   **Headless API**: Una API que solo se encarga de los datos y la lógica, sin generar ninguna interfaz de usuario. El "head" (frontend) está desacoplado.
 
