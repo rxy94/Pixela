@@ -32,6 +32,7 @@ const STYLES = {
       textarea: "w-full h-32 bg-[#252525] border border-white/10 rounded-lg p-3 text-white placeholder-gray-400 focus:outline-none focus:border-pixela-accent transition-colors resize-none"
     },
     error: "p-3 mb-4 text-sm text-red-400 border rounded-lg bg-red-500/10 border-red-500/20",
+    success: "p-3 mb-4 text-sm text-green-400 border rounded-lg bg-green-500/10 border-green-500/20",
     submit: {
       container: "flex justify-end",
       button: "flex items-center gap-2 px-6 py-2 font-medium text-white transition-colors rounded-lg bg-pixela-accent hover:bg-pixela-accent/90 disabled:opacity-50 disabled:cursor-not-allowed",
@@ -75,6 +76,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
   const [review, setReview] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -98,6 +100,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const reviewData: CreateReview = {
@@ -107,8 +110,15 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
         review
       };
       await reviewsAPI.add(reviewData);
-      onClose();
-      if (refreshReviews) refreshReviews();
+      
+      // Mostrar mensaje de éxito
+      setSuccess('¡Reseña creada correctamente!');
+      
+      // Esperar un poco para que el usuario vea el mensaje antes de cerrar
+      setTimeout(() => {
+        onClose();
+        if (refreshReviews) refreshReviews();
+      }, 1500);
 
     } catch (error: unknown) {
       let errorMsg = 'No se pudo guardar la reseña. Por favor, inténtalo de nuevo.';
@@ -207,6 +217,12 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
             {error && (
               <div className={STYLES.content.error}>
                 {error}
+              </div>
+            )}
+
+            {success && (
+              <div className={STYLES.content.success}>
+                {success}
               </div>
             )}
 

@@ -27,10 +27,17 @@ import { ProfileClientProps } from '@/features/profile/types/profileTypes';
 import '@/shared/styles/profile/main.scss';
 
 const STYLES = {
+  // Contenedores principales
   container: 'profile-page',
   content: 'profile-page__content',
+  profileContainer: 'profile-page__container',
+  
+  // Títulos y texto
   title: 'profile-page__title',
   welcome: 'profile-page__welcome text-gray-400 mb-6',
+  welcomeAccent: 'font-medium text-pixela-accent',
+  
+  // Secciones de perfil
   profileSection: 'profile-page__profile-section',
   profileGrid: 'profile-page__profile-grid',
   avatarColumn: (scrolled: boolean) => clsx(
@@ -38,14 +45,45 @@ const STYLES = {
     { scrolled }
   ),
   infoColumn: 'profile-page__info-column',
+  
+  // Avatar
+  avatarName: 'user-avatar__name',
+  avatarRole: 'user-avatar__role',
+  
+  // Botones
   addUserButton: 'px-4 py-1.5 flex items-center justify-center rounded-md bg-pixela-accent text-white text-sm font-medium hover:bg-pixela-accent/90 transition-colors',
-  loadingContainer: 'flex flex-col items-center justify-center p-8 text-pixela-primary',
+  
+  // Pantalla de redirección
+  loadingContainer: 'fixed inset-0 bg-gradient-to-br from-[#0F0F0F] via-[#1A1A1A] to-[#0F0F0F] flex flex-col items-center justify-center z-40 p-8 text-pixela-primary',
+  redirectContent: 'text-center max-w-lg',
+  redirectIconContainer: 'mb-6 flex justify-center',
+  redirectIcon: 'w-16 h-16 bg-pixela-accent rounded-full flex items-center justify-center shadow-lg',
+  redirectIconSvg: 'w-8 h-8 text-white',
+  redirectTitle: 'text-2xl font-bold text-pixela-accent mb-4',
+  redirectMessage: 'bg-pixela-accent/10 border border-pixela-accent/30 rounded-lg p-6 mb-6 backdrop-blur-sm',
+  redirectMessageHeader: 'flex items-center justify-center mb-3',
+  redirectMessageIcon: 'w-6 h-6 text-pixela-accent mr-2',
+  redirectMessageTitle: 'text-pixela-accent font-medium',
+  redirectMessageText: 'text-gray-300 text-sm leading-relaxed',
+  redirectLoader: 'flex items-center justify-center text-gray-400',
+  redirectLoaderIcon: 'w-5 h-5 mr-2 animate-spin',
+  redirectLoaderText: 'text-sm',
+  
+  // Notificaciones
+  notification: 'fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 animate-fade-in backdrop-blur-sm border',
+  notificationSuccess: 'bg-pixela-accent/90 border-pixela-accent/50 text-white',
+  notificationError: 'bg-red-500/90 border-red-400/50 text-white',
+  notificationIcon: 'w-5 h-5 flex-shrink-0',
+  notificationText: 'max-w-sm font-medium',
+  notificationCloseButton: 'ml-2 hover:opacity-70 transition-opacity flex-shrink-0 p-1 rounded',
+  notificationCloseButtonSuccess: 'hover:bg-pixela-accent/30',
+  notificationCloseButtonError: 'hover:bg-red-600/30',
+  notificationCloseIcon: 'w-4 h-4',
+  
+  // Legacy (mantener compatibilidad)
   loadingSpinner: 'w-8 h-8 mb-4 animate-spin',
   loadingText: 'text-lg font-semibold'
 } as const;
-
-
-
 
 /**
  * Componente de perfil del cliente
@@ -60,6 +98,7 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   const [redirecting, setRedirecting] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [refreshUsers, setRefreshUsers] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,6 +117,16 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
       return () => clearTimeout(timer);
     }
   }, [redirecting]);
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage(null);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   const handleTabChange = (tab: TabType) => setActiveTab(tab);
   const handleEditProfile = () => setIsEditing(true);
@@ -99,15 +148,34 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
       const updatedUser = await usersAPI.update(userData);
       const userToSet = 'user' in updatedUser ? updatedUser.user : updatedUser;
 
-      if (data.password) {
+      // Si se cambió la contraseña, redirigir al login por seguridad
+      if (data.password && data.password.trim()) {
         setRedirecting(true);
         return;
       }
 
+      // Para cambios que no incluyen contraseña, actualizar normalmente
       setUser(userToSet as UserResponse);
       setIsEditing(false);
+
+      // Mostrar notificación de éxito para cambios sin contraseña
+      setSuccessMessage('¡Perfil guardado correctamente!');
+
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
+      
+      // Manejo de errores específico
+      if (error instanceof Error) {
+        if (error.message.includes('email')) {
+          setSuccessMessage('Error: El email ya está en uso o es inválido.');
+        } else if (error.message.includes('password')) {
+          setSuccessMessage('Error: La contraseña debe tener al menos 8 caracteres.');
+        } else {
+          setSuccessMessage(`Error: ${error.message}`);
+        }
+      } else {
+        setSuccessMessage('Error al actualizar el perfil. Inténtalo de nuevo.');
+      }
     }
   };
 
@@ -123,21 +191,90 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
     setRefreshUsers(r => !r);
   };
 
+  // Componente de notificación
+  const NotificationMessage = () => {
+    if (!successMessage) return null;
+    
+    const isError = successMessage.toLowerCase().includes('error');
+    
+    return (
+      <div className={`${STYLES.notification} ${
+        isError ? STYLES.notificationError : STYLES.notificationSuccess
+      }`}>
+        {isError ? (
+          <svg className={STYLES.notificationIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className={STYLES.notificationIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        )}
+        <span className={STYLES.notificationText}>{successMessage}</span>
+        <button 
+          onClick={() => setSuccessMessage(null)}
+          className={`${STYLES.notificationCloseButton} ${
+            isError ? STYLES.notificationCloseButtonError : STYLES.notificationCloseButtonSuccess
+          }`}
+          aria-label="Cerrar notificación"
+        >
+          <svg className={STYLES.notificationCloseIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    );
+  };
+
   if (redirecting) {
     return (
       <div className={STYLES.loadingContainer}>
-        <FiLoader className={STYLES.loadingSpinner} />
-        <span className={STYLES.loadingText}>Contraseña cambiada, redirigiendo al login...</span>
+        <div className={STYLES.redirectContent}>
+          {/* Icono de éxito */}
+          <div className={STYLES.redirectIconContainer}>
+            <div className={STYLES.redirectIcon}>
+              <svg className={STYLES.redirectIconSvg} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          
+          {/* Título principal */}
+          <h2 className={STYLES.redirectTitle}>
+            ¡Contraseña actualizada correctamente!
+          </h2>
+          
+          {/* Mensaje explicativo */}
+          <div className={STYLES.redirectMessage}>
+            <div className={STYLES.redirectMessageHeader}>
+              <svg className={STYLES.redirectMessageIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span className={STYLES.redirectMessageTitle}>Por tu seguridad</span>
+            </div>
+            <p className={STYLES.redirectMessageText}>
+              Cuando cambias tu contraseña, cerramos tu sesión automáticamente para proteger tu cuenta. 
+              Te redirigimos a la página principal para que puedas iniciar sesión con tu nueva contraseña.
+            </p>
+          </div>
+          
+          {/* Indicador de carga */}
+          <div className={STYLES.redirectLoader}>
+            <FiLoader className={STYLES.redirectLoaderIcon} />
+            <span className={STYLES.redirectLoaderText}>Redirigiendo en unos segundos...</span>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <main className={STYLES.container}>
-      <div className="profile-page__container">
+      <NotificationMessage />
+      <div className={STYLES.profileContainer}>
         <h1 className={STYLES.title}>Mi Cuenta</h1>
         <p className={STYLES.welcome}>
-          ¡Bienvenido/a, <span className="font-medium text-pixela-accent">{user.name}</span>! Aquí puedes gestionar tu perfil y preferencias.
+          ¡Bienvenido/a, <span className={STYLES.welcomeAccent}>{user.name}</span>! Aquí puedes gestionar tu perfil y preferencias.
         </p>
         <ProfileTabs
           activeTab={activeTab}
@@ -153,8 +290,8 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
                     profileImage={user.photo_url}
                     name={user.name}
                   />
-                  <h3 className="user-avatar__name">{user.name}</h3>
-                  <p className="user-avatar__role">
+                  <h3 className={STYLES.avatarName}>{user.name}</h3>
+                  <p className={STYLES.avatarRole}>
                     {user.is_admin ? 'Administrador' : 'Usuario'}
                   </p>
                 </div>

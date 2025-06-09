@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       // Timeout de 500ms para verificación rápida
       const authPromise = authAPI.getUser();
       const timeoutPromise = new Promise<UserResponse>((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout de autenticación')), 500)
+        setTimeout(() => reject(new Error('Timeout de autenticación')), 2000)
       );
       
       const user = await Promise.race([authPromise, timeoutPromise]);
