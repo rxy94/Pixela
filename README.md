@@ -192,3 +192,61 @@ Para empezar a trabajar en el proyecto, un nuevo desarrollador debería seguir e
 *   **TMDB**: The Movie Database, una popular API externa con información sobre películas y series.
 *   **Headless API**: Una API que solo se encarga de los datos y la lógica, sin generar ninguna interfaz de usuario. El "head" (frontend) está desacoplado.
 
+## 9. Flujo de Peticiones en el Frontend (Análisis con Ficheros Reales)
+
+Para entender cómo interactúan los ficheros, sigamos el rastro de una acción común: **un usuario hace clic en una película para ver su página de detalles**.
+
+### Paso 1: La Página de Detalles - El Inicio
+
+*   **Archivo**: `pixela-frontend/src/app/(rutas)/movies/[id]/page.tsx`
+*   **Qué ocurre**: Cuando el usuario va a `/movies/550`, Next.js renderiza este componente. Es el "cerebro" de la página.
+*   **Código clave**:
+    ```typescript
+    // ...
+    const { id } = await params;
+    const pelicula = await getMovieData(id);
+    // ...
+    ```
+*   **Flujo**: La página no pide los datos directamente. Llama a una función de servicio, `getMovieData`, delegando la responsabilidad de obtener la información.
+
+### Paso 2: El Servicio - El Intermediario
+
+*   **Archivo**: `pixela-frontend/src/features/media/services/movieService.ts`
+*   **Qué ocurre**: Esta capa de servicio actúa como un puente. Su trabajo es orquestar las llamadas a la capa de API.
+*   **Código clave**:
+    ```typescript
+    export async function getMovieData(id: string): Promise<Pelicula> {
+      return await getPeliculaById(id);
+    }
+    ```
+*   **Flujo**: El servicio, en este caso, simplemente pasa la petición a la capa inferior, la capa de API, llamando a `getPeliculaById`.
+
+### Paso 3: La Capa de API - El Ejecutor
+
+*   **Archivo**: `pixela-frontend/src/api/peliculas/peliculas.ts`
+*   **Qué ocurre**: Aquí se define la lógica para comunicarse con el backend. Esta función es la que realiza el trabajo pesado.
+*   **Código clave**:
+    ```typescript
+    export async function getPeliculaById(id: string): Promise<Pelicula> {
+      const apiUrl = API_ENDPOINTS.PELICULAS.GET_BY_ID(id);
+      // ...
+      const response = await fetch(apiUrl, { // <-- LLAMADA DIRECTA A FETCH
+        ...DEFAULT_FETCH_OPTIONS,
+      });
+      // ...
+    }
+    ```
+*   **Flujo**:
+    1.  `getPeliculaById` obtiene la URL del endpoint (ej. `/api/movies/550`).
+    2.  **Importante**: En lugar de usar el helper centralizado `fetchFromAPI`, esta función **llama directamente al `fetch` nativo del navegador**.
+    3.  Al mismo tiempo, dispara otras llamadas `fetch` para obtener datos adicionales como los actores (`getPeliculaActores`), vídeos y proveedores.
+    4.  Una vez que todas las peticiones `fetch` se completan, combina toda la información en un único objeto `pelicula`.
+
+### Paso 4: El Retorno - Actualización de la UI
+
+*   **Flujo**:
+    1.  El objeto `pelicula` completo viaja de vuelta desde la capa de API, a través del servicio, hasta llegar al componente inicial (`.../movies/[id]/page.tsx`).
+    2.  El componente `MediaPage` recibe este objeto como `props`.
+    3.  React renderiza la información en pantalla, mostrando al usuario los detalles de la película.
+
+
