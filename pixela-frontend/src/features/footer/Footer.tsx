@@ -6,7 +6,7 @@ import { FooterContent } from './components';
 import FooterScrollTopButton from "./components/ui/FooterScrollTopButton";
 
 const STYLES = {
-  footer: "relative w-full bg-[#101010] overflow-hidden min-h-[420px] flex items-center justify-center"
+  footer: "relative w-full bg-pixela-dark overflow-hidden min-h-[420px] flex items-center justify-center"
 } as const;
 
 const DynamicFooterParticles = dynamic(
