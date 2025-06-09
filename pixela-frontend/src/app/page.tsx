@@ -10,8 +10,8 @@ import { getRandomQuote } from "@/features/quotes/service";
 export const dynamic = 'force-dynamic';
 
 const STYLES = {
-  main: "flex-grow",
-  section: "scroll-mt-24"
+  main: "flex-grow 2k:max-w-[100vw] 2k:mx-auto",
+  section: "scroll-mt-24 2k:scroll-mt-16"
 } as const;
 
 /**

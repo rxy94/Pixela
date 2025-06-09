@@ -1,6 +1,6 @@
 'use client';
 import '../trending.css';
-import { useState, memo } from 'react';
+import { useState, memo, useRef } from 'react';
 import { useTrendingStore } from '@/features/trending/store/trendingStore';
 import { TrendingMediaCarousel } from '../layout/TrendingMediaCarousel';
 import { TrendingButton } from './TrendingButton';
@@ -8,19 +8,20 @@ import { TrendingSerie, TrendingMovie } from '@/features/trending/types';
 import clsx from 'clsx';
 import QuoteSection from '@/features/quotes/components/QuoteSection';
 import { MediaType } from '@/features/trending/types/common';
-import type { TrendingToggleProps } from '@/features/trending/types/components';  
+import type { TrendingToggleProps } from '@/features/trending/types/components';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Constantes
 const STYLES = {
-  title: 'font-black font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-left break-words pl-4 sm:pl-0',
-  titleMobile: 'block sm:hidden text-[64px] leading-[0.95] text-pixela-accent text-left pl-4 sm:pl-0',
-  titleDesktop: 'hidden sm:block text-[64px] md:text-[96px] lg:text-[128px] text-pixela-accent text-left pl-4 sm:pl-0',
-  container: 'relative w-full min-h-screen bg-pixela-dark flex flex-col pt-8 md:pt-20',
-  content: 'flex-grow flex flex-col justify-center md:justify-start relative z-10 pb-16 md:pb-0',
-  contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] mx-auto',
-  contentWrapperWithToggle: 'w-full md:w-[85%] lg:w-[80%] mx-auto flex flex-col items-center gap-8 lg:gap-0 lg:flex-row lg:items-end lg:justify-between',
-  toggleContainer: 'mb-12 md:mb-10 w-[90%] md:w-auto',
-  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 justify-center lg:justify-start w-full sm:w-auto',
+  title: 'font-black font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-left break-words',
+  titleMobile: 'block sm:hidden text-[64px] leading-[0.95] text-pixela-accent text-left pl-4',
+  titleDesktop: 'hidden sm:block text-[64px] md:text-[96px] lg:text-[128px] 2k:text-[100px] text-pixela-accent text-left pl-4 sm:pl-0',
+  container: 'relative w-full min-h-screen 2k:min-h-[80vh] bg-pixela-dark flex flex-col pt-8 md:pt-20 2k:pt-12',
+  content: 'flex-grow flex flex-col justify-center md:justify-start relative z-10 pb-16 md:pb-0 2k:pb-8',
+  contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] 2k:w-[70%] mx-auto',
+  contentWrapperWithToggle: 'relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden items-stretch gap-8 px-4 py-12 lg:w-[85%] xl:w-[80%] 2k:w-[70%] lg:mx-auto lg:flex-row lg:items-end lg:justify-between lg:gap-0 lg:px-0 lg:py-0 2k:py-6 lg:overflow-visible lg:bg-transparent lg:relative',
+  toggleContainer: 'mb-12 md:mb-10 px-4 md:px-0',
+  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 w-full sm:w-auto ipad:w-full',
   loadingContainer: 'relative w-full h-screen bg-pixela-dark flex flex-col justify-center',
   loadingCard: 'w-[280px] md:w-[375px] h-[395px] md:h-[528px] bg-gray-800 flex items-center justify-center',
   loadingText: 'text-pixela-light'
@@ -108,26 +109,54 @@ interface ContentStateProps {
  * @param {ContentStateProps} props - Props del componente
  * @returns {JSX.Element} Contenido principal
  */
-const ContentState = memo(({ activeButton, activeContent, onButtonChange, quote }: ContentStateProps) => (
-  <div id="tendencias" className={STYLES.container}>
-    <div className={STYLES.content}>
-      <div className={STYLES.contentWrapperWithToggle}>
-        <TrendingTitle />
-        <TrendingToggle 
-          activeButton={activeButton}
-          onButtonChange={onButtonChange}
-        />
-      </div>
-      
-      <TrendingMediaCarousel 
-        content={activeContent} 
-        type={activeButton}
-      />
+const ContentState = memo(({ activeButton, activeContent, onButtonChange, quote }: ContentStateProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const toggleRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
 
-      <QuoteSection quote={quote} />
+  useScrollAnimation({
+    trigger: containerRef,
+    triggerStart: 'top 80%',
+    initialY: 30,
+    elements: [
+      { ref: titleRef, duration: 0.8, ease: 'power2.out' },
+      { ref: toggleRef, duration: 0.6, ease: 'power2.out', delay: "-=0.4" },
+      { ref: carouselRef, duration: 0.8, ease: 'power2.out', delay: "-=0.3" },
+      { ref: quoteRef, duration: 0.6, ease: 'power2.out', delay: "-=0.2" }
+    ]
+  });
+
+  return (
+    <div id="tendencias" className={STYLES.container} ref={containerRef}>
+      <div className={STYLES.content}>
+        <div className={STYLES.contentWrapperWithToggle}>
+          <div ref={titleRef}>
+            <TrendingTitle />
+          </div>
+          <div ref={toggleRef}>
+            <TrendingToggle 
+              activeButton={activeButton}
+              onButtonChange={onButtonChange}
+            />
+          </div>
+        </div>
+        
+        <div ref={carouselRef}>
+          <TrendingMediaCarousel 
+            content={activeContent} 
+            type={activeButton}
+          />
+        </div>
+
+        <div ref={quoteRef}>
+          <QuoteSection quote={quote} />
+        </div>
+      </div>
     </div>
-  </div>
-));
+  )
+});
 
 ContentState.displayName = 'ContentState';
 

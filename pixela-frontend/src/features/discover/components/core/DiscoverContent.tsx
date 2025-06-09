@@ -15,15 +15,15 @@ const STYLES = {
     // --- Contenedor y Degradados ---
     container: "relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden",
     gradientContainer: "absolute inset-0 w-full h-full z-0 pointer-events-none",
-    mainGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] lg:w-[80vw] lg:h-[80vw] lg:left-[75%] rounded-full",
-    secondaryGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] lg:w-[60vw] lg:h-[60vw] lg:left-[75%] rounded-full",
+    mainGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] lg:w-[80vw] lg:h-[80vw] lg:left-[75%] 2k:w-[60vw] 2k:h-[60vw] 2k:left-[65%] rounded-full",
+    secondaryGradient: "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] lg:w-[60vw] lg:h-[60vw] lg:left-[75%] 2k:w-[45vw] 2k:h-[45vw] 2k:left-[65%] rounded-full",
 
     // --- Layout de Escritorio ---
-    desktopContainer: "min-h-screen mt-8",
-    desktopContent: "w-[90%] xl:w-[85%] mx-auto flex flex-row items-center gap-16",
+    desktopContainer: "min-h-screen 2k:min-h-[80vh] mt-8 2k:mt-4",
+    desktopContent: "w-[90%] xl:w-[85%] 2k:w-[70%] mx-auto flex flex-row items-center gap-16 2k:gap-12",
     desktopLeftSection: "w-5/12 text-left",
     desktopRightSection: "w-7/12",
-    desktopActions: "flex flex-row items-center justify-start gap-8 mt-10",
+    desktopActions: "flex flex-row items-center justify-start gap-8 2k:gap-6 mt-10 2k:mt-6",
     desktopDivider: "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-px h-64 bg-gradient-to-b from-transparent via-pixela-accent/30 to-transparent blur-sm",
 
     // --- Layout Móvil ---
@@ -31,10 +31,10 @@ const STYLES = {
 
     // --- Tipografía y Contenido ---
     discoverLabel: "text-lg font-semibold text-pixela-accent uppercase tracking-widest mb-4",
-    mainHeadingDesktop: "text-6xl font-black text-white leading-tight mb-8",
+    mainHeadingDesktop: "text-6xl 2k:text-5xl font-black text-white leading-tight mb-8 2k:mb-6",
     mainHeadingMobile: "text-6xl font-black text-pixela-accent font-outfit tracking-tighter uppercase leading-none text-left",
-    description: "text-pixela-light/80 text-base max-w-full text-left",
-    descriptionDesktop: "mb-8 mx-0 lg:max-w-xl",
+    description: "text-pixela-light/80 text-base 2k:text-lg max-w-full text-left",
+    descriptionDesktop: "mb-8 2k:mb-6 mx-0 lg:max-w-xl",
     descriptionMobile: "py-8",
     accentText: "text-pixela-light font-semibold",
 
