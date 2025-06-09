@@ -200,7 +200,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
               </div>
             </div>
 
-            {/* Review Text */}
+            {/* Review Text */} 
             <div className="mb-6">
               <label className={STYLES.content.review.label}>
                 Reseña
