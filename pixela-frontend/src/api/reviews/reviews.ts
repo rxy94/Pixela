@@ -1,4 +1,4 @@
-import { Review, CreateReview } from "./types";
+import { Review, CreateReview } from "./types/index";
 import { API_ENDPOINTS } from "../shared/apiEndpoints";
 import { fetchFromAPI } from "../shared/apiHelpers";
 

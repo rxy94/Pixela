@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "../shared/apiEndpoints";
 import { fetchFromAPI } from "../shared/apiHelpers";
-import { User } from "./types";
+import { User } from "./types/index";
 
 /**
  * API para usuarios

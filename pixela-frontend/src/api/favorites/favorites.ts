@@ -1,4 +1,4 @@
-import { FavoriteWithDetails, Favorite, CreateFavorite } from "./types";
+import { FavoriteWithDetails, Favorite, CreateFavorite } from "./types/index";
 
 import { API_ENDPOINTS } from "../shared/apiEndpoints";
 import { fetchFromAPI } from "../shared/apiHelpers";
