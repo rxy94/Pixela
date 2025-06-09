@@ -13,15 +13,15 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Constantes
 const STYLES = {
-  title: 'font-black font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-left break-words pl-4 sm:pl-0',
-  titleMobile: 'block sm:hidden text-[64px] leading-[0.95] text-pixela-accent text-left pl-4 sm:pl-0',
+  title: 'font-black font-outfit tracking-wider uppercase leading-none w-full md:w-auto text-left break-words',
+  titleMobile: 'block sm:hidden text-[64px] leading-[0.95] text-pixela-accent text-left pl-4',
   titleDesktop: 'hidden sm:block text-[64px] md:text-[96px] lg:text-[128px] text-pixela-accent text-left pl-4 sm:pl-0',
   container: 'relative w-full min-h-screen bg-pixela-dark flex flex-col pt-8 md:pt-20',
   content: 'flex-grow flex flex-col justify-center md:justify-start relative z-10 pb-16 md:pb-0',
   contentWrapper: 'w-[90%] md:w-[85%] lg:w-[80%] mx-auto',
-  contentWrapperWithToggle: 'w-full md:w-[85%] lg:w-[80%] mx-auto flex flex-col items-center gap-8 lg:gap-0 lg:flex-row lg:items-end lg:justify-between',
-  toggleContainer: 'mb-12 md:mb-10 w-[90%] md:w-auto',
-  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 justify-center lg:justify-start w-full sm:w-auto',
+  contentWrapperWithToggle: 'relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden items-stretch gap-8 px-4 py-12 lg:w-[85%] xl:w-[80%] lg:mx-auto lg:flex-row lg:items-end lg:justify-between lg:gap-0 lg:px-0 lg:py-0 lg:overflow-visible lg:bg-transparent lg:relative',
+  toggleContainer: 'mb-12 md:mb-10 px-4 md:px-0',
+  toggleWrapper: 'flex bg-white/5 backdrop-blur-sm rounded-full p-1 border border-white/10 relative shadow-lg shadow-black/20 w-full sm:w-auto ipad:w-full',
   loadingContainer: 'relative w-full h-screen bg-pixela-dark flex flex-col justify-center',
   loadingCard: 'w-[280px] md:w-[375px] h-[395px] md:h-[528px] bg-gray-800 flex items-center justify-center',
   loadingText: 'text-pixela-light'
