@@ -79,10 +79,7 @@ export const GalleryGrid = ({ images, type, onImageClick, showAll = false }: Gal
           <div className={STYLES.overlay.base}>
             <div className={STYLES.overlay.content}>
               <p className="text-sm">
-                {image.width}x{image.height} • {image.aspect_ratio.toFixed(2)}:1
-              </p>
-              <p className="mt-1 text-xs text-gray-300">
-                {image.vote_count} votos • {image.vote_average.toFixed(1)}/10
+                {image.width}x{image.height}
               </p>
             </div>
           </div>
