@@ -6,6 +6,7 @@ return [
     'welcome' => 'Welcome to Pixela',
     'back_to_login' => 'Back to login',
     'back_to_home' => 'Back to home',
+    'go_back' => 'Go back',
     'email' => 'Email',
     'password' => 'Password',
     'view_api' => 'View API',
