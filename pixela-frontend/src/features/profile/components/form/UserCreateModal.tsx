@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiX } from 'react-icons/fi';
+import { FiX, FiEye, FiEyeOff } from 'react-icons/fi';
 import clsx from 'clsx';
 import { usersAPI } from '@/api/users/users';
 import type { User } from '@/api/users/types';
@@ -77,7 +77,17 @@ const STYLES = {
   cancelButton: clsx(
     'px-6 py-2.5 bg-white/5 hover:bg-white/10',
     'text-white rounded-xl font-medium transition-all duration-200'
-  )
+  ),
+  
+  // Estilos para el botón del ojo en las contraseñas
+  passwordContainer: 'relative',
+  eyeButton: clsx(
+    'absolute right-3 top-1/2 transform -translate-y-1/2',
+    'text-gray-400 hover:text-pixela-accent transition-colors',
+    'cursor-pointer z-10 p-1 rounded',
+    'hover:bg-gray-700/20'
+  ),
+  eyeIcon: 'w-4 h-4'
 } as const;
 
 /**
@@ -93,6 +103,8 @@ export const UserCreateModal = ({
   const [form, setForm] = useState<UserForm>(INITIAL_FORM_STATE);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
   /**
    * Maneja el cambio en los campos del formulario
@@ -153,6 +165,22 @@ export const UserCreateModal = ({
   const resetForm = () => {
     setForm(INITIAL_FORM_STATE);
     setError(null);
+    setShowPassword(false);
+    setShowPasswordConfirmation(false);
+  };
+
+  /**
+   * Alterna la visibilidad de la contraseña
+   */
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  /**
+   * Alterna la visibilidad de la confirmación de contraseña
+   */
+  const togglePasswordConfirmationVisibility = () => {
+    setShowPasswordConfirmation(!showPasswordConfirmation);
   };
 
   if (!isOpen) return null;
@@ -207,29 +235,57 @@ export const UserCreateModal = ({
             <div className={STYLES.grid}>
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Contraseña</label>
-                <input
-                  name="password"
-                  type="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  className={STYLES.input}
-                  placeholder="••••••••"
-                  required
-                  minLength={8}
-                />
+                <div className={STYLES.passwordContainer}>
+                  <input
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={form.password}
+                    onChange={handleChange}
+                    className={STYLES.input}
+                    placeholder="••••••••"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className={STYLES.eyeButton}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  >
+                    {showPassword ? (
+                      <FiEyeOff className={STYLES.eyeIcon} />
+                    ) : (
+                      <FiEye className={STYLES.eyeIcon} />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Confirmar contraseña</label>
-                <input
-                  name="password_confirmation"
-                  type="password"
-                  value={form.password_confirmation}
-                  onChange={handleChange}
-                  className={STYLES.input}
-                  placeholder="••••••••"
-                  required
-                  minLength={8}
-                />
+                <div className={STYLES.passwordContainer}>
+                  <input
+                    name="password_confirmation"
+                    type={showPasswordConfirmation ? 'text' : 'password'}
+                    value={form.password_confirmation}
+                    onChange={handleChange}
+                    className={STYLES.input}
+                    placeholder="••••••••"
+                    required
+                    minLength={8}
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordConfirmationVisibility}
+                    className={STYLES.eyeButton}
+                    aria-label={showPasswordConfirmation ? 'Ocultar confirmación de contraseña' : 'Mostrar confirmación de contraseña'}
+                  >
+                    {showPasswordConfirmation ? (
+                      <FiEyeOff className={STYLES.eyeIcon} />
+                    ) : (
+                      <FiEye className={STYLES.eyeIcon} />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
