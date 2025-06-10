@@ -1,6 +1,6 @@
 import { API_ENDPOINTS } from "../shared/apiEndpoints";
 import { fetchFromAPI } from "../shared/apiHelpers";
-import { AuthResponse, UserResponse } from "./types/index";
+import { AuthResponse, UserResponse } from "./types";
 
 /**
  * API para autenticación

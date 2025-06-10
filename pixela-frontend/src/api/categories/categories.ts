@@ -1,9 +1,9 @@
 import { API_ENDPOINTS } from '@/api/shared/apiEndpoints';
 import { fetchFromAPI } from '@/api/shared/apiHelpers';
-import { Category, CategoriesApiResponse } from './types/index';
+import { Category, CategoriesApiResponse } from './types';
 
 // Re-exportar tipos para facilitar las importaciones
-export type { Category } from './types/index';
+export type { Category } from './types';
 
 /**
  * Categorías que son específicas para películas y no deberían aparecer en series
