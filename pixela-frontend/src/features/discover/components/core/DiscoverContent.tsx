@@ -24,7 +24,7 @@ const STYLES = {
     desktopLeftSection: "w-5/12 text-left",
     desktopRightSection: "w-7/12",
     desktopActions: "flex flex-row items-center justify-start gap-8 2k:gap-6 mt-10 2k:mt-6",
-    desktopDivider: "absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-px h-64 bg-gradient-to-b from-transparent via-pixela-accent/30 to-transparent blur-sm",
+
 
     // --- Layout Móvil ---
     mobileContainer: "flex-col items-stretch gap-8 px-4 py-12",
@@ -181,8 +181,6 @@ export const DiscoverContent = () => {
                             </Link>
                         </div>
                     </div>
-                    
-                    <div className={STYLES.desktopDivider} />
                     
                     <div ref={gridRef} className={STYLES.desktopRightSection}>
                         <DiscoverGrid type={activeType} />
