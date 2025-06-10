@@ -2,10 +2,11 @@ import { FooterLink } from '../types/links';
 
 // Enlaces para las columnas - Extraídos como constantes para evitar re-creación en cada render
 export const DISCOVER_LINKS: FooterLink[] = [
-  { name: 'Películas', href: '/movies' },
-  { name: 'Series', href: '/series' },
+  { name: 'Inicio', href: '/' },
+  { name: 'Tendencias', href: '/#trending' },
+  { name: 'Descubre', href: '/#discover' },
   { name: 'Categorías', href: '/categories' },
-  { name: 'Tendencias', href: '/trending' }
+  { name: 'Sobre Nosotros', href: '/#about' }
 ];
 
 export const COMMUNITY_LINKS: FooterLink[] = [
