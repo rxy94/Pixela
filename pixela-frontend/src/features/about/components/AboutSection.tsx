@@ -41,7 +41,7 @@ const STYLES = {
   teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16 2k:gap-12 ipad:flex-col ipad:gap-8",
   teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16 ipad:w-full ipad:pt-0",
   teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8 ipad:w-full ipad:gap-6",
-  teamTextContainer: "mt-8 max-sm:mt-2 ipad:mt-6",
+  teamTextContainer: "max-sm:mt-2 ipad:mt-6",
   teamDescription: "text-xl max-sm:text-base text-white/90 leading-relaxed mb-4 ipad:text-lg ipad:mb-3",
   teamCardsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6 mb-20 [&>*:nth-child(3)]:md:col-span-2 [&>*:nth-child(3)]:lg:col-span-1",
   teamTitleMobileEquipo: "block sm:hidden",
@@ -50,7 +50,7 @@ const STYLES = {
   // Tarjeta de miembro del equipo
   teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 cursor-pointer animate-float-smooth ipad:p-5",
   teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300 ipad:w-28 ipad:h-28",
-  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6 ipad:flex-row ipad:gap-4",
+  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-center sm:gap-6 ipad:flex-row ipad:gap-4",
   teamCardImageContainer: "flex-shrink-0 max-sm:w-full max-sm:flex max-sm:justify-start sm:w-auto",
   teamCardInfo: "flex-grow max-sm:text-left max-sm:w-full sm:text-left sm:w-auto",
   teamCardHeader: "flex flex-row items-center justify-between gap-3 sm:flex-row sm:items-start sm:gap-3 mb-2 md:items-center md:justify-between md:gap-2",
