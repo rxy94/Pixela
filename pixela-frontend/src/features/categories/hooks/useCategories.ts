@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getAllCategories } from '@/api/categories/categories';
 import { Category } from '@/api/categories/categories';
 
 /**
@@ -12,8 +13,7 @@ export const useCategories = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('/api/categories');
-                const data = await response.json();
+                const data = await getAllCategories();
                 setCategories(data);
             } catch (error) {
                 console.error('Error fetching categories:', error);

@@ -2,10 +2,11 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { FaLinkedin } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { TEAM_MEMBERS, FEATURE_CARDS } from '@/features/about/data/aboutData';
-import type { TeamMember, FeatureCard } from '@/features/about/types/components';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import type { TeamMember, FeatureCard as FeatureCardType } from '@/features/about/types/components';
+import { useScrollAnimation, useInteractiveBorder } from '@/hooks';
 
 /**
  * Estilos constantes para el componente AboutSection
@@ -15,7 +16,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 const STYLES = {
   
   // Seccion general
-  section: "py-36 2k:py-24 px-4 max-sm:px-2 bg-pixela-dark",
+  section: "relative z-0 py-36 2k:py-24 px-4 max-sm:px-2 bg-pixela-dark",
   container: "max-w-7xl 2k:max-w-6xl mx-auto max-sm:w-5/6 ipad:w-[90%] 2k:w-[70%]",
 
   // Titulos
@@ -26,7 +27,9 @@ const STYLES = {
   subtitle: "text-xl max-sm:text-base text-white/80 text-left ipad:text-left lg:text-center xl:text-center",
 
   // Tarjeta de característica
-  card: "group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-8 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 cursor-pointer flex flex-col h-full transition-all duration-700 animate-float ipad:p-6",
+  card: "group relative rounded-2xl p-px cursor-pointer animate-float overflow-hidden",
+  cardBorder: "absolute inset-0 rounded-2xl bg-[radial-gradient(250px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+  cardContent: "relative z-10 h-full rounded-[15px] p-8 max-sm:p-4 ipad:p-6 flex flex-col bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5",
   cardIcon: "text-4xl text-pixela-accent ipad:text-3xl",
   cardIconContainer: "mb-6",
   cardTitle: "text-2xl font-semibold text-white mb-4 group-hover:text-pixela-accent transition-colors duration-300 flex items-center ipad:text-xl ipad:mb-3 mt-1",
@@ -41,16 +44,18 @@ const STYLES = {
   teamGrid: "flex flex-col md:flex-row justify-between gap-8 md:gap-16 2k:gap-12 ipad:flex-col ipad:gap-8",
   teamTextColumn: "w-full md:w-1/2 pt-8 md:pt-16 ipad:w-full ipad:pt-0",
   teamCardsColumn: "w-full md:w-1/2 flex flex-col gap-8 ipad:w-full ipad:gap-6",
-  teamTextContainer: "mt-8 max-sm:mt-2 ipad:mt-6",
+  teamTextContainer: "max-sm:mt-2 ipad:mt-6",
   teamDescription: "text-xl max-sm:text-base text-white/90 leading-relaxed mb-4 ipad:text-lg ipad:mb-3",
   teamCardsGrid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-6 mb-20 [&>*:nth-child(3)]:md:col-span-2 [&>*:nth-child(3)]:lg:col-span-1",
   teamTitleMobileEquipo: "block sm:hidden",
   teamTitleDesktopEquipo: "hidden sm:block",
 
   // Tarjeta de miembro del equipo
-  teamCard: "w-full group relative bg-[#181818] backdrop-blur-sm rounded-2xl p-6 max-sm:p-4 border border-pixela-accent/20 bg-gradient-to-br from-[#181818] to-[#1a1a1a] shadow-2xl shadow-pixela-accent/5 ring-1 ring-pixela-accent/10 transition-all duration-700 cursor-pointer animate-float-smooth ipad:p-5",
+  teamCard: "w-full group relative rounded-2xl p-px cursor-pointer animate-float-smooth overflow-hidden",
+  teamCardBorder: "absolute inset-0 rounded-2xl bg-[radial-gradient(200px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+  teamCardContentContainer: "relative z-10 h-full rounded-[15px] p-6 max-sm:p-4 ipad:p-5 bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5",
   teamImage: "relative w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-2 border-pixela-accent/30 group-hover:border-pixela-accent/50 transition-colors duration-300 ipad:w-28 ipad:h-28",
-  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-start sm:gap-6 ipad:flex-row ipad:gap-4",
+  teamCardContent: "flex flex-col max-sm:items-start max-sm:gap-4 sm:flex-row sm:items-center sm:gap-6 ipad:flex-row ipad:gap-4",
   teamCardImageContainer: "flex-shrink-0 max-sm:w-full max-sm:flex max-sm:justify-start sm:w-auto",
   teamCardInfo: "flex-grow max-sm:text-left max-sm:w-full sm:text-left sm:w-auto",
   teamCardHeader: "flex flex-row items-center justify-between gap-3 sm:flex-row sm:items-start sm:gap-3 mb-2 md:items-center md:justify-between md:gap-2",
@@ -61,10 +66,11 @@ const STYLES = {
   teamQuote: "text-white/80 italic text-sm leading-relaxed ipad:text-xs ipad:leading-relaxed",
   teamInfoRow: "flex items-start gap-2",
 
-  // Boton de LinkedIn
-  linkedinButton: "group/linkedin p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-1 sm:-mt-2 md:-mt-1.5 md:p-1.5",
-  linkedinButtonMobile: "max-sm:ml-auto",
-  linkedinIcon: "text-lg text-pixela-accent group-hover/linkedin:scale-110 transition-transform duration-300 w-5 h-5 sm:w-5 sm:h-5 sm:text-lg",
+  // Botones de redes sociales
+  socialsContainer: "flex items-center gap-2",
+  socialButton: "group/social p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-1 sm:-mt-2 md:-mt-1.5 md:p-1.5",
+  socialButtonMobile: "max-sm:ml-auto",
+  socialIcon: "text-lg text-pixela-accent group-hover/social:scale-110 transition-transform duration-300 w-5 h-5 sm:w-5 sm:h-5 sm:text-lg",
 } as const;
 
 /**
@@ -73,22 +79,27 @@ const STYLES = {
  * @param {FeatureCard} props - Propiedades de la tarjeta
  * @returns {JSX.Element} Tarjeta de característica
  */
-const FeatureCard = ({ icon, title, description, isComingSoon }: FeatureCard) => (
-  <div 
-    className={STYLES.card}
-  >
-    <div className={STYLES.cardIconContainer}>
-      <div className={STYLES.cardIcon}>{icon}</div>
+const FeatureCard = ({ icon, title, description, isComingSoon }: FeatureCardType) => {
+  const cardRef = useInteractiveBorder<HTMLDivElement>();
+
+  return (
+    <div ref={cardRef} className={STYLES.card}>
+      <div className={STYLES.cardBorder} />
+      <div className={STYLES.cardContent}>
+        <div className={STYLES.cardIconContainer}>
+          <div className={STYLES.cardIcon}>{icon}</div>
+        </div>
+        <div className={STYLES.cardTitleContainer}>
+          <h3 className={STYLES.cardTitle}>{title}</h3>
+          {isComingSoon && (
+            <span className={STYLES.comingSoon}>Próximamente</span>
+          )}
+        </div>
+        <p className={STYLES.cardDescription}>{description}</p>
+      </div>
     </div>
-    <div className={STYLES.cardTitleContainer}>
-      <h3 className={STYLES.cardTitle}>{title}</h3>
-      {isComingSoon && (
-        <span className={STYLES.comingSoon}>Próximamente</span>
-      )}
-    </div>
-    <p className={STYLES.cardDescription}>{description}</p>
-  </div>
-);
+  );
+};
 
 /**
  * Componente que renderiza una tarjeta de miembro del equipo
@@ -97,49 +108,68 @@ const FeatureCard = ({ icon, title, description, isComingSoon }: FeatureCard) =>
  * @param {TeamMember} props.member - Datos del miembro del equipo
  * @returns {JSX.Element} Tarjeta de miembro del equipo
  */
-const TeamMemberCard = ({ member }: { member: TeamMember }) => (
-  <div className={STYLES.teamCard}>
-    <div className={STYLES.teamCardContent}>
-      <div className={STYLES.teamCardImageContainer}>
-        <div className={STYLES.teamImage}>
-          <Image
-            src={member.image}
-            alt={member.name}
-            fill
-            className="object-cover"
-          />
-        </div>
-      </div>
-      <div className={STYLES.teamCardInfo}>
-        <div className={STYLES.teamCardHeader}>
-          <h3 className={STYLES.cardTitle}>{member.name}</h3>
-          <a 
-            href={member.linkedin}
-            target="_blank" 
-            rel="noopener noreferrer"
-            className={`${STYLES.linkedinButton} ${STYLES.linkedinButtonMobile}`}
-          >
-            <FaLinkedin className={STYLES.linkedinIcon} />
-          </a>
-        </div>
-        <p className={STYLES.teamRole}>{member.role}</p>
-        <div className={STYLES.teamInfoContainer}>
-          <div className={STYLES.teamInfoRow}>
-            <span className={STYLES.teamInfoLabel}>Serie favorita:</span>
-            <span className={STYLES.teamInfoValue}>{member.favoriteSeries}</span>
+const TeamMemberCard = ({ member }: { member: TeamMember }) => {
+  const cardRef = useInteractiveBorder<HTMLDivElement>();
+  
+  return (
+    <div ref={cardRef} className={STYLES.teamCard}>
+      <div className={STYLES.teamCardBorder} />
+      <div className={STYLES.teamCardContentContainer}>
+        <div className={STYLES.teamCardContent}>
+          <div className={STYLES.teamCardImageContainer}>
+            <div className={STYLES.teamImage}>
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                className="object-cover"
+              />
+            </div>
           </div>
-          <div className={STYLES.teamInfoRow}>
-            <span className={STYLES.teamInfoLabel}>Película favorita:</span>
-            <span className={STYLES.teamInfoValue}>{member.favoriteMovie}</span>
+          <div className={STYLES.teamCardInfo}>
+            <div className={STYLES.teamCardHeader}>
+              <h3 className={STYLES.cardTitle}>{member.name}</h3>
+              <div className={`${STYLES.socialsContainer} ${STYLES.socialButtonMobile}`}>
+                <Link
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={STYLES.socialButton}
+                >
+                  <FaLinkedin className={STYLES.socialIcon} />
+                </Link>
+                {member.github && (
+                  <Link
+                    href={member.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={STYLES.socialButton}
+                  >
+                    <FaGithub className={STYLES.socialIcon} />
+                  </Link>
+                )}
+              </div>
+            </div>
+            <p className={STYLES.teamRole}>{member.role}</p>
+            <div className={STYLES.teamInfoContainer}>
+              <div className={STYLES.teamInfoRow}>
+                <span className={STYLES.teamInfoLabel}>Serie favorita:</span>
+                <span className={STYLES.teamInfoValue}>{member.favoriteSeries}</span>
+              </div>
+              <div className={STYLES.teamInfoRow}>
+                <span className={STYLES.teamInfoLabel}>Película favorita:</span>
+                <span className={STYLES.teamInfoValue}>{member.favoriteMovie}</span>
+              </div>
+            </div>
+            <p className={STYLES.teamQuote}>
+              &ldquo;{member.quote}&rdquo;
+            </p>
           </div>
         </div>
-        <p className={STYLES.teamQuote}>
-          &ldquo;{member.quote}&rdquo;
-        </p>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 /**
  * Componente principal que renderiza la sección "Acerca de"

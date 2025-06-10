@@ -1,10 +1,9 @@
 import { API_ENDPOINTS } from '@/api/shared/apiEndpoints';
-import { DEFAULT_FETCH_OPTIONS } from '@/api/shared/apiHelpers';
+import { fetchFromAPI } from '@/api/shared/apiHelpers';
+import { Category, CategoriesApiResponse } from './types';
 
-export interface Category {
-    id: number;
-    name: string;
-}
+// Re-exportar tipos para facilitar las importaciones
+export type { Category } from './types';
 
 /**
  * Categorías que son específicas para películas y no deberían aparecer en series
@@ -51,16 +50,7 @@ export async function getAllCategories(): Promise<Category[]> {
     console.log(`[DEBUG] getAllCategories - Intentando obtener categorías`);
 
     try {
-        const response = await fetch(apiUrl, {
-            ...DEFAULT_FETCH_OPTIONS,
-        });
-
-        if (!response.ok) {
-            console.error(`[ERROR] getAllCategories - Código ${response.status}`);
-            throw new Error(`Error al obtener las categorías: ${response.status}`);
-        }
-
-        const data = await response.json();
+        const data = await fetchFromAPI<CategoriesApiResponse>(apiUrl);
         return data.success ? (data.data || []) : [];
     } catch (error) {
         console.error('[ERROR] getAllCategories:', error);

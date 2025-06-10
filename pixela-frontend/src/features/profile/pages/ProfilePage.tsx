@@ -113,7 +113,7 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
   useEffect(() => {
     if (redirecting) {
       const timer = setTimeout(() => {
-        window.location.replace('http://localhost:3000'); // TODO: Cambiar a la URL de producción
+        window.location.replace('http://localhost:3000');  // TODO: Cambiar a la URL de producción
       }, 1200);
 
       return () => clearTimeout(timer);
