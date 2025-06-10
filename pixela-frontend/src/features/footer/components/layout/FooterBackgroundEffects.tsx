@@ -8,7 +8,6 @@ const STYLES = {
   // Gradientes animados
   gradientContainer: "absolute top-[10%] left-[5%] w-64 h-64 rounded-full bg-[#ff007f]/10 filter blur-[80px] animate-pulse-slow",
   gradientContainer2: "absolute bottom-[20%] right-[10%] w-80 h-80 rounded-full bg-purple-500/10 filter blur-[100px] animate-pulse-slow animation-delay-1000",
-  gradientContainer3: "absolute top-[40%] right-[25%] w-40 h-40 rounded-full bg-blue-500/10 filter blur-[60px] animate-pulse-slow animation-delay-2000",
   
   // Elementos de fondo
   pixelGrid: "absolute inset-0 w-full h-full",
@@ -88,7 +87,6 @@ export const FooterBackgroundEffects: React.FC<BackgroundEffectProps> = ({ isAni
       <div className={`${STYLES.container} ${isAnimated ? 'opacity-30' : ''}`}>
         <div className={STYLES.gradientContainer} />
         <div className={STYLES.gradientContainer2} />
-        <div className={STYLES.gradientContainer3} />
       </div>
       
       {/* Grid de píxeles decorativo animado */}
@@ -180,14 +178,14 @@ export const FooterBackgroundEffects: React.FC<BackgroundEffectProps> = ({ isAni
       
       {/* Fondo decorativo: PIXELA gigante */}
       <span
-        className={`${STYLES.backgroundText} ${isAnimated ? 'opacity-40' : 'opacity-0'}`}
+        className={`${STYLES.backgroundText} ${isAnimated ? 'opacity-8' : 'opacity-0'}`}
         style={{
           lineHeight: 1,
           fontSize: "clamp(200px, 30vw, 500px)",
           letterSpacing: "-0.05em",
           userSelect: "none",
           whiteSpace: "nowrap",
-          backgroundImage: "linear-gradient(135deg, #181818 60%, #ff007f 300%)",
+          backgroundImage: "linear-gradient(135deg, #181818 0%, #1a1a1a 20%, rgba(26,26,26,0.8) 50%, rgba(255,0,127,0.12) 80%, rgba(255,0,127,0.08) 100%)",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
         }}
