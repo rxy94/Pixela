@@ -2,7 +2,8 @@
 
 import { useRef } from 'react';
 import Image from 'next/image';
-import { FaLinkedin } from 'react-icons/fa';
+import Link from 'next/link';
+import { FaLinkedin, FaGithub } from 'react-icons/fa';
 import { TEAM_MEMBERS, FEATURE_CARDS } from '@/features/about/data/aboutData';
 import type { TeamMember, FeatureCard as FeatureCardType } from '@/features/about/types/components';
 import { useScrollAnimation, useInteractiveBorder } from '@/hooks';
@@ -65,10 +66,11 @@ const STYLES = {
   teamQuote: "text-white/80 italic text-sm leading-relaxed ipad:text-xs ipad:leading-relaxed",
   teamInfoRow: "flex items-start gap-2",
 
-  // Boton de LinkedIn
-  linkedinButton: "group/linkedin p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-1 sm:-mt-2 md:-mt-1.5 md:p-1.5",
-  linkedinButtonMobile: "max-sm:ml-auto",
-  linkedinIcon: "text-lg text-pixela-accent group-hover/linkedin:scale-110 transition-transform duration-300 w-5 h-5 sm:w-5 sm:h-5 sm:text-lg",
+  // Botones de redes sociales
+  socialsContainer: "flex items-center gap-2",
+  socialButton: "group/social p-2 rounded-full bg-pixela-accent/10 hover:bg-pixela-accent/20 transition-all duration-300 flex items-center justify-center -mt-1 sm:-mt-2 md:-mt-1.5 md:p-1.5",
+  socialButtonMobile: "max-sm:ml-auto",
+  socialIcon: "text-lg text-pixela-accent group-hover/social:scale-110 transition-transform duration-300 w-5 h-5 sm:w-5 sm:h-5 sm:text-lg",
 } as const;
 
 /**
@@ -127,14 +129,26 @@ const TeamMemberCard = ({ member }: { member: TeamMember }) => {
           <div className={STYLES.teamCardInfo}>
             <div className={STYLES.teamCardHeader}>
               <h3 className={STYLES.cardTitle}>{member.name}</h3>
-              <a 
-                href={member.linkedin}
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`${STYLES.linkedinButton} ${STYLES.linkedinButtonMobile}`}
-              >
-                <FaLinkedin className={STYLES.linkedinIcon} />
-              </a>
+              <div className={`${STYLES.socialsContainer} ${STYLES.socialButtonMobile}`}>
+                <Link
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={STYLES.socialButton}
+                >
+                  <FaLinkedin className={STYLES.socialIcon} />
+                </Link>
+                {member.github && (
+                  <Link
+                    href={member.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={STYLES.socialButton}
+                  >
+                    <FaGithub className={STYLES.socialIcon} />
+                  </Link>
+                )}
+              </div>
             </div>
             <p className={STYLES.teamRole}>{member.role}</p>
             <div className={STYLES.teamInfoContainer}>
