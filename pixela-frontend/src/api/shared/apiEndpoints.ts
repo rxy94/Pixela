@@ -84,6 +84,7 @@ export const API_ENDPOINTS = {
      */
     REVIEWS: {
         LIST: `${API_URL}/reviews`,
+        BY_MEDIA: `${API_URL}/reviews/media/:tmdbId/:itemType`,
         CREATE: `${API_URL}/reviews`,
         UPDATE: `${API_URL}/reviews/:id`,
         DELETE: `${API_URL}/reviews/:id`,
