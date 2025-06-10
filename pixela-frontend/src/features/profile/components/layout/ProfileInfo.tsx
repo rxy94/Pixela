@@ -15,7 +15,7 @@ const STYLES = {
   editButton: clsx(
     'profile-info__edit-button',
     'flex items-center gap-2',
-    'text-gray-400 hover:text-white',
+    'text-white hover:text-gray-200',
     'transition-colors duration-200'
   ),
   content: 'profile-info__content',

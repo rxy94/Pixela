@@ -42,7 +42,8 @@ Dado el avance del proyecto, el vídeo necesitaba superar los 5 minutos para cub
 | **Backend** | Laravel 12, PHP 8.2 | Framework principal de la API |
 | | Laravel Sanctum | Autenticación de API para la SPA |
 | | Eloquent ORM | Interacción con la base de datos |
-| | l5-swagger | Potencial para documentación de API (OpenAPI) |
+| | Guzzle | Peticiones HTTP |
+| | l5-swagger | Documentación de API (OpenAPI) |
 | **Frontend**| Next.js 15, React 19 | Framework principal de la SPA |
 | | TypeScript | Tipado estático para robustez del código |
 | | Zustand | Gestión de estado global |
@@ -51,6 +52,9 @@ Dado el avance del proyecto, el vídeo necesitaba superar los 5 minutos para cub
 | **DevOps** | Docker, Docker Compose | Contenerización y orquestación del entorno |
 | | Laravel Sail | Abstracción sobre Docker para Laravel |
 | | GitHub | Control de versiones |
+| **Despliegue** | AWS | Amazon Web Services|
+| | EC2 | Servicio de AWS para alojar la aplicación y la base de datos |
+| | Nginx | Manejo de proxies |
 
 ## 2. Estructura del Proyecto
 
@@ -87,6 +91,7 @@ pixela/
 
 *   **Rutas (`routes/`)**: Definen todos los endpoints de la aplicación. `api.php` contiene los endpoints de los recursos (películas, reseñas), mientras que `auth.php` maneja las rutas de autenticación (login, registro).
 *   **Controladores (`app/Http/Controllers/Api/`)**: Contienen la lógica de negocio para cada petición. Actúan como intermediarios entre las rutas y los modelos. Hay controladores dedicados para `User`, `Favorite`, `Review`, y para interactuar con la API de TMDB.
+*   **Controladores (`app/Http/Controllers/Auth/`)**: Contienen la lógica de autenticación del usuario (Login, Register, Forgot-password...)
 *   **Modelos (`app/Models/`)**: Representan las tablas de la base de datos (`users`, `favorites`, `reviews`) y definen las relaciones entre ellas (un usuario tiene muchos favoritos y reseñas).
 *   **Middleware (`auth:sanctum`, `isAdmin`)**: Filtros que se ejecutan antes de los controladores. `auth:sanctum` protege las rutas que requieren autenticación, y el middleware `isAdmin` (inferido de las rutas) protege las rutas exclusivas para administradores.
 
@@ -152,11 +157,11 @@ Estas rutas actúan como un proxy a la API de TMDB.
 ## 5. Flujos Principales de la Aplicación
 
 1.  **Flujo de Autenticación**:
-    1.  El usuario rellena el formulario de login/registro en el frontend de Next.js.
-    2.  El frontend envía una petición `POST` a `/login` o `/register` en el backend de Laravel.
-    3.  Laravel valida los datos, crea el usuario o la sesión, y devuelve una respuesta exitosa, estableciendo una cookie de sesión segura (HTTPOnly).
+    1.  El usuario rellena el formulario de login/registro en el backend de Laravel, en las vistas de Blade.
+    2.  Se envía una petición `POST` a `/login` o `/register` en el backend de Laravel.
+    3.  Laravel valida los datos, crea el usuario o la sesión, y devuelve una respuesta exitosa, estableciendo una cookie de sesión segura (HTTPOnly) y un XSRF-TOKEN.
     4.  El frontend recibe la respuesta, pide los datos del usuario a `/api/user` y los guarda en el store de Zustand, marcando al usuario como autenticado.
-    5.  La UI reacciona al cambio de estado, mostrando el perfil del usuario y ocultando los botones de "Login".
+    5.  La UI reacciona al cambio de estado, mostrando el perfil del usuario y el icono de logout, ocultando el icono de "Login".
 
 2.  **Flujo de Añadir a Favoritos**:
     1.  El usuario está en la página de detalles de una película y hace clic en "Añadir a Favoritos".
@@ -178,15 +183,18 @@ Para empezar a trabajar en el proyecto, un nuevo desarrollador debería seguir e
 1.  Clonar el repositorio de GitHub.
 2.  Asegurarse de tener Docker y Docker Compose instalados.
 3.  Navegar a la carpeta `pixela-backend` y crear el archivo `.env` a partir de `.env.example`.
-4.  Ejecutar `docker-compose up -d` (o el script personalizado si existe, como `make up` o `sail up`). Esto levantará todos los servicios (PHP, Nginx, base de datos).
-5.  Una vez levantado, ejecutar las migraciones de la base de datos con `docker-compose exec app php artisan migrate`.
-6.  Instalar las dependencias del frontend: navegar a `pixela-frontend` y ejecutar `npm install`.
-7.  Ejecutar el servidor de desarrollo del frontend con `npm run dev`.
+4.  Instalar las dependencias del backend: ejecutar `composer install` y `npm install`.
+5.  Ejecutar `docker-compose up -d` (o el script personalizado si existe, como `make up`, `sail up` o `./vendor/bin/sail up`). Esto levantará todos los servicios (PHP, Next.js, base de datos).
+6.  Una vez levantado, ejecutar las migraciones de la base de datos con `docker-compose exec app php artisan migrate` o si se usa Sail `sail artisan migrate` o `./vendor/bin/sail artisan migrate`.
+7.  Instalar las dependencias del frontend: navegar a `pixela-frontend` y ejecutar `npm install`.
+8.  Ejecutar el servidor de desarrollo en el backend con `npm run dev`.
+9.  El servidor de desarrollo del front ya se ejecuta automáticamente al levantar los contenedores de Docker, si no es así ejecuta `npm run dev`.
 
 ## 8. Glosario de Términos
 
 *   **Eloquent**: El ORM (Object-Relational Mapper) de Laravel. Permite interactuar con la base de datos usando objetos y clases de PHP en lugar de SQL crudo.
 *   **Sanctum**: El sistema de autenticación de Laravel para SPAs y APIs.
+*   **Guzzle**: Cliente PHP HTTP que facilita el envío de peticiones HTTP y hace trivial la integración con servicios web.
 *   **Next.js App Router**: El nuevo sistema de enrutado de Next.js basado en la estructura de carpetas dentro de `/app`.
 *   **Zustand**: Una librería de gestión de estado para React, conocida por su simplicidad y bajo peso.
 *   **TMDB**: The Movie Database, una popular API externa con información sobre películas y series.
@@ -248,5 +256,3 @@ Para entender cómo interactúan los ficheros, sigamos el rastro de una acción 
     1.  El objeto `pelicula` completo viaja de vuelta desde la capa de API, a través del servicio, hasta llegar al componente inicial (`.../movies/[id]/page.tsx`).
     2.  El componente `MediaPage` recibe este objeto como `props`.
     3.  React renderiza la información en pantalla, mostrando al usuario los detalles de la película.
-
-
