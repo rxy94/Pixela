@@ -2,10 +2,15 @@ import { TrendingSerie, TrendingMovie } from "@/features/trending/types";
 import { MediaType } from "@/features/trending/types/common";
 import { FetchOptions } from "@/features/trending/types/api";
 import { API_BASE_URL } from "@/api/shared/apiEndpoints"; // PROD   UCTION: Cambiar {API_BASE_URL} por {API_URL}
+import { DEFAULT_FETCH_OPTIONS } from "@/api/shared/apiHelpers";
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
+// Interface para respuesta de la API de tendencias
+interface TrendingResponse<T> {
+    data: T[];
+}
 
 /**
  * Función base para realizar peticiones a la API de tendencias
@@ -18,17 +23,19 @@ async function fetchTrendingMedia<T>(
     options: FetchOptions = {}
 ): Promise<T[]> {
     const { limit = DEFAULT_LIMIT, offset = DEFAULT_OFFSET } = options;
-    const endpoint = `${API_BASE_URL}/${mediaType}/trending`; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
+    const endpoint = `${API_BASE_URL}/${mediaType}/trending?limit=${limit}&offset=${offset}`; // PRODUCTION: Cambiar {API_BASE_URL} por {API_URL}
 
     try {
-        console.log(`Fetching trending ${mediaType} from: ${endpoint}?limit=${limit}&offset=${offset}`);
-        const response = await fetch(`${endpoint}?limit=${limit}&offset=${offset}`);
+        console.log(`Fetching trending ${mediaType} from: ${endpoint}`);
+        const response = await fetch(endpoint, {
+            ...DEFAULT_FETCH_OPTIONS,
+        });
         
         if (!response.ok) {
             throw new Error(`Error de API: ${response.status} ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data: TrendingResponse<T> = await response.json();
         return data.data;
 
     } catch (error) {

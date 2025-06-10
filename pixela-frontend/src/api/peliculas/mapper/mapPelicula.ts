@@ -1,7 +1,7 @@
 import { Pelicula } from '@/features/media/types/content';
 import { Actor } from '@/features/media/types/people';
 import { Trailer } from '@/features/media/types/trailer';
-import { ApiActor, ApiPelicula, ApiTrailer } from './types';
+import { ApiActor, ApiPelicula, ApiTrailer } from '../types';
 
 
 // URL base para imágenes de TMDb

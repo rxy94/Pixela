@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { openPlatform } from './platformUtils';
-import { formatImageUrl } from '@/api/peliculas/mapPelicula';
+import { formatImageUrl } from '@/api/peliculas/mapper/mapPelicula';
 import { PlatformCardProps } from '@/features/media/types/platforms';
 
 /**

@@ -124,3 +124,22 @@ export async function fetchFromAPI<T>(url: string, options: RequestInit = {}): P
     throw error;
   }
 }
+
+/**
+ * Helper para hacer fetch con manejo de errores unificado
+ * @param url - URL de la petición
+ * @returns - Respuesta de la petición o null si hay error
+ */
+export async function fetchWithErrorHandling<T>(url: string): Promise<T | null> {
+  try {
+    const response = await fetch(url, DEFAULT_FETCH_OPTIONS);
+    if (!response.ok) {
+      if (response.status === 404) return null;
+      throw new Error(`HTTP ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.warn(`[API] Error fetching ${url}:`, error);
+    return null;
+  }
+}

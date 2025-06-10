@@ -105,60 +105,43 @@ export interface ApiCreator {
 }
 
 /**
- * Image
- * @interface ApiImage
- * @property {string} file_path - URL de la imagen
- * @property {number} width - Ancho de la imagen
- * @property {number} height - Alto de la imagen
- * @property {number} aspect_ratio - Relación de aspecto de la imagen
- * @property {number} vote_average - Puntuación promedio de la imagen
- * @property {number} vote_count - Cantidad de votos de la imagen
- */
-export interface ApiImage {
-  file_path: string;
-  width: number;
-  height: number;
-  aspect_ratio: number;
-  vote_average: number;
-  vote_count: number;
-}
-
-/**
- * Interfaz que representa una película desde la API
- * @interface ApiPelicula
- * @property {number} id - ID único de la película
- * @property {string} [nombre] - Nombre de la película en español
- * @property {string} [titulo] - Título de la película en español
- * @property {string} [name] - Nombre de la película en inglés
- * @property {string} [title] - Título de la película en inglés
- * @property {string} [descripcion] - Descripción de la película en español
- * @property {string} [sinopsis] - Sinopsis de la película en español
- * @property {string} [overview] - Resumen de la película en inglés
+ * Interfaz que representa una serie desde la API
+ * @interface ApiSerie
+ * @property {number} id - ID único de la serie
+ * @property {string} [nombre] - Nombre de la serie en español
+ * @property {string} [titulo] - Título de la serie en español
+ * @property {string} [name] - Nombre de la serie en inglés
+ * @property {string} [title] - Título de la serie en inglés
+ * @property {string} [descripcion] - Descripción de la serie en español
+ * @property {string} [sinopsis] - Sinopsis de la serie en español
+ * @property {string} [overview] - Resumen de la serie en inglés
  * @property {string} [fecha_estreno] - Fecha de estreno en formato español
  * @property {string} [fecha] - Fecha alternativa en formato español
- * @property {string} [release_date] - Fecha de estreno en formato inglés
- * @property {Array<string | { nombre?: string; name?: string }>} [generos] - Lista de géneros de la película
+ * @property {string} [first_air_date] - Fecha de estreno en formato inglés
+ * @property {Array<string | { nombre?: string; name?: string }>} [generos] - Lista de géneros de la serie
  * @property {string} [poster_path] - Ruta del póster en la API
  * @property {string} [poster] - URL alternativa del póster
  * @property {string} [backdrop_path] - Ruta de la imagen de fondo en la API
  * @property {string} [backdrop] - URL alternativa de la imagen de fondo
  * @property {number} [vote_average] - Puntuación promedio en formato decimal
  * @property {number} [puntuacion] - Puntuación alternativa
- * @property {number} [runtime] - Duración en minutos
- * @property {number} [duracion] - Duración alternativa en minutos
+ * @property {number} [temporadas] - Número de temporadas en español
+ * @property {number} [number_of_seasons] - Número de temporadas en inglés
+ * @property {number} [episodios] - Número total de episodios en español
+ * @property {number} [number_of_episodes] - Número total de episodios en inglés
  * @property {ApiActor[]} [actores] - Lista de actores principales
  * @property {ApiTrailer[]} [trailers] - Lista de trailers disponibles
  * @property {ApiProvider[]} [proveedores] - Lista de proveedores de streaming
- * @property {Object} [imagenes] - Objeto que contiene las imágenes de la película
- * @property {ApiImage[]} [imagenes.backdrops] - Imágenes de fondo
- * @property {ApiImage[]} [imagenes.posters] - Pósters de la película
- * @property {ApiCreator} [creador] - Información del creador/director
- * @property {Object} [credits] - Objeto que contiene los créditos de la película
+ * @property {ApiCreator[]} [creadores] - Lista de creadores en español
+ * @property {ApiCreator[]} [created_by] - Lista de creadores en inglés
+ * @property {ApiActor[]} [cast] - Lista completa del elenco
+ * @property {Object} [credits] - Objeto que contiene los créditos de la serie
  * @property {ApiActor[]} [credits.cast] - Lista completa del elenco
- * @property {Object} [videos] - Objeto que contiene los videos de la película
+ * @property {Object} [videos] - Objeto que contiene los videos de la serie
  * @property {ApiTrailer[]} [videos.results] - Lista de videos/trailers
+ * @property {ApiTrailer[]} [results] - Lista alternativa de videos/trailers
  */
-export interface ApiPelicula {
+export interface ApiSerie {
   id: number;
   nombre?: string;
   titulo?: string;
@@ -169,7 +152,7 @@ export interface ApiPelicula {
   overview?: string;
   fecha_estreno?: string;
   fecha?: string;
-  release_date?: string;
+  first_air_date?: string;
   generos?: Array<string | { nombre?: string; name?: string }>;
   poster_path?: string;
   poster?: string;
@@ -177,16 +160,16 @@ export interface ApiPelicula {
   backdrop?: string;
   vote_average?: number;
   puntuacion?: number;
-  runtime?: number;
-  duracion?: number;
+  temporadas?: number;
+  number_of_seasons?: number;
+  episodios?: number;
+  number_of_episodes?: number;
   actores?: ApiActor[];
   trailers?: ApiTrailer[];
   proveedores?: ApiProvider[];
-  imagenes?: {
-    backdrops: ApiImage[];
-    posters: ApiImage[];
-  };
-  creador?: ApiCreator;
+  creadores?: ApiCreator[];
+  created_by?: ApiCreator[];
+  cast?: ApiActor[];
   credits?: {
     cast?: ApiActor[];
   };
@@ -195,3 +178,60 @@ export interface ApiPelicula {
   };
   results?: ApiTrailer[];
 } 
+
+/** 
+ * Interfaz que representa una respuesta de la API
+ * @interface ApiResponse
+ * @property {boolean} success - Si la respuesta fue exitosa
+ * @property {T} data - Datos de la respuesta
+ * @returns {ApiResponse<T>} - Respuesta de la API
+ */
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
+/**
+ * Interfaz que representa una respuesta de la API para el elenco
+ * @interface ApiCastResponse
+ * @property {boolean} success - Si la respuesta fue exitosa
+ * @property {Object} data - Datos de la respuesta
+ */
+export interface ApiCastResponse {
+  success: boolean;
+  data: {
+    cast: ApiActor[];
+  };
+}
+
+/**
+ * Interfaz que representa una respuesta de la API para los videos
+ * @interface ApiVideosResponse
+ * @property {boolean} success - Si la respuesta fue exitosa
+ * @property {Object} data - Datos de la respuesta
+ */
+export interface ApiVideosResponse {
+  success: boolean;
+  data: {
+    results: Video[];
+  };
+}
+
+/**
+ * Interfaz que representa una respuesta de la API para los proveedores
+ * @interface ApiProvidersResponse
+ * @property {boolean} success - Si la respuesta fue exitosa
+ * @property {Object} data - Datos de la respuesta
+ */
+export interface ApiProvidersResponse {
+  success: boolean;
+  data: {
+    results: {
+      [region: string]: {
+        flatrate?: Provider[];
+        rent?: Provider[];
+        buy?: Provider[];
+      };
+    };
+  };
+}
