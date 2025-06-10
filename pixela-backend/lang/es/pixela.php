@@ -8,6 +8,7 @@ return [
     'password' => 'Contraseña',
     'back_to_login' => 'Volver al login',
     'back_to_home' => 'Volver al inicio',
+    'go_back' => 'Volver atrás',
     'view_api' => 'Ver API',
     
     # Register
