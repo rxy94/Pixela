@@ -2,7 +2,6 @@
 
 import { useRef } from 'react';
 import Link from 'next/link';
-import FooterNewsletter from '../content/FooterNewsletter';
 import FooterSocialLinks from '../content/FooterSocialLinks';
 import { DISCOVER_LINKS, LEGAL_LINKS } from '@/features/footer/constants/links';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -14,7 +13,7 @@ const STYLES = {
   gridMain: "grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-8 md:gap-y-16 2k:gap-y-12 py-8 md:py-16 2k:py-12 ipad:gap-x-8 ipad:gap-y-6 ipad:py-12 ipad:grid-cols-3",
 
   // Logo y descripción
-  logoColumn: "flex flex-col space-y-4 md:space-y-6 md:col-span-4 ipad:space-y-4 ipad:col-span-3",
+  logoColumn: "flex flex-col space-y-4 md:space-y-6 md:col-span-4 ipad:space-y-4 ipad:col-span-1",
   logoContainer: "flex items-center",
   logoWrapper: "relative",
   logoText: "tracking-tight font-black font-outfit text-3xl md:text-5xl ipad:text-4xl",
@@ -31,8 +30,8 @@ const STYLES = {
   // Navegación y enlaces
   mobileSeparator: "h-px w-full bg-white/5 md:hidden my-4",
   linksContainer: "grid grid-cols-2 gap-25 md:contents ipad:contents",
-  explorerColumn: "md:col-span-2 md:col-start-6 text-left ipad:col-span-1",
-  companyColumn: "md:col-span-2 text-left ml-auto ipad:col-span-1 ipad:ml-0",
+  explorerColumn: "md:col-span-3 text-left ipad:col-span-1",
+  companyColumn: "md:col-span-3 text-left ipad:col-span-1",
   sectionTitle: "text-white font-bold text-base md:text-lg mb-4 md:mb-6 relative inline-block ipad:text-base ipad:mb-4",
   titleUnderline: "absolute -bottom-1 left-0 w-8 h-0.5 bg-[#ff007f]/50 rounded-full",
   linksList: "space-y-4 ipad:space-y-3",
@@ -40,8 +39,8 @@ const STYLES = {
   linkAnchor: "text-white/70 hover:text-[#ff007f] transition flex items-center justify-start group ipad:text-sm",
   linkIndicator: "w-0 h-0.5 bg-[#ff007f] mr-0 opacity-0 group-hover:w-2 group-hover:mr-2 group-hover:opacity-100 transition-all duration-300",
 
-  // Newsletter
-  newsletterColumn: "flex flex-col space-y-6 md:space-y-8 md:col-span-4 md:col-start-10 mt-6 md:mt-0 ipad:space-y-5 ipad:mt-0 ipad:col-span-1",
+  // Redes sociales
+  socialColumn: "flex flex-col space-y-6 md:space-y-8 md:col-span-2 mt-6 md:mt-0 ipad:space-y-5 ipad:mt-0 ipad:col-span-1",
 
   // Footer inferior
   copyrightSection: "pb-8 md:pb-12 transition-all duration-700 delay-100 ipad:pb-8",
@@ -164,9 +163,8 @@ export const FooterContent = () => {
           {/* Separador para móviles */}
           <div className={STYLES.mobileSeparator}></div>
 
-          {/* Columna 4: Newsletter + redes sociales */}
-          <div className={STYLES.newsletterColumn} ref={newsletterRef}>
-            <FooterNewsletter />
+          {/* Columna 4: redes sociales */}
+          <div className={STYLES.socialColumn} ref={newsletterRef}>
             <FooterSocialLinks />
           </div>
         </div>

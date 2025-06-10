@@ -185,7 +185,7 @@ export const FooterBackgroundEffects: React.FC<BackgroundEffectProps> = ({ isAni
           letterSpacing: "-0.05em",
           userSelect: "none",
           whiteSpace: "nowrap",
-          backgroundImage: "linear-gradient(135deg, #181818 0%, #1a1a1a 20%, rgba(26,26,26,0.8) 50%, rgba(255,0,127,0.12) 80%, rgba(255,0,127,0.08) 100%)",
+          backgroundImage: "linear-gradient(8deg, rgb(24, 24, 24) -50%, rgb(26, 26, 26) 0%, rgba(26, 26, 26, 0.8) 35%, rgba(255, 0, 127, 0.12) 100%, rgba(255, 0, 127, 0.08) 100%)",
           WebkitBackgroundClip: "text",
           backgroundClip: "text",
         }}
