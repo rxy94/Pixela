@@ -381,28 +381,69 @@ ContentGrid.displayName = 'ContentGrid';
  * @param {Serie[]} series - Array de series
  * @returns {Object} Objeto con las recomendaciones actuales y función para obtener nuevas
  */
-const useRandomRecommendations = (movies: Pelicula[], series: Serie[]) => {
+const useRandomRecommendations = (movies: Pelicula[], series: Serie[], mediaType: string) => {
     const [currentMovie, setCurrentMovie] = useState<(Pelicula & { mediaType: 'movie' }) | null>(null);
     const [currentSerie, setCurrentSerie] = useState<(Serie & { mediaType: 'series' }) | null>(null);
     const [hasSearched, setHasSearched] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [lastMediaType, setLastMediaType] = useState<string>(mediaType);
 
     const getNewRecommendations = useCallback(() => {
-        // Seleccionar película aleatoria
-        if (movies.length > 0) {
-            const randomMovieIndex = Math.floor(Math.random() * movies.length);
-            setCurrentMovie({ ...movies[randomMovieIndex], mediaType: 'movie' as const });
-        }
+        // Prevenir múltiples ejecuciones simultáneas
+        if (isGenerating) return;
         
-        // Seleccionar serie aleatoria
-        if (series.length > 0) {
-            const randomSerieIndex = Math.floor(Math.random() * series.length);
-            setCurrentSerie({ ...series[randomSerieIndex], mediaType: 'series' as const });
+        // Verificar que hay contenido disponible
+        if (movies.length === 0 && series.length === 0) return;
+        
+        setIsGenerating(true);
+        
+        // Resetear recomendaciones actuales
+        setCurrentMovie(null);
+        setCurrentSerie(null);
+        
+        // Pequeño delay para evitar condiciones de carrera
+        setTimeout(() => {
+            // Seleccionar película aleatoria
+            if (movies.length > 0) {
+                const randomMovieIndex = Math.floor(Math.random() * movies.length);
+                setCurrentMovie({ ...movies[randomMovieIndex], mediaType: 'movie' as const });
+            }
+            
+            // Seleccionar serie aleatoria
+            if (series.length > 0) {
+                const randomSerieIndex = Math.floor(Math.random() * series.length);
+                setCurrentSerie({ ...series[randomSerieIndex], mediaType: 'series' as const });
+            }
+
+            setHasSearched(true);
+            setIsGenerating(false);
+        }, 150);
+    }, [movies, series, isGenerating]);
+
+    // Resetear estado cuando no hay contenido
+    useEffect(() => {
+        if (movies.length === 0 && series.length === 0) {
+            setCurrentMovie(null);
+            setCurrentSerie(null);
+            setHasSearched(false);
+            setIsGenerating(false);
         }
+    }, [movies.length, series.length]);
 
-        setHasSearched(true);
-    }, [movies, series]);
+    // Resetear estado solo cuando se cambia entre random y no-random
+    useEffect(() => {
+        if (mediaType !== lastMediaType) {
+            if (mediaType === 'random' || lastMediaType === 'random') {
+                setCurrentMovie(null);
+                setCurrentSerie(null);
+                setHasSearched(false);
+                setIsGenerating(false);
+            }
+            setLastMediaType(mediaType);
+        }
+    }, [mediaType, lastMediaType]);
 
-    return { currentMovie, currentSerie, hasSearched, getNewRecommendations };
+    return { currentMovie, currentSerie, hasSearched, getNewRecommendations, isGenerating };
 };
 
 /**
@@ -494,12 +535,17 @@ RecommendationCard.displayName = 'RecommendationCard';
  * @param {Serie[]} props.series - Array de series
  * @returns {JSX.Element} Las dos recomendaciones renderizadas
  */
-const RandomRecommendations = memo(({ movies, series }: { movies: Pelicula[], series: Serie[] }) => {
-    const { currentMovie, currentSerie, hasSearched, getNewRecommendations } = useRandomRecommendations(movies, series);
+const RandomRecommendations = memo(({ movies, series, mediaType }: { movies: Pelicula[], series: Serie[], mediaType: string }) => {
+    const { currentMovie, currentSerie, hasSearched, getNewRecommendations, isGenerating } = useRandomRecommendations(movies, series, mediaType);
 
     const handleNewRecommendations = () => {
-        getNewRecommendations();
+        if (!isGenerating && (movies.length > 0 || series.length > 0)) {
+            getNewRecommendations();
+        }
     };
+
+    // Verificar si hay contenido disponible para generar recomendaciones
+    const hasContentAvailable = movies.length > 0 || series.length > 0;
 
     return (
         <div className={STYLES.randomContainer}>
@@ -544,11 +590,12 @@ const RandomRecommendations = memo(({ movies, series }: { movies: Pelicula[], se
                     <div className={STYLES.cardsWrapper}>
                         <button
                             onClick={handleNewRecommendations}
-                            className={STYLES.randomButton}
+                            disabled={isGenerating || !hasContentAvailable}
+                            className={`${STYLES.randomButton} ${(isGenerating || !hasContentAvailable) ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            <FiRefreshCw className={STYLES.buttonIcon} />
+                            <FiRefreshCw className={`${STYLES.buttonIcon} ${isGenerating ? 'animate-spin' : ''}`} />
                             <span className={STYLES.buttonText}>
-                                {hasSearched ? 'Nuevas recomendaciones' : 'Sorpréndeme'}
+                                {!hasContentAvailable ? 'Cargando contenido...' : isGenerating ? 'Generando...' : hasSearched ? 'Nuevas recomendaciones' : 'Sorpréndeme'}
                             </span>
                         </button>
                         
@@ -567,12 +614,38 @@ const RandomRecommendations = memo(({ movies, series }: { movies: Pelicula[], se
                             </div>
                         ) : (
                             <div className={STYLES.cardsGrid}>
-                                {currentMovie && <RecommendationCard recommendation={currentMovie} />}
-                                {currentSerie && <RecommendationCard recommendation={currentSerie} />}
-                                {(!currentMovie && !currentSerie) && (
-                                     <div className="text-center sm:col-span-2 text-pixela-light/50">
-                                         No hay contenido disponible para generar recomendaciones.
-                                     </div>
+                                {/* Tarjeta de película */}
+                                {currentMovie ? (
+                                    <RecommendationCard recommendation={currentMovie} />
+                                ) : movies.length > 0 ? (
+                                    <div className={STYLES.mysteryCard}>
+                                        <div className={STYLES.mysteryEmoji}>🎬</div>
+                                        <h3 className={STYLES.mysteryTitle}>Cargando película...</h3>
+                                        <p className={STYLES.mysteryDescription}>Seleccionando una película aleatoria</p>
+                                    </div>
+                                ) : (
+                                    <div className={STYLES.mysteryCard}>
+                                        <div className={STYLES.mysteryEmoji}>❌</div>
+                                        <h3 className={STYLES.mysteryTitle}>Sin películas</h3>
+                                        <p className={STYLES.mysteryDescription}>No hay películas disponibles</p>
+                                    </div>
+                                )}
+                                
+                                {/* Tarjeta de serie */}
+                                {currentSerie ? (
+                                    <RecommendationCard recommendation={currentSerie} />
+                                ) : series.length > 0 ? (
+                                    <div className={STYLES.mysteryCard}>
+                                        <div className={STYLES.mysteryEmoji}>📺</div>
+                                        <h3 className={STYLES.mysteryTitle}>Cargando serie...</h3>
+                                        <p className={STYLES.mysteryDescription}>Seleccionando una serie aleatoria</p>
+                                    </div>
+                                ) : (
+                                    <div className={STYLES.mysteryCard}>
+                                        <div className={STYLES.mysteryEmoji}>❌</div>
+                                        <h3 className={STYLES.mysteryTitle}>Sin series</h3>
+                                        <p className={STYLES.mysteryDescription}>No hay series disponibles</p>
+                                    </div>
                                 )}
                             </div>
                         )}
@@ -707,7 +780,7 @@ export const CategoriesContent = memo(({
 
             <div className={STYLES.contentWrapper}>
                 {mediaType === 'random' ? (
-                    <RandomRecommendations movies={movies} series={series} />
+                    <RandomRecommendations movies={movies} series={series} mediaType={mediaType} />
                 ) : (
                     <ContentGrid movies={movies} series={series} searchTerm={''} />
                 )}
