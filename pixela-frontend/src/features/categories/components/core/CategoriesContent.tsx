@@ -9,7 +9,9 @@ import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
 import { ContentSkeleton } from '@/features/categories/components/ui/ContentSkeleton';
+import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
 import { CategoriesContentProps } from '@/features/categories/types/content';
+import { useInteractiveBorder } from '@/hooks/useInteractiveBorder';
 
 const INITIAL_VISIBLE_ITEMS = 6;
 const HIGH_RATING_THRESHOLD = 8.0;
@@ -36,9 +38,11 @@ const STYLES = {
     // Categorías en Móvil
     mobileCategoriesList: 'lg:hidden mb-6',
 
-    // Tarjeta de Contenido (Película/Serie)
-    card: 'w-full flex flex-col relative group overflow-hidden animate-fade-in',
-    posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg',
+    // Tarjeta de Contenido (Película/Serie) - Con efecto de borde interactivo
+    card: 'w-full flex flex-col relative group overflow-hidden animate-fade-in rounded-2xl p-px cursor-pointer',
+    cardBorder: 'absolute inset-0 rounded-2xl bg-[radial-gradient(250px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+    cardContent: 'relative z-10 h-full rounded-[15px] bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5 transition-all duration-300',
+    posterContainer: 'relative w-full aspect-[2/3] overflow-hidden rounded-[15px]',
     poster: 'object-cover',
     noiseEffect: 'noise-effect opacity-5',
     overlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark/95 via-pixela-dark/80 to-transparent flex flex-col justify-end p-3 md:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-lg',
@@ -86,7 +90,9 @@ const STYLES = {
     mysteryEmoji: 'text-4xl mb-4 opacity-50',
     mysteryTitle: 'text-pixela-light/60 text-sm font-medium mb-2',
     mysteryDescription: 'text-pixela-light/40 text-xs text-center',
-    recommendationCard: 'relative w-full aspect-[2/3] overflow-hidden rounded-lg group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300',
+    recommendationCard: 'relative w-full aspect-[2/3] overflow-hidden rounded-2xl p-px group cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-300',
+    recommendationCardBorder: 'absolute inset-0 rounded-2xl bg-[radial-gradient(250px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+    recommendationCardContent: 'relative z-10 w-full h-full overflow-hidden rounded-[15px] bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5 transition-all duration-300',
     recommendationOverlay: 'absolute inset-0 flex flex-col justify-end p-4 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent group-hover:opacity-100',
     recommendationTitle: 'mb-2 text-base font-bold leading-tight text-pixela-light md:text-lg font-outfit line-clamp-2',
     recommendationInfo: 'flex flex-wrap items-center gap-2 mb-2',
@@ -245,6 +251,7 @@ const MediaCard = memo(({
     index: number 
 }) => {
     const router = useRouter();
+    const cardRef = useInteractiveBorder<HTMLDivElement>();
     
     const isHighRated = (media.vote_average ?? 0) >= HIGH_RATING_THRESHOLD;
     const isInitiallyVisible = index < INITIAL_VISIBLE_ITEMS;
@@ -261,17 +268,17 @@ const MediaCard = memo(({
     
     return (
         <div 
-            className={STYLES.card}
+            ref={cardRef}
+            className={`${STYLES.card} opacity-0 animate-fade-in-up`}
             style={{
-                opacity: 0,
-                animationName: 'fadeIn',
-                animationDuration: '0.5s',
-                animationTimingFunction: 'ease-out',
-                animationFillMode: 'forwards',
-                animationDelay: `${index * 50}ms`
+                animationDelay: `${Math.min(index * 80, 800)}ms`,
+                animationDuration: '0.6s',
+                animationFillMode: 'forwards'
             }}
         >
-            <div className={STYLES.posterContainer}>
+            <div className={STYLES.cardBorder} />
+            <div className={STYLES.cardContent}>
+                <div className={STYLES.posterContainer}>
                 <PosterImage 
                     posterPath={media.poster_path || media.poster || ''}
                     title={type === 'movies' 
@@ -297,6 +304,7 @@ const MediaCard = memo(({
                         variant="primary"
                     />
                 )}
+                </div>
             </div>
         </div>
     );
@@ -455,9 +463,12 @@ const useRandomRecommendations = (movies: Pelicula[], series: Serie[], mediaType
  * @returns {JSX.Element} Card de recomendación
  */
 const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula | Serie) & { mediaType: 'movie' | 'series' } }) => {
+    const cardRef = useInteractiveBorder<HTMLDivElement>();
+    
     return (
-        <div className={STYLES.recommendationCard}>
-            <div className="relative w-full h-full">
+        <div ref={cardRef} className={STYLES.recommendationCard}>
+            <div className={STYLES.recommendationCardBorder} />
+            <div className={STYLES.recommendationCardContent}>
                 <PosterImage 
                     posterPath={recommendation.poster_path || recommendation.poster || ''}
                     title={recommendation.mediaType === 'movie' 
@@ -673,15 +684,18 @@ export const CategoriesContent = memo(({
     error,
     searchQuery,
     onSearch,
-    mediaType
+    mediaType,
+    currentPage,
+    totalPages
 }: CategoriesContentProps) => {
     const [isContentReady, setIsContentReady] = useState(false);
     const [inputValue, setInputValue] = useState(searchQuery);
+    const [showSkeleton, setShowSkeleton] = useState(true);
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
         setInputValue(searchQuery);
     }, [searchQuery]);
-
 
     useEffect(() => {
         setInputValue('');
@@ -689,13 +703,27 @@ export const CategoriesContent = memo(({
     }, [mediaType, onSearch]);
 
     useEffect(() => {
-        if (!loading && (movies.length > 0 || series.length > 0)) {
-            const timer = setTimeout(() => {
+        if (loading) {
+            setIsTransitioning(true);
+            setIsContentReady(false);
+            setShowSkeleton(true);
+        } else if (movies.length > 0 || series.length > 0) {
+            // Pequeño delay para evitar el salto visual
+            const transitionTimer = setTimeout(() => {
+                setIsTransitioning(false);
                 setIsContentReady(true);
-            }, 300);
-            return () => clearTimeout(timer);
+                
+                // Fade out skeleton suavemente
+                setTimeout(() => {
+                    setShowSkeleton(false);
+                }, 150);
+            }, 200);
+            
+            return () => clearTimeout(transitionTimer);
         } else {
             setIsContentReady(false);
+            setShowSkeleton(false);
+            setIsTransitioning(false);
         }
     }, [loading, movies, series]);
 
@@ -733,9 +761,22 @@ export const CategoriesContent = memo(({
     }
 
     // Para mediaType random, renderizar inmediatamente sin depender de isContentReady
-    // Para otros tipos, mostrar skeleton mientras carga
-    if (mediaType !== 'random' && (loading || !isContentReady)) {
-        return <ContentSkeleton count={12} />;
+    if (mediaType !== 'random' && (showSkeleton || isTransitioning)) {
+        return (
+            <div className="relative">
+                <ContentSkeleton count={12} />
+                {isContentReady && (
+                    <div 
+                        className="absolute inset-0 opacity-0 animate-content-reveal"
+                        style={{
+                            animationDelay: '100ms',
+                        }}
+                    >
+                        <ContentGrid movies={movies} series={series} searchTerm={''} />
+                    </div>
+                )}
+            </div>
+        );
     }
 
     const hasContent = movies.length > 0 || series.length > 0;
@@ -751,7 +792,7 @@ export const CategoriesContent = memo(({
     }
 
     return (
-        <div className={STYLES.mainContainer}>
+        <div className={`${STYLES.mainContainer} ${isContentReady ? 'animate-fade-in-up' : ''}`}>
             {/* Solo mostrar búsqueda si no es modo random */}
             {mediaType !== 'random' && (
                 <form onSubmit={handleFormSubmit} className={STYLES.searchContainer}>
@@ -776,6 +817,19 @@ export const CategoriesContent = memo(({
                         </button>
                     )}
                 </form>
+            )}
+
+            {/* Contador de elementos - Solo mostrar si no es modo random y hay contenido */}
+            {mediaType !== 'random' && hasContent && (
+                <ItemCounter
+                    moviesCount={movies.length}
+                    seriesCount={series.length}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    isSearching={!!searchQuery.trim()}
+                    searchQuery={searchQuery}
+                    mediaType={mediaType}
+                />
             )}
 
             <div className={STYLES.contentWrapper}>
