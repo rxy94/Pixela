@@ -70,19 +70,10 @@ export const CategoriesContainer = () => {
     /**
      * Maneja el cambio de página en la paginación.
      * Preserva el término de búsqueda si existe una búsqueda activa.
-     * Incluye scroll automático al top de la página.
      * 
      * @param {number} page - El número de página a cargar
      */
     const handlePageChange = useCallback(async (page: number) => {
-        // Scroll inmediato al top
-        if (typeof window !== 'undefined') {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
         if (searchQuery.trim()) {
             // Si hay una búsqueda activa, usar searchContent para preservar el término de búsqueda
             await searchContent(searchQuery, page);
@@ -149,18 +140,17 @@ export const CategoriesContainer = () => {
         }
     }, [selectedMediaType, isInitialized, resetContent, loadContent]);
 
-    // Scroll automático al top cuando cambia la página
+    // Scroll automático al top cuando cambia la página (excepto la inicial)
     useEffect(() => {
         if (currentPage > 1 && typeof window !== 'undefined') {
-            const scrollToTop = () => {
+            // Pequeño delay para asegurar que el contenido se ha actualizado
+            const timeoutId = setTimeout(() => {
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
-            };
+            }, 100);
             
-            // Pequeño delay para asegurar que el contenido se ha actualizado
-            const timeoutId = setTimeout(scrollToTop, 100);
             return () => clearTimeout(timeoutId);
         }
     }, [currentPage]);

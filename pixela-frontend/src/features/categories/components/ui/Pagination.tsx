@@ -91,7 +91,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange, disabled = f
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1 || disabled}
-                className={`${STYLES.button} ${STYLES.navButton}`}
+                className={`${STYLES.button} ${STYLES.navButton} group`}
                 aria-label="Página anterior"
             >
                 <FiChevronLeft className={`${STYLES.chevronIcon} ${currentPage === 1 ? '' : 'group-hover:-translate-x-0.5'}`} />
