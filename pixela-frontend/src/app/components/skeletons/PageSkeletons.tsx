@@ -1,29 +1,10 @@
 'use client';
 
-/**
- * Componentes de skeleton para la página principal
- * Mantiene la estética y colores de Pixela durante las cargas
- * 
- * @author Pixela
- * @version 1.0.0
- */
-
-import { useState, useEffect } from 'react';
 
 /**
  * Componente de loading optimizado para el hero con mensaje de bienvenida
  */
 export const HeroSectionSkeleton = () => {
-  const [showWelcome, setShowWelcome] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcome(false);
-    }, 500); // Mostrar bienvenida por 1.5 segundos
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div className="relative w-full h-screen overflow-hidden bg-pixela-dark">
       {/* Fondo con gradiente Pixela */}
@@ -32,18 +13,16 @@ export const HeroSectionSkeleton = () => {
         <div className="absolute w-64 h-64 rounded-full top-1/4 left-1/4 bg-pixela-accent/5 blur-3xl animate-pulse"></div>
         <div className="absolute rounded-full bottom-1/4 right-1/3 w-96 h-96 bg-pink-500/5 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
         
-        {/* Mensaje de bienvenida */}
-        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-1000 ${
-          showWelcome ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
-        }`}>
-          <div className="space-y-4 text-center">
+        {/* Mensaje de bienvenida siempre visible */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="space-y-6 text-center">
             <div className="relative">
-              <h1 className="text-4xl font-bold text-transparent md:text-6xl bg-gradient-to-r from-pixela-accent via-pink-400 to-pixela-accent bg-clip-text animate-shimmer">
-                Bienvenido a Pixela
+              <h1 className="text-6xl font-black tracking-tight text-transparent md:text-8xl lg:text-9xl font-outfit bg-gradient-to-r from-pixela-accent via-pink-400 to-pixela-accent bg-clip-text animate-shimmer">
+                BIENVENIDO A PIXELA
               </h1>
-              <div className="absolute -inset-4 bg-gradient-to-r from-pixela-accent/20 via-pink-400/20 to-pixela-accent/20 blur-xl animate-pulse"></div>
+              <div className="absolute -inset-6 bg-gradient-to-r from-pixela-accent/20 via-pink-400/20 to-pixela-accent/20 blur-xl animate-pulse"></div>
             </div>
-            <p className="text-lg text-pixela-light/70 md:text-xl animate-pulse">
+            <p className="text-xl font-light text-pixela-light/70 md:text-2xl font-outfit">
               Cargando tu experiencia cinematográfica...
             </p>
             
@@ -61,43 +40,6 @@ export const HeroSectionSkeleton = () => {
             </div>
           </div>
         </div>
-
-        {/* Skeleton del hero (aparece después del mensaje de bienvenida) */}
-        <div className={`absolute inset-0 transition-all duration-1000 ${
-          showWelcome ? 'opacity-0 scale-105' : 'opacity-100 scale-100'
-        }`}>
-          <div className="flex items-center justify-center h-full px-4">
-            <div className="w-full max-w-4xl space-y-6 text-center">
-              {/* Título principal skeleton */}
-              <div className="space-y-4">
-                <div className="h-16 max-w-2xl mx-auto bg-gradient-to-r from-pixela-accent/20 via-pink-400/20 to-pixela-accent/20 rounded-xl animate-shimmer"></div>
-                <div className="h-12 max-w-xl mx-auto rounded-lg bg-gradient-to-r from-pixela-accent/15 via-pink-400/15 to-pixela-accent/15 animate-shimmer" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-              
-              {/* Descripción skeleton */}
-              <div className="max-w-2xl mx-auto space-y-3">
-                <div className="h-4 rounded bg-pixela-light/10 animate-pulse"></div>
-                <div className="w-3/4 h-4 mx-auto rounded bg-pixela-light/10 animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-1/2 h-4 mx-auto rounded bg-pixela-light/10 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-              
-              {/* Botones skeleton */}
-              <div className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
-                <div className="w-48 h-12 rounded-full bg-gradient-to-r from-pixela-accent/30 to-pink-400/30 animate-pulse"></div>
-                <div className="w-40 h-12 border-2 rounded-full border-pixela-accent/20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Indicador de navegación skeleton */}
-          <div className="absolute transform -translate-x-1/2 bottom-8 left-1/2">
-            <div className="flex space-x-2">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-2 h-2 rounded-full bg-pixela-accent/30 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
-              ))}
-            </div>
-          </div>
-        </div>
       </div>
     
       {/* Overlay con patrón de ruido sutil */}
@@ -107,68 +49,81 @@ export const HeroSectionSkeleton = () => {
 };
 
 /**
- * Componente de loading para secciones secundarias con diseño Pixela
+ * Skeleton para la sección de trending que replica la estructura real
  */
-export const SectionSkeleton = () => (
-  <div className="relative w-full py-16 overflow-hidden bg-pixela-dark">
+export const TrendingSectionSkeleton = () => (
+  <div className="relative flex flex-col w-full min-h-screen pt-8 bg-pixela-dark md:pt-20">
     {/* Efectos de fondo sutiles */}
     <div className="absolute top-0 w-32 h-32 rounded-full left-1/4 bg-pixela-accent/3 blur-2xl"></div>
     <div className="absolute bottom-0 w-40 h-40 rounded-full right-1/4 bg-pink-500/3 blur-2xl"></div>
     
-    <div className="container relative z-10 px-4 mx-auto">
-      <div className="space-y-8">
-        {/* Título de sección skeleton */}
-        <div className="space-y-4 text-center">
-          <div className="h-10 max-w-md mx-auto rounded-lg bg-gradient-to-r from-pixela-accent/15 via-pink-400/15 to-pixela-accent/15 animate-shimmer"></div>
-          <div className="h-4 max-w-lg mx-auto rounded bg-pixela-light/8 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+    <div className="relative z-10 flex flex-col justify-center flex-grow pb-16 md:justify-start md:pb-0">
+      <div className="relative w-full bg-pixela-dark flex flex-col justify-center overflow-hidden items-stretch gap-8 px-4 py-12 lg:w-[85%] xl:w-[80%] lg:mx-auto lg:flex-row lg:items-end lg:justify-between lg:gap-0 lg:px-0 lg:py-0">
+        
+        {/* Título TENDENCIAS skeleton con misma estética del hero */}
+        <div className="mb-8 lg:mb-0">
+          <h2 className="w-full font-black leading-none tracking-wider text-left uppercase font-outfit md:w-auto">
+            <span className="block sm:hidden text-[64px] leading-[0.95] text-transparent bg-gradient-to-r from-pixela-accent via-pink-400 to-pixela-accent bg-clip-text animate-shimmer pl-4">
+              TEN-<br/>DENCIAS
+            </span>
+            <span className="hidden sm:block text-[64px] md:text-[96px] lg:text-[128px] text-transparent bg-gradient-to-r from-pixela-accent via-pink-400 to-pixela-accent bg-clip-text animate-shimmer pl-4 sm:pl-0">
+              TENDENCIAS
+            </span>
+          </h2>
         </div>
         
-        {/* Toggle/Botones skeleton */}
-        <div className="flex justify-center">
-          <div className="flex p-1 space-x-2 border rounded-full bg-pixela-dark/40 border-pixela-accent/10">
-            <div className="w-24 h-10 rounded-full bg-pixela-accent/20 animate-pulse"></div>
-            <div className="h-10 rounded-full w-28 bg-pixela-light/5 animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+        {/* Toggle skeleton que replica el real */}
+        <div className="px-4 mb-12 md:mb-10 md:px-0">
+          <div className="relative flex w-full p-1 border rounded-full shadow-lg bg-white/5 backdrop-blur-sm border-white/10 shadow-black/20 sm:w-auto">
+            <div className="h-12 px-8 rounded-full bg-pixela-accent/25 animate-pulse">
+              <div className="w-12 h-4 mt-4 rounded bg-white/20 animate-pulse"></div>
+            </div>
+            <div className="h-12 px-8 rounded-full bg-white/5 animate-pulse" style={{ animationDelay: '0.1s' }}>
+              <div className="w-16 h-4 mt-4 rounded bg-white/10 animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+            </div>
           </div>
         </div>
-        
-        {/* Grid de contenido skeleton */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="relative group">
-              {/* Card skeleton */}
-              <div className="overflow-hidden transition-all duration-300 border bg-gray-900/40 backdrop-blur-sm rounded-xl border-pixela-accent/5 hover:border-pixela-accent/20">
-                {/* Imagen skeleton */}
-                <div className="aspect-[3/4] bg-gradient-to-br from-pixela-accent/10 via-pink-400/10 to-pixela-accent/10 animate-shimmer relative">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                </div>
+      </div>
+      
+      {/* Carrusel skeleton que replica las dimensiones reales */}
+      <div className="mx-0 overflow-hidden trending-carousel">
+        <div className="flex gap-0 px-4">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="relative w-[280px] min-w-[280px] max-w-[280px] md:w-[375px] md:min-w-[375px] md:max-w-[375px] flex-none mr-4">
+              <div className="w-full h-[395px] md:h-[528px] bg-gradient-to-br from-pixela-accent/10 via-pixela-dark/40 to-pink-400/10 animate-shimmer rounded-2xl relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-shimmer"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-pixela-dark/80 to-transparent"></div>
                 
-                {/* Contenido skeleton */}
-                <div className="p-4 space-y-3">
-                  <div className="h-5 rounded bg-pixela-light/10 animate-pulse"></div>
-                  <div className="w-2/3 h-3 rounded bg-pixela-light/8 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="w-16 h-3 rounded bg-pixela-accent/20 animate-pulse"></div>
-                    <div className="w-12 h-3 rounded bg-pixela-light/8 animate-pulse"></div>
+                {/* Contenido interno de la card */}
+                <div className="absolute space-y-2 bottom-4 left-4 right-4">
+                  <div className="h-5 rounded bg-white/20 animate-pulse"></div>
+                  <div className="w-2/3 h-3 rounded bg-white/15 animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
+                  <div className="flex gap-2 mt-2">
+                    <div className="w-12 h-3 rounded bg-pixela-accent/30 animate-pulse"></div>
+                    <div className="w-8 h-3 rounded bg-white/10 animate-pulse"></div>
                   </div>
                 </div>
               </div>
-              
-              {/* Efecto hover skeleton */}
-              <div className="absolute inset-0 transition-opacity duration-300 opacity-0 pointer-events-none bg-gradient-to-t from-pixela-accent/5 to-transparent group-hover:opacity-100 rounded-xl"></div>
             </div>
           ))}
         </div>
-        
-        {/* Quote section skeleton */}
-        <div className="pt-8 space-y-4 text-center">
-          <div className="w-16 h-1 mx-auto rounded bg-pixela-accent/30 animate-pulse"></div>
-          <div className="max-w-2xl mx-auto space-y-2">
-            <div className="h-4 rounded bg-pixela-light/8 animate-pulse"></div>
-            <div className="w-3/4 h-4 mx-auto rounded bg-pixela-light/8 animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-          </div>
-          <div className="w-32 h-3 mx-auto rounded bg-pixela-accent/15 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+      </div>
+      
+      {/* Quote section skeleton */}
+      <div className="px-4 pt-16 space-y-6 text-center">
+        <div className="w-16 h-1 mx-auto rounded bg-pixela-accent/30 animate-pulse"></div>
+        <div className="max-w-2xl mx-auto space-y-3">
+          <div className="h-5 rounded bg-pixela-light/15 animate-pulse"></div>
+          <div className="w-4/5 h-5 mx-auto rounded bg-pixela-light/15 animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+          <div className="w-2/3 h-5 mx-auto rounded bg-pixela-light/15 animate-pulse" style={{ animationDelay: '0.2s' }}></div>
         </div>
+        <div className="w-40 h-4 mx-auto rounded bg-pixela-accent/20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
       </div>
     </div>
   </div>
-); 
+);
+
+/**
+ * Componente de loading para secciones secundarias (mantenemos para compatibilidad)
+ */
+export const SectionSkeleton = () => <TrendingSectionSkeleton />; 

@@ -52,6 +52,10 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
     setEditRating(0);
   };
 
+  /**
+   * Función para guardar la reseña editada
+   * @returns {Promise<void>}
+   */
   const handleSaveEdit = async () => {
     if (!editingReview) return;
 

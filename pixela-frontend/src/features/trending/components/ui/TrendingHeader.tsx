@@ -172,8 +172,9 @@ export const TrendingHeader = ({ quote }: { quote: { quote: string; author: stri
   
   const activeContent = activeButton === 'series' ? series : movies;
   
+  // Si no hay contenido, no renderizamos nada - el skeleton de nivel superior se encarga
   if (!activeContent || activeContent.length === 0) {
-    return <LoadingState />;
+    return null;
   }
   
   return (

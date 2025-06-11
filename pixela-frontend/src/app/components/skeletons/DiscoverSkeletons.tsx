@@ -107,12 +107,12 @@ export const DiscoverGridSkeletonDesktop = () => (
 export const DiscoverSectionSkeleton = () => (
   <div className={STYLES.discoverSection}>
     {/* Efectos de fondo */}
-    <div className="absolute top-0 left-1/4 w-32 h-32 bg-pixela-accent/3 rounded-full blur-2xl"></div>
-    <div className="absolute bottom-0 right-1/4 w-40 h-40 bg-pink-500/3 rounded-full blur-2xl"></div>
+    <div className="absolute top-0 w-32 h-32 rounded-full left-1/4 bg-pixela-accent/3 blur-2xl"></div>
+    <div className="absolute bottom-0 w-40 h-40 rounded-full right-1/4 bg-pink-500/3 blur-2xl"></div>
     
     <div className={STYLES.sectionContainer}>
       {/* Título de sección */}
-      <div className="text-center mb-12">
+      <div className="mb-12 text-center">
         <div className={STYLES.sectionTitle} />
         <div className={STYLES.sectionSubtitle} style={{ animationDelay: '0.2s' }} />
       </div>
@@ -137,11 +137,43 @@ export const DiscoverSectionSkeleton = () => (
 );
 
 /**
- * Skeleton simple para el grid interno de discover
+ * Skeleton simple para el grid interno de discover (diseño original limpio)
  */
 export const DiscoverGridSkeleton = ({ isMobile = false }: { isMobile?: boolean }) => {
+  const SIMPLE_STYLES = {
+    container: "flex flex-col items-center gap-4",
+    row: "flex gap-4",
+    mobileGridContainer: "grid grid-cols-2 gap-2 px-1 sm:gap-3 sm:px-2 w-full",
+  };
+
   if (isMobile) {
-    return <DiscoverGridSkeletonMobile />;
+    return (
+      <div className={SIMPLE_STYLES.mobileGridContainer}>
+        {[...Array(6)].map((_, index) => (
+          <div
+            key={index}
+            className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-full h-[240px] xs:h-[220px] sm:h-[240px] animate-pulse"
+          />
+        ))}
+      </div>
+    );
   }
-  return <DiscoverGridSkeletonDesktop />;
+
+  return (
+    <div className={SIMPLE_STYLES.container}>
+      <div className={SIMPLE_STYLES.row}>
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+      </div>
+      <div className={SIMPLE_STYLES.row}>
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+      </div>
+      <div className={SIMPLE_STYLES.row}>
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+        <div className="bg-gray-300 dark:bg-gray-700 rounded-2xl w-[200px] h-[281px] animate-pulse" />
+      </div>
+    </div>
+  );
 }; 
