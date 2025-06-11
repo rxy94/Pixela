@@ -76,7 +76,7 @@ const STYLES = {
     // Contenedor de Tarjetas Aleatorias y Botón
     cardsContainer: 'flex justify-center w-full',
     cardsWrapper: 'relative w-full max-w-lg text-center',
-    randomButton: 'flex items-center justify-center w-full max-w-lg gap-3 px-6 py-3 mb-4 text-purple-400 transition-all duration-300 border group bg-gradient-to-r from-purple-500/20 to-pink-500/20 border-purple-400/30 rounded-xl hover:from-purple-500/30 hover:to-pink-500/30 hover:scale-105',
+    randomButton: 'flex items-center justify-center w-full max-w-lg gap-3 px-6 py-3 mb-4 text-white transition-all duration-300 border group bg-gradient-to-r from-pixela-accent/20 to-pixela-accent/30 border-pixela-accent/30 rounded-xl hover:from-pixela-accent/30 hover:to-pixela-accent/40 hover:scale-105',
     buttonIcon: 'w-5 h-5 transition-transform duration-500 group-hover:rotate-180',
     buttonText: 'font-medium',
 
