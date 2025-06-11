@@ -2,6 +2,7 @@
 
 import { useDiscoverStore } from '@/features/discover/store/discoverStore';
 import { DiscoverCard } from '@/features/discover/components/ui/DiscoverCard';  
+import { DiscoverGridSkeleton } from '@/app/components/skeletons';
 import clsx from 'clsx';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { DiscoverGridProps } from '@/features/discover/types/components';
@@ -12,8 +13,6 @@ const STYLES = {
     container: "flex flex-col items-center gap-4",
     row: "flex gap-4",
     mobileGridContainer: "grid grid-cols-2 gap-2 px-1 sm:gap-3 sm:px-2 w-full",
-    skeletonCard: "bg-gray-800/50 animate-pulse rounded-2xl w-[200px] h-[281px]",
-    mobileSkeletonCard: "bg-gray-800/50 animate-pulse rounded-2xl w-full h-[240px] xs:h-[220px] sm:h-[240px]",
     cardContainer: "flex flex-col items-center gap-4 relative",
     firstRow: "[&>*]:animate-float",
     secondRow: "[&>*]:animate-float [&>*:nth-child(2)]:animation-delay-200",
@@ -35,33 +34,7 @@ export const DiscoverGrid = ({ type }: DiscoverGridProps) => {
     const limitedContent = contentToDisplay.slice(0, limit);
 
     if (!limitedContent?.length) {
-        if (isMobile) {
-            const skeletonCount = limit;
-            return (
-                <div className={STYLES.mobileGridContainer}>
-                    {[...Array(skeletonCount)].map((_, index) => (
-                        <div key={index} className={STYLES.mobileSkeletonCard} />
-                    ))}
-                </div>
-            );
-        }
-        return (
-            <div className={STYLES.container}>
-                <div className={STYLES.row}>
-                    <div className={STYLES.skeletonCard} />
-                    <div className={STYLES.skeletonCard} />
-                </div>
-                <div className={STYLES.row}>
-                    <div className={STYLES.skeletonCard} />
-                    <div className={STYLES.skeletonCard} />
-                    <div className={STYLES.skeletonCard} />
-                </div>
-                <div className={STYLES.row}>
-                    <div className={STYLES.skeletonCard} />
-                    <div className={STYLES.skeletonCard} />
-                </div>
-            </div>
-        );
+        return <DiscoverGridSkeleton isMobile={isMobile} />;
     }
 
     if (isMobile) {

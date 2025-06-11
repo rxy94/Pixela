@@ -1,12 +1,13 @@
 "use client";
 
-import { FiAlertCircle, FiLoader } from 'react-icons/fi';
+import { FiAlertCircle } from 'react-icons/fi';
 import { Review } from '@/api/reviews/types';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useState } from 'react';
 import { reviewsAPI } from '@/api/reviews/reviews';
 import { ReviewCard } from './ReviewCard';
 import { ReviewSectionProps } from '@/features/media/types/reviews';
+import { ReviewsSkeleton } from '@/app/components/skeletons';
 
 const STYLES = {
   section: {
@@ -84,11 +85,7 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
   }
 
   if (loading) {
-    return (
-      <div className={STYLES.states.loading}>
-        <FiLoader className={STYLES.states.spinner} />
-      </div>
-    );
+    return <ReviewsSkeleton count={3} />;
   }
 
   if (error) {

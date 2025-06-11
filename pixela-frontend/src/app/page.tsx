@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { getHeroData } from "@/features/hero/services/heroContentService";
 import { HeroSection } from "@/features/hero/components";
 import { TrendingSection } from "@/features/trending/components";
@@ -6,6 +7,7 @@ import { getTrendingSeries, getTrendingMovies } from "@/features/trending/servic
 import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service/discover";
 import AboutSection from "@/features/about/components/AboutSection";
 import { getRandomQuote } from "@/features/quotes/service";
+import { HeroSectionSkeleton, SectionSkeleton } from "./components/skeletons/PageSkeletons";
 
 export const dynamic = 'force-dynamic';
 
@@ -14,34 +16,71 @@ const STYLES = {
   section: "scroll-mt-24 2k:scroll-mt-16"
 } as const;
 
-/**
- * Componente principal de la página de inicio que renderiza las diferentes secciones
- * de la aplicación incluyendo el héroe, tendencias, descubrimientos y la sección about.
- * 
- * @async
- * @returns {Promise<JSX.Element>} Componente de la página de inicio con todas sus secciones
+
+/** 
+ * Componente async para hero (crítico)
+ * @returns {JSX.Element} HeroSection
  */
-export default async function Home() {
-  const [heroData, trendingSeries, trendingMovies, discoveredSeries, discoveredMovies] = await Promise.all([
-    getHeroData(),
-    getTrendingSeries(20),
-    getTrendingMovies(20),
+async function HeroSectionAsync() {
+  const heroData = await getHeroData();
+  return <HeroSection {...heroData} />;
+}
+
+/**
+ * Componente async para trending (no crítico)
+ * @returns {JSX.Element} TrendingSection
+ */
+async function TrendingSectionAsync() {
+  const [trendingSeries, trendingMovies] = await Promise.all([
+    getTrendingSeries(15),
+    getTrendingMovies(15)
+  ]);
+  const randomQuote = getRandomQuote();
+  
+  return <TrendingSection series={trendingSeries} movies={trendingMovies} quote={randomQuote} />;
+}
+
+
+/**
+ * Componente async para discover (no crítico)
+ * @returns {JSX.Element} DiscoverSection
+ */
+async function DiscoverSectionAsync() {
+  const [discoveredSeries, discoveredMovies] = await Promise.all([
     getDiscoveredSeries(),
     getDiscoveredMovies()
   ]);
+  
+  return <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />;
+}
 
-  const randomQuote = getRandomQuote();
-
-
+/**
+ * Componente principal de la página de inicio optimizado con Suspense boundaries
+ * para mejorar el INP y la experiencia de usuario
+ * 
+ * 
+ * @returns {JSX.Element} Página de inicio optimizada
+ */
+export default function Home() {
   return (
     <main className={STYLES.main}>
-      <HeroSection {...heroData} />
+
+      <Suspense fallback={<HeroSectionSkeleton />}>
+        <HeroSectionAsync />
+      </Suspense>
+      
       <div id="trending" className={STYLES.section}>
-        <TrendingSection series={trendingSeries} movies={trendingMovies} quote={randomQuote} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <TrendingSectionAsync />
+        </Suspense>
       </div>
+      
       <div id="discover" className={STYLES.section}>
-        <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />
+        <Suspense fallback={<SectionSkeleton />}>
+          <DiscoverSectionAsync />
+        </Suspense>
       </div>
+      
       <div id="about" className={STYLES.section}>
         <AboutSection />
       </div>
