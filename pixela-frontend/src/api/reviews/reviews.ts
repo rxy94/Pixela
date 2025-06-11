@@ -14,6 +14,14 @@ export const reviewsAPI = {
         return response.data;
     },
 
+    async getByMedia(tmdbId: number, itemType: 'movie' | 'series'): Promise<Review[]> {
+        const endpoint = API_ENDPOINTS.REVIEWS.BY_MEDIA
+            .replace(':tmdbId', String(tmdbId))
+            .replace(':itemType', itemType);
+        const response = await fetchFromAPI<{ success: boolean; data: Review[] }>(endpoint);
+        return response.data;
+    },
+
     async add(review: CreateReview): Promise<Review> {
         return fetchFromAPI<Review>(API_ENDPOINTS.REVIEWS.CREATE, {
             method: 'POST',
