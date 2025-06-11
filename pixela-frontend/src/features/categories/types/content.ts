@@ -9,6 +9,11 @@ import { Pelicula, Serie } from '@/features/media/types/content';
  * @param {Serie[]} series - Array de series
  * @param {boolean} loading - Indica si se está cargando el contenido
  * @param {string | null} error - Mensaje de error si hay algún problema
+ * @param {string} searchQuery - Término de búsqueda actual
+ * @param {(query: string) => void} onSearch - Función para manejar búsquedas
+ * @param {'all' | 'movies' | 'series' | 'random'} mediaType - Tipo de media actual
+ * @param {number} currentPage - Página actual
+ * @param {number} totalPages - Total de páginas disponibles
  */
 export interface CategoriesContentProps {
     selectedCategory: Category | null;
@@ -19,6 +24,8 @@ export interface CategoriesContentProps {
     searchQuery: string;
     onSearch: (query: string) => void;
     mediaType: 'all' | 'movies' | 'series' | 'random';
+    currentPage: number;
+    totalPages: number;
 }
 
 /**

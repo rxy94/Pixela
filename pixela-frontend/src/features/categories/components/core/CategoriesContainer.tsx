@@ -24,7 +24,7 @@ const STYLES = {
     
     // Búsqueda y Paginación
     searchContainer: 'w-full max-w-4xl mx-auto mb-6 lg:max-w-none',
-    paginationContainer: 'w-full max-w-4xl mx-auto mt-8 md:mt-12 lg:max-w-none',
+    paginationContainer: 'w-full max-w-4xl mx-auto my-8 md:my-12 lg:max-w-none',
 } as const;
 
 /**
@@ -140,6 +140,21 @@ export const CategoriesContainer = () => {
         }
     }, [selectedMediaType, isInitialized, resetContent, loadContent]);
 
+    // Scroll automático al top cuando cambia la página (excepto la inicial)
+    useEffect(() => {
+        if (currentPage > 1 && typeof window !== 'undefined') {
+            // Pequeño delay para asegurar que el contenido se ha actualizado
+            const timeoutId = setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, 100);
+            
+            return () => clearTimeout(timeoutId);
+        }
+    }, [currentPage]);
+
     return (
         <div className={STYLES.container}>
             <div className={STYLES.contentWrapper}>
@@ -181,6 +196,8 @@ export const CategoriesContainer = () => {
                                 searchQuery={searchQuery}
                                 onSearch={handleSearch}
                                 mediaType={selectedMediaType}
+                                currentPage={currentPage}
+                                totalPages={totalPages}
                             />
                         </div>
 

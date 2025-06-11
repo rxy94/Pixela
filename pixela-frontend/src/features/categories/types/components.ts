@@ -38,4 +38,25 @@ export interface CategoriesModalProps {
 export interface CategoriesHeaderProps {
     selectedMediaType: MediaType | 'random';
     onMediaTypeChange: (type: MediaType | 'random') => void;
+}
+
+/**
+ * Props del componente ItemCounter
+ * @interface
+ * @param {number} moviesCount - Número de películas en la página actual
+ * @param {number} seriesCount - Número de series en la página actual
+ * @param {number} currentPage - Página actual
+ * @param {number} totalPages - Total de páginas disponibles
+ * @param {boolean} isSearching - Indica si hay una búsqueda activa
+ * @param {string} [searchQuery] - Término de búsqueda
+ * @param {MediaType | 'random'} mediaType - Tipo de media actual
+ */
+export interface ItemCounterProps {
+    moviesCount: number;
+    seriesCount: number;
+    currentPage: number;
+    totalPages: number;
+    isSearching: boolean;
+    searchQuery?: string;
+    mediaType: MediaType | 'random';
 } 
