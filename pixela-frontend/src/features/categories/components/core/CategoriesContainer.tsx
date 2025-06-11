@@ -174,8 +174,8 @@ export const CategoriesContainer = () => {
                         <div className="transform-gpu">
                             <CategoriesContent
                                 selectedCategory={selectedCategory}
-                                movies={selectedMediaType === 'series' ? [] : movies}
-                                series={selectedMediaType === 'movies' ? [] : series}
+                                movies={selectedMediaType === 'random' ? movies : selectedMediaType === 'series' ? [] : movies}
+                                series={selectedMediaType === 'random' ? series : selectedMediaType === 'movies' ? [] : series}
                                 loading={loading}
                                 error={error}
                                 searchQuery={searchQuery}
