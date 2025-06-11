@@ -8,11 +8,16 @@ import { MediaItem, MediaResponse } from "@/features/hero/types/content";
  */
 export const featuredMedia: MediaItem[] = [
   { id: "986056",  type: "movie" },  // Thunderbolts
-  { id: "124364",  type: "serie" },  // From
   { id: "1084199", type: "movie" },  // La acompañante
+  { id: "124364",  type: "serie" },  // From
   { id: "680",     type: "movie" },  // Pulp Fiction
   { id: "95396",   type: "serie" },  // Severance
   { id: "4607",    type: "serie" },  // Lost
+  { id: "66732",    type: "serie" },  // Lost
+  { id: "87108",  type: "serie" },   // Chernobyl
+  { id: "1087891",  type: "movie" },  // Amateur
+  { id: "46952",   type: "serie" },   // Black List
+  { id: "533535",  type: "movie" },  // Deadpool y Wolverine
 ];
 
 /**
