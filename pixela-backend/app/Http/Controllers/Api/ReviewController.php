@@ -141,6 +141,106 @@ class ReviewController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/reviews/media/{tmdbId}/{itemType}",
+     *     summary="Get reviews for specific media",
+     *     description="Gets all the reviews from all users for a specific movie or series",
+     *     operationId="getReviewsByMedia",
+     *     tags={"Reviews"},
+     *     security={{ "sanctum": {} }},
+     *     @OA\Parameter(
+     *         name="tmdbId",
+     *         in="path",
+     *         required=true,
+     *         description="TMDB ID of the movie or series",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="itemType",
+     *         in="path",
+     *         required=true,
+     *         description="Type of media",
+     *         @OA\Schema(type="string", enum={"movie", "series"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reviews list retrieved successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/ReviewListResponse")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
+     */
+    public function getReviewsByMedia(Request $request, int $tmdbId, string $itemType): JsonResponse
+    {
+        // Validar que el itemType sea válido
+        if (!in_array($itemType, ['movie', 'series'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid item type. Must be either "movie" or "series".'
+            ], 400);
+        }
+
+        // Obtener todas las reseñas para este tmdbId e itemType
+        $reviews = Review::with('user')
+            ->where('tmdb_id', $tmdbId)
+            ->where('item_type', $itemType)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $apiKey = env('TMDB_API_KEY');
+        $language = 'es-ES';
+        $client = new Client();
+
+        // Obtener detalles del medio desde TMDB (solo una vez)
+        $cacheKey = "tmdb_{$itemType}_{$tmdbId}_{$language}";
+        $details = Cache::remember($cacheKey, now()->addHours(12), function () use ($client, $itemType, $tmdbId, $apiKey, $language) {
+            $url = $itemType === 'movie'
+                ? "https://api.themoviedb.org/3/movie/{$tmdbId}"
+                : "https://api.themoviedb.org/3/tv/{$tmdbId}";
+
+            try {
+                $response = $client->request('GET', $url, [
+                    'query' => [
+                        'api_key' => $apiKey,
+                        'language' => $language,
+                    ],
+                    'timeout' => 5,
+                ]);
+                $body = $response->getBody()->getContents();
+                return json_decode($body, true);
+            } catch (\Exception $e) {
+                return null;
+            }
+        });
+
+        $detailedReviews = $reviews->map(function ($review) use ($details, $itemType) {
+            return [
+                'id' => $review->review_id,
+                'user_id' => $review->user_id,
+                'user_name' => $review->user ? $review->user->name : null,
+                'photo_url' => $review->user ? $review->user->photo_url : null,
+                'tmdb_id' => $review->tmdb_id,
+                'item_type' => $review->item_type,
+                'rating' => $review->rating,
+                'review' => $review->review,
+                'created_at' => $review->created_at,
+                'updated_at' => $review->updated_at,
+                'title' => $itemType === 'movie' ? ($details['title'] ?? null) : ($details['name'] ?? null),
+                'poster_path' => $details['poster_path'] ?? null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Reviews retrieved successfully',
+            'data'    => $detailedReviews
+        ], 200);
+    }
 
     /**
      * @OA\Get(

@@ -57,9 +57,9 @@ export const MediaPage = ({ media }: MediaPageProps) => {
   const refreshReviews = useCallback(() => {
     setLoadingReviews(true);
     setErrorReviews(null);
-    reviewsAPI.list()
+    reviewsAPI.getByMedia(tmdbId, itemType)
       .then(data => {
-        setReviews(data.filter(r => r.tmdb_id === tmdbId && r.item_type === itemType));
+        setReviews(data);
       })
       .catch(() => setErrorReviews('No se pudieron cargar las reseñas.'))
       .finally(() => setLoadingReviews(false));

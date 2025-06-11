@@ -69,12 +69,19 @@ export const CategoriesContainer = () => {
 
     /**
      * Maneja el cambio de página en la paginación.
+     * Preserva el término de búsqueda si existe una búsqueda activa.
      * 
      * @param {number} page - El número de página a cargar
      */
     const handlePageChange = useCallback(async (page: number) => {
-        await loadContent(selectedCategory, page);
-    }, [selectedCategory, loadContent]);
+        if (searchQuery.trim()) {
+            // Si hay una búsqueda activa, usar searchContent para preservar el término de búsqueda
+            await searchContent(searchQuery, page);
+        } else {
+            // Si no hay búsqueda, usar loadContent normal
+            await loadContent(selectedCategory, page);
+        }
+    }, [selectedCategory, loadContent, searchContent, searchQuery]);
 
     /**
      * Maneja el cambio de tipo de medio.
@@ -167,8 +174,8 @@ export const CategoriesContainer = () => {
                         <div className="transform-gpu">
                             <CategoriesContent
                                 selectedCategory={selectedCategory}
-                                movies={selectedMediaType === 'series' ? [] : movies}
-                                series={selectedMediaType === 'movies' ? [] : series}
+                                movies={selectedMediaType === 'random' ? movies : selectedMediaType === 'series' ? [] : movies}
+                                series={selectedMediaType === 'random' ? series : selectedMediaType === 'movies' ? [] : series}
                                 loading={loading}
                                 error={error}
                                 searchQuery={searchQuery}

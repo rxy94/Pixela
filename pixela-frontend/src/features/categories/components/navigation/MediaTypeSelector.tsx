@@ -16,8 +16,8 @@ const STYLES = {
 
     // Botón de recomendación aleatoria
     randomButton: 'px-5 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm md:text-base flex items-center gap-2',
-    randomButtonActive: 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-400 border border-purple-400/30',
-    randomButtonInactive: 'bg-pixela-dark/20 text-pixela-light/60 border border-pixela-accent/10 hover:bg-gradient-to-r hover:from-purple-500/10 hover:to-pink-500/10 hover:text-purple-400',
+    randomButtonActive: 'bg-gradient-to-r from-pixela-accent/20 to-pixela-accent/30 text-pixela-accent border border-pixela-accent/30',
+    randomButtonInactive: 'bg-pixela-dark/20 text-pixela-light/60 border border-pixela-accent/10 hover:bg-gradient-to-r hover:from-pixela-accent/10 hover:to-pixela-accent/20 hover:text-pixela-accent',
     randomDescription: 'max-w-md text-sm text-pixela-light/70 leading-relaxed px-2'
 } as const;
 

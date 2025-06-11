@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function() {
     
     // Reviews routes
     Route::get('/reviews', [ReviewController::class, 'list']);
+    Route::get('/reviews/media/{tmdbId}/{itemType}', [ReviewController::class, 'getReviewsByMedia']);
     Route::post('/reviews', [ReviewController::class, 'add']);
     Route::put('/reviews/{review}', [ReviewController::class, 'update']);
     Route::delete('/reviews/{review}', [ReviewController::class, 'delete']);
