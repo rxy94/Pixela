@@ -793,7 +793,7 @@ export const CategoriesContent = memo(({
     }
 
     return (
-        <div className={`${STYLES.mainContainer} ${isContentReady ? 'animate-fade-in-up' : ''}`}>
+        <div className={`${STYLES.mainContainer} ${isContentReady && mediaType !== 'random' ? 'animate-fade-in-up' : ''}`}>
             {/* Solo mostrar búsqueda si no es modo random */}
             {mediaType !== 'random' && (
                 <form onSubmit={handleFormSubmit} className={STYLES.searchContainer}>
