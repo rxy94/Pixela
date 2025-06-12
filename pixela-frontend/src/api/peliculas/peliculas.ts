@@ -40,8 +40,8 @@ export async function getPeliculaById(id: string): Promise<Pelicula> {
     trailers: videos.status === 'fulfilled' ? videos.value : [],
     proveedores: proveedores.status === 'fulfilled' ? proveedores.value : [],
     imagenes: imagenes.status === 'fulfilled' ? {
-      backdrops: imagenes.value.filter(img => img.file_path.includes('backdrop')),
-      posters: imagenes.value.filter(img => !img.file_path.includes('backdrop'))
+      backdrops: imagenes.value.filter(img => img.file_path && img.file_path.includes('backdrop')),
+      posters: imagenes.value.filter(img => img.file_path && !img.file_path.includes('backdrop'))
     } : { backdrops: [], posters: [] },
     creador: creatorData.status === 'fulfilled' && creatorData.value?.data?.creator 
       ? creatorData.value.data.creator 
