@@ -16,6 +16,7 @@ const STYLES = {
 /**
  * Componente principal que muestra la sección hero de la página
  * Incluye carrusel de imágenes, controles de navegación y contenido principal
+ * Optimizado para mostrar las imágenes backdrop como primera impresión
  */
 export const HeroSection = ({
   title,
@@ -29,6 +30,24 @@ export const HeroSection = ({
   
   useCarouselAutoPlay(imagesLength);
   useProgressBar();
+  
+  // Preload de la primera imagen para garantizar carga inmediata
+  useMemo(() => {
+    if (images.length > 0 && images[0]) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = images[0];
+      document.head.appendChild(link);
+      
+      // Cleanup
+      return () => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      };
+    }
+  }, [images]);
   
   return (
     <div className={`${STYLES.hero.base} ${STYLES.hero.ipadFix}`}>

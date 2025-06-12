@@ -8,7 +8,7 @@ import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
-import { ContentSkeleton } from '@/features/categories/components/ui/ContentSkeleton';
+import { ContentSkeleton } from '@/app/components/skeletons';
 import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
 import { CategoriesContentProps } from '@/features/categories/types/content';
 import { useInteractiveBorder } from '@/hooks/useInteractiveBorder';

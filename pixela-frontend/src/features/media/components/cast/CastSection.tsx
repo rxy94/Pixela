@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { ActorCard } from './ActorCard';
 import { ActorSliderControls } from './ActorSliderControls';
 import { CastSectionProps } from '@/features/media/types/cast';
+import { CastSkeleton } from '@/app/components/skeletons';
 
 /**
  * Componente que muestra el reparto principal de una película o serie
@@ -69,7 +70,8 @@ export function CastSection({ actors }: CastSectionProps) {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
   
-  if (!actors || actors.length === 0) return null;
+  if (!actors) return <CastSkeleton count={6} />;
+  if (actors.length === 0) return null;
   
   /**
    * Usar grid solo en desktop (>= 1024px) cuando hay 6 o menos actores

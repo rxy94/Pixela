@@ -8,6 +8,7 @@ import { getMediaImages } from '@/features/media/services/galleryService';
 import { GalleryGrid } from './GalleryGrid';
 import { GalleryTabs } from './GalleryTabs';
 import { useMediaStore } from '@/features/media/store/mediaStore';
+import { GallerySkeleton } from '@/app/components/skeletons';
 
 
 const STYLES = {
@@ -121,16 +122,7 @@ export function GallerySection({ media }: GallerySectionProps) {
   const hasImages = images.backdrops.length > 0 || images.posters.length > 0;
   
   if (isLoading) {
-    return (
-      <div className={STYLES.loadingContainer}>
-        <h2 className={STYLES.title}>Galería</h2>
-        <div className={STYLES.loadingSpinner}>
-          <div className={STYLES.loadingPulse}>
-            <div className={STYLES.loadingPlaceholder}></div>
-          </div>
-        </div>
-      </div>
-    );
+    return <GallerySkeleton count={8} />;
   }
 
   if (!hasImages) {
