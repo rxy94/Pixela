@@ -13,7 +13,7 @@ import { DiscoverCardProps } from "@/features/discover/types/components";
 import { MediaType } from "@/features/media/types";
 
 const STYLES = {
-  containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden",
+  containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden cursor-pointer",
   image: "object-cover",
   overlay: "absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-3 sm:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100",
   overlayContent: "mb-3 sm:mb-4",
@@ -83,8 +83,6 @@ const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
         itemType={type === 'serie' ? 'series' : 'movie'}
         onFollowClick={onFollowClick}
         onReviewsClick={onReviewsClick}
-        detailsHref={type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`}
-        infoLabel="Más información"
         followLabel="Favoritos"
         reviewsLabel="Reseñas"
       />
@@ -110,13 +108,29 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
     isMobile ? "w-full" : "w-[200px]"
   );
 
+  /**
+   * Maneja el clic en el botón de seguir.
+   * @returns {void}
+   */
   const handleFollowClick = () => {
     console.log("Seguir", type === 'serie' ? 'serie' : 'película', media.title);
   };
-
+/**
+ * Maneja el clic en el botón de reseñas.
+ * @returns {void}
+ */
   const handleReviewsClick = () => {
     const route = type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`;
     router.prefetch(route);
+    router.push(route);
+  };
+
+  /**
+   * Maneja el clic en la tarjeta de la película o serie.
+   * @returns {void}
+   */
+  const handleCardClick = () => {
+    const route = type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`;
     router.push(route);
   };
 
@@ -125,6 +139,7 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
       className={containerClasses}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
     >
       <Image
         src={`https://image.tmdb.org/t/p/w500${imagePath}`}

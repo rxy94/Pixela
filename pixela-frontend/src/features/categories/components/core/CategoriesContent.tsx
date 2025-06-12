@@ -224,7 +224,6 @@ const OverlayContent = memo(({
             itemType={type === 'series' ? 'series' : 'movie'}
             onFollowClick={onFollowClick}
             onReviewsClick={onReviewsClick}
-            detailsHref={type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`}
         />
     </div>
 ));
@@ -266,6 +265,16 @@ const MediaCard = memo(({
         router.push(route);
     };
     
+    /**
+     * Maneja el clic en la tarjeta de la película o serie.
+     *  
+     * @returns {void}
+     */
+    const handleCardClick = () => {
+        const route = type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`;
+        router.push(route);
+    };
+    
     return (
         <div 
             ref={cardRef}
@@ -275,6 +284,7 @@ const MediaCard = memo(({
                 animationDuration: '0.6s',
                 animationFillMode: 'forwards'
             }}
+            onClick={handleCardClick}
         >
             <div className={STYLES.cardBorder} />
             <div className={STYLES.cardContent}>
@@ -464,9 +474,15 @@ const useRandomRecommendations = (movies: Pelicula[], series: Serie[], mediaType
  */
 const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula | Serie) & { mediaType: 'movie' | 'series' } }) => {
     const cardRef = useInteractiveBorder<HTMLDivElement>();
+    const router = useRouter();
+    
+    const handleCardClick = () => {
+        const route = recommendation.mediaType === 'series' ? `/series/${recommendation.id}` : `/movies/${recommendation.id}`;
+        router.push(route);
+    };
     
     return (
-        <div ref={cardRef} className={STYLES.recommendationCard}>
+        <div ref={cardRef} className={STYLES.recommendationCard} onClick={handleCardClick}>
             <div className={STYLES.recommendationCardBorder} />
             <div className={STYLES.recommendationCardContent}>
                 <PosterImage 
@@ -518,7 +534,6 @@ const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula
                         itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
                         onFollowClick={() => console.log("Seguir")}
                         onReviewsClick={() => {}}
-                        detailsHref={recommendation.mediaType === 'series' ? `/series/${recommendation.id}` : `/movies/${recommendation.id}`}
                     />
                 </div>
                 

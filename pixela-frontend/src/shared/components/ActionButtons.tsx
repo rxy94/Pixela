@@ -1,6 +1,6 @@
 'use client';
 
-import { FaInfoCircle, FaBookmark, FaRegComments } from "react-icons/fa";
+import { FaBookmark, FaRegComments } from "react-icons/fa";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import clsx from 'clsx';
@@ -138,23 +138,24 @@ export const ActionButtons = ({
 
   const handleFollow = tmdbId && itemType ? handleFavorite : (onFollowClick || (() => {}));
 
-  const InfoButton = detailsHref ? (
-    <Link 
-      href={detailsHref} 
-      className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
-    >
-      <FaInfoCircle className={STYLES.icon[isHero ? 'hero' : 'default']} />
-      {isHero && <span>{infoLabel || detailsLabel || "Más información"}</span>}
-    </Link>
-  ) : (
-    <button 
-      className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
-      onClick={onInfoClick || onDetailsClick || (() => {})}
-    >
-      <FaInfoCircle className={STYLES.icon[isHero ? 'hero' : 'default']} />
-      {isHero && <span>{infoLabel || detailsLabel || "Más información"}</span>}
-    </button>
-  );
+  // Solo creamos el botón de información si estamos en la variante hero o si se proporciona detailsHref
+  const InfoButton = isHero || detailsHref ? (
+    detailsHref ? (
+      <Link 
+        href={detailsHref} 
+        className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
+      >
+        <span>{infoLabel || detailsLabel || "Más información"}</span>
+      </Link>
+    ) : (
+      <button 
+        className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
+        onClick={onInfoClick || onDetailsClick || (() => {})}
+      >
+        <span>{infoLabel || detailsLabel || "Más información"}</span>
+      </button>
+    )
+  ) : null;
 
   return (
     <div className={STYLES.container}>

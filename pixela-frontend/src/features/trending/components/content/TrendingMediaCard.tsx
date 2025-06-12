@@ -11,7 +11,7 @@ import type { TrendingMediaCardProps, PosterImageProps, OverlayContentProps } fr
  * Estilos constantes para el componente TrendingMediaCard
  */
 const STYLES = {
-  card: 'w-[280px] md:w-[375px] flex flex-col relative group',
+  card: 'w-[280px] md:w-[375px] flex flex-col relative group cursor-pointer',
   posterContainer: 'relative w-full h-[395px] md:h-[528px] overflow-hidden',
   noiseEffect: 'noise-effect opacity-5'
 } as const;
@@ -53,7 +53,6 @@ const OverlayContent = memo(({ media, type, onFollowClick, onReviewsClick }: Ove
       itemType={type === 'series' ? 'series' : 'movie'}
       onFollowClick={onFollowClick}
       onReviewsClick={onReviewsClick}
-      detailsHref={`/${type}/${media.id}`}
     />
   </div>
 ));
@@ -81,11 +80,20 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
     router.push(`/${type}/${media.id}`);
   };
   
+  /**
+   * Maneja el clic en la tarjeta de la película o serie.
+   * @returns {void}
+   */
+  const handleCardClick = () => {
+    router.push(`/${type}/${media.id}`);
+  };
+  
   return (
     <div 
       className={STYLES.card}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
     >
       <div className={STYLES.posterContainer}>
         <PosterImage 
