@@ -45,15 +45,14 @@ PosterImage.displayName = 'PosterImage';
  * @param {OverlayContentProps} props - Props del componente
  * @returns {JSX.Element} Contenido superpuesto
  */
-const OverlayContent = memo(({ media, type, onFollowClick, onReviewsClick }: OverlayContentProps) => (
-  <div className="absolute inset-0 flex flex-col justify-end p-5 transition-opacity duration-300 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent">
-    <MediaInfoDetails media={media} type={type} />
+const OverlayContent = memo(({ media, type, onFollowClick }: OverlayContentProps) => (
+  <div className="absolute inset-0 flex flex-col justify-end p-5 transition-all duration-500 ease-in-out bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent">
     <ActionButtons 
       tmdbId={Number(media.id)}
       itemType={type === 'series' ? 'series' : 'movie'}
       onFollowClick={onFollowClick}
-      onReviewsClick={onReviewsClick}
     />
+    <MediaInfoDetails media={media} type={type} />
   </div>
 ));
 
@@ -73,11 +72,6 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
 
   const handleFollowClick = () => {
     console.log("Seguir", type === 'series' ? 'serie' : 'película', media.title);
-  };
-
-  const handleReviewsClick = () => {
-    router.prefetch(`/${type}/${media.id}`);
-    router.push(`/${type}/${media.id}`);
   };
   
   /**
@@ -109,7 +103,6 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
             media={media}
             type={type}
             onFollowClick={handleFollowClick}
-            onReviewsClick={handleReviewsClick}
           />
         )}
         

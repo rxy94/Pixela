@@ -1,14 +1,13 @@
 'use client';
 
-import { FaBookmark, FaRegComments } from "react-icons/fa";
-import Link from "next/link";
+import { FaBookmark } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import clsx from 'clsx';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { favoritesAPI } from '@/api/favorites/favorites';
 
 const STYLES = {
-  container: 'flex gap-2 flex-wrap',
+  container: 'absolute top-4 right-4 z-50',
   button: {
     primary: {
       hero: 'flex items-center gap-2 bg-pixela-accent hover:bg-pixela-accent/90 text-white px-4 py-2 rounded-md transition-all duration-300 text-sm font-medium',
@@ -19,8 +18,8 @@ const STYLES = {
       default: 'w-12 h-12 flex items-center justify-center bg-pixela-dark hover:bg-pixela-dark/80 rounded text-pixela-light transition-colors border border-pixela-accent/40'
     },
     favorite: {
-      active: 'p-3 rounded font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-pixela-accent text-white hover:bg-pixela-accent/90',
-      inactive: 'p-3 rounded font-medium transition duration-300 flex items-center gap-2 shadow-lg border border-pixela-accent/40 text-white '
+      active: 'p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-pixela-accent text-white hover:bg-pixela-accent/90',
+      inactive: 'p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-black/40 backdrop-blur-sm text-white hover:bg-black/50'
     }
   },
   icon: {
@@ -33,15 +32,12 @@ const STYLES = {
 interface ActionButtonsProps {
   onInfoClick?: () => void;
   onFollowClick?: () => void;
-  onReviewsClick?: () => void;
   infoLabel?: string;
   followLabel?: string;
-  reviewsLabel?: string;
   variant?: 'hero' | 'default';
   onDetailsClick?: () => void;
   detailsLabel?: string;
   followTitle?: string;
-  reviewsTitle?: string;
   detailsHref?: string;
   tmdbId?: number;
   itemType?: 'movie' | 'series';
@@ -55,27 +51,24 @@ interface ActionButtonsProps {
 export const ActionButtons = ({
   onInfoClick,
   onFollowClick,
-  onReviewsClick,
   infoLabel = "Más información",
   followLabel = "Seguir",
-  reviewsLabel = "Reseñas",
   variant = 'default',
-  onDetailsClick,
-  detailsLabel,
   followTitle,
-  reviewsTitle,
-  detailsHref,
   tmdbId,
   itemType
 }: ActionButtonsProps) => {
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavorited, setIsFavorited] = useState<boolean | null>(null);
   const [favoriteId, setFavoriteId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, checkAuth } = useAuthStore();
   const isHero = variant === 'hero';
 
   useEffect(() => {
-    if (!tmdbId || !itemType || !isAuthenticated) return;
+    if (!tmdbId || !itemType || !isAuthenticated) {
+      setIsFavorited(false);
+      return;
+    }
     
     const checkFavoriteStatus = async () => {
       try {
@@ -87,19 +80,27 @@ export const ActionButtons = ({
         setFavoriteId(fav ? fav.id : null);
       } catch (error) {
         console.error('Error checking favorite status:', error);
+        setIsFavorited(false);
       }
     };
     
     checkFavoriteStatus();
   }, [isAuthenticated, tmdbId, itemType]);
 
-  const handleFavorite = async () => {
+  const handleFollow = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
     if (!isAuthenticated) {
       window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + '/login';
       return;
     }
-    if (!tmdbId || !itemType) return;
-    
+
+    if (!tmdbId || !itemType) {
+      onFollowClick?.();
+      return;
+    }
+
     setIsLoading(true);
     try {
       if (isFavorited && favoriteId) {
@@ -110,13 +111,14 @@ export const ActionButtons = ({
           item_type: itemType,
         });
       }
-      
+
       const favorites = await favoritesAPI.listWithDetails();
       const fav = favorites.find(fav =>
         fav.tmdb_id === tmdbId && fav.item_type === itemType
       );
       setIsFavorited(!!fav);
       setFavoriteId(fav ? fav.id : null);
+
     } catch (error) {
       console.error('Error toggling favorite:', error);
       if (error instanceof Error && error.message.includes('401')) {
@@ -128,34 +130,17 @@ export const ActionButtons = ({
     }
   };
 
-  const handleReviews = () => {
-    if (!isAuthenticated) {
-      window.location.href = process.env.NEXT_PUBLIC_BACKEND_URL + '/login';
-      return;
-    }
-    onReviewsClick?.();
-  };
+  const InfoButton = onInfoClick && (
+    <button 
+      className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
+      onClick={onInfoClick}
+    >
+      {infoLabel}
+    </button>
+  );
 
-  const handleFollow = tmdbId && itemType ? handleFavorite : (onFollowClick || (() => {}));
-
-  // Solo creamos el botón de información si estamos en la variante hero o si se proporciona detailsHref
-  const InfoButton = isHero || detailsHref ? (
-    detailsHref ? (
-      <Link 
-        href={detailsHref} 
-        className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
-      >
-        <span>{infoLabel || detailsLabel || "Más información"}</span>
-      </Link>
-    ) : (
-      <button 
-        className={clsx(STYLES.button.primary[isHero ? 'hero' : 'default'])}
-        onClick={onInfoClick || onDetailsClick || (() => {})}
-      >
-        <span>{infoLabel || detailsLabel || "Más información"}</span>
-      </button>
-    )
-  ) : null;
+  // No renderizamos el botón hasta que sepamos el estado inicial
+  if (isFavorited === null) return null;
 
   return (
     <div className={STYLES.container}>
@@ -178,14 +163,6 @@ export const ActionButtons = ({
             : STYLES.icon[isHero ? 'hero' : 'default']
         } />
         {isHero && <span>{followLabel}</span>}
-      </button>
-      <button 
-        className={clsx(STYLES.button.secondary[isHero ? 'hero' : 'default'])}
-        onClick={handleReviews}
-        title={reviewsTitle || reviewsLabel}
-      >
-        <FaRegComments className={STYLES.icon[isHero ? 'hero' : 'default']} />
-        {isHero && <span>{reviewsLabel}</span>}
       </button>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { Pelicula, Serie } from '@/features/media/types/content';
-import { FaStar } from 'react-icons/fa';
 import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
@@ -168,67 +167,31 @@ const PosterImage = memo(({ posterPath, title, isInitiallyVisible, type }: {
 PosterImage.displayName = 'PosterImage';
 
 /**
- * Componente que muestra el contenido de películas y series.
- * 
- * @component
+ * Componente que renderiza el contenido superpuesto al hacer hover
  * @param {Object} props - Propiedades del componente
  * @param {Pelicula | Serie} props.media - Película o serie
- * @param {'series' | 'movies'} props.type - Tipo de media  
+ * @param {'series' | 'movies'} props.type - Tipo de medio
  * @param {() => void} props.onFollowClick - Función para manejar el clic en el botón de seguir
- * @param {() => void} props.onReviewsClick - Función para manejar el clic en el botón de reseñas
  */
-const OverlayContent = memo(({ 
+const OverlayContent = ({ 
     media, 
     type, 
-    onFollowClick, 
-    onReviewsClick 
+    onFollowClick 
 }: { 
     media: Pelicula | Serie, 
     type: 'series' | 'movies',
-    onFollowClick: () => void,
-    onReviewsClick: () => void
-}) => (
-    <div className={STYLES.overlay}>
-        <div className={STYLES.overlayContent}>
-            <h3 className={STYLES.title}>
-                {type === 'movies' 
-                    ? (media as Pelicula).title || (media as Pelicula).titulo || 'Sin título'
-                    : (media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título'}
-            </h3>
-            
-            <div className={STYLES.mediaInfo}>
-                <div className={STYLES.rating}>
-                    <FaStar className={STYLES.ratingIcon} />
-                    <span className={STYLES.ratingText}>
-                        {media.vote_average?.toFixed(1) || media.puntuacion?.toFixed(1) || "N/A"}
-                    </span>
-                </div>
-                
-                {(type === 'movies' && ((media as Pelicula).release_date || (media as Pelicula).fecha)) || 
-                 (type === 'series' && ((media as Serie).first_air_date || (media as Serie).fecha)) ? (
-                    <span className={STYLES.year}>
-                        {type === 'movies' 
-                            ? ((media as Pelicula).release_date || (media as Pelicula).fecha)?.split('-')[0]
-                            : ((media as Serie).first_air_date || (media as Serie).fecha)?.split('-')[0]}
-                    </span>
-                ) : null}
-                
-                <span className={STYLES.mediaType}>
-                    {type === 'series' ? 'Serie' : 'Película'}
-                </span>
-            </div>
+    onFollowClick: () => void
+}) => {
+    return (
+        <div className={STYLES.overlay}>
+            <ActionButtons 
+                tmdbId={Number(media.id)}
+                itemType={type === 'series' ? 'series' : 'movie'}
+                onFollowClick={onFollowClick}
+            />
         </div>
-
-        <ActionButtons 
-            tmdbId={Number(media.id)}
-            itemType={type === 'series' ? 'series' : 'movie'}
-            onFollowClick={onFollowClick}
-            onReviewsClick={onReviewsClick}
-        />
-    </div>
-));
-
-OverlayContent.displayName = 'OverlayContent';
+    );
+};
 
 /**
  * Componente que muestra la tarjeta de la película o serie.
@@ -257,12 +220,6 @@ const MediaCard = memo(({
 
     const handleFollowClick = () => {
         console.log("Seguir", type === 'series' ? 'serie' : 'película', type === 'movies' ? (media as Pelicula).title : (media as Serie).name);
-    };
-
-    const handleReviewsClick = () => {
-        const route = type === 'series' ? `/series/${media.id}` : `/movies/${media.id}`;
-        router.prefetch(route);
-        router.push(route);
     };
     
     /**
@@ -304,7 +261,6 @@ const MediaCard = memo(({
                     media={media}
                     type={type}
                     onFollowClick={handleFollowClick}
-                    onReviewsClick={handleReviewsClick}
                 />
                 
                 {isHighRated && (
@@ -473,78 +429,60 @@ const useRandomRecommendations = (movies: Pelicula[], series: Serie[], mediaType
  * @returns {JSX.Element} Card de recomendación
  */
 const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula | Serie) & { mediaType: 'movie' | 'series' } }) => {
-    const cardRef = useInteractiveBorder<HTMLDivElement>();
     const router = useRouter();
+    const cardRef = useInteractiveBorder<HTMLDivElement>();
     
+    const isHighRated = (recommendation.vote_average ?? 0) >= HIGH_RATING_THRESHOLD;
+
+    const handleFollowClick = () => {
+        console.log("Seguir", recommendation.mediaType === 'series' ? 'serie' : 'película', recommendation.title);
+    };
+    
+    /**
+     * Maneja el clic en la tarjeta de la película o serie.
+     * @returns {void}
+     */
     const handleCardClick = () => {
         const route = recommendation.mediaType === 'series' ? `/series/${recommendation.id}` : `/movies/${recommendation.id}`;
         router.push(route);
     };
+
+    const title = recommendation.mediaType === 'movie' 
+        ? (recommendation as Pelicula).title || (recommendation as Pelicula).titulo || 'Sin título'
+        : (recommendation as Serie).name || (recommendation as Serie).titulo || (recommendation as Serie).title || 'Sin título';
     
     return (
-        <div ref={cardRef} className={STYLES.recommendationCard} onClick={handleCardClick}>
-            <div className={STYLES.recommendationCardBorder} />
-            <div className={STYLES.recommendationCardContent}>
-                <PosterImage 
-                    posterPath={recommendation.poster_path || recommendation.poster || ''}
-                    title={recommendation.mediaType === 'movie' 
-                        ? ((recommendation as Pelicula).title || (recommendation as Pelicula).titulo || 'Sin título')
-                        : ((recommendation as Serie).name || (recommendation as Serie).titulo || (recommendation as Serie).title || 'Sin título')}
-                    isInitiallyVisible={true}
-                    type={recommendation.mediaType === 'movie' ? 'movies' : 'series'}
-                />
-                
-                {/* Overlay que aparece en hover - estilo trending */}
-                <div className={STYLES.recommendationOverlay}>
-                    <div className={STYLES.recommendationInfo}>
-                        {/* Título */}
-                        <h3 className={STYLES.recommendationTitle}>
-                            {recommendation.mediaType === 'movie' 
-                                ? ((recommendation as Pelicula).title || (recommendation as Pelicula).titulo || 'Sin título')
-                                : ((recommendation as Serie).name || (recommendation as Serie).titulo || (recommendation as Serie).title || 'Sin título')}
-                        </h3>
-
-                        {/* Información */}
-                        <div className={STYLES.recommendationInfo}>
-                            <div className={STYLES.recommendationRating}>
-                                <FaStar className={STYLES.recommendationRatingIcon} />
-                                <span className={STYLES.recommendationRatingText}>
-                                    {recommendation.vote_average?.toFixed(1) || recommendation.puntuacion?.toFixed(1) || "N/A"}
-                                </span>
-                            </div>
-                            
-                            {((recommendation.mediaType === 'movie' && ((recommendation as Pelicula).release_date || (recommendation as Pelicula).fecha)) || 
-                              (recommendation.mediaType === 'series' && ((recommendation as Serie).first_air_date || (recommendation as Serie).fecha))) && (
-                                <span className={STYLES.recommendationYear}>
-                                    {recommendation.mediaType === 'movie' 
-                                        ? ((recommendation as Pelicula).release_date || (recommendation as Pelicula).fecha)?.split('-')[0]
-                                        : ((recommendation as Serie).first_air_date || (recommendation as Serie).fecha)?.split('-')[0]}
-                                </span>
-                            )}
-
-                            <span className={STYLES.recommendationMediaType}>
-                                {recommendation.mediaType === 'series' ? 'Serie' : 'Película'}
-                            </span>
-                        </div>
-                    </div>
-
-                    {/* Botones de acción */}
+        <div 
+            ref={cardRef}
+            className={STYLES.card}
+            onClick={handleCardClick}
+        >
+            <div className={STYLES.cardBorder} />
+            <div className={STYLES.cardContent}>
+                <div className={STYLES.posterContainer}>
+                    <PosterImage 
+                        posterPath={recommendation.poster_path || recommendation.poster || ''}
+                        title={title}
+                        isInitiallyVisible={true}
+                        type={recommendation.mediaType === 'movie' ? 'movies' : 'series'}
+                    />
+                    
+                    <div className={STYLES.noiseEffect} />
+                    
                     <ActionButtons 
                         tmdbId={Number(recommendation.id)}
                         itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
-                        onFollowClick={() => console.log("Seguir")}
-                        onReviewsClick={() => {}}
+                        onFollowClick={handleFollowClick}
                     />
+                    
+                    {isHighRated && (
+                        <Badge 
+                            label="TOP PIXELA"
+                            position="top-left"
+                            variant="primary"
+                        />
+                    )}
                 </div>
-                
-                {/* Badge TOP PIXELA si tiene alta puntuación */}
-                {(recommendation.vote_average ?? 0) >= HIGH_RATING_THRESHOLD && (
-                    <Badge 
-                        label="TOP PIXELA"
-                        position="top-left"
-                        variant="primary"
-                    />
-                )}
             </div>
         </div>
     );
