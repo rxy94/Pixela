@@ -697,10 +697,13 @@ export const CategoriesContent = memo(({
         setInputValue(searchQuery);
     }, [searchQuery]);
 
+    // Limpiar búsqueda solo cuando se cambia de tipo de media si hay una búsqueda activa
     useEffect(() => {
-        setInputValue('');
-        onSearch('');
-    }, [mediaType, onSearch]);
+        if (searchQuery.trim()) {
+            setInputValue('');
+            onSearch('');
+        }
+    }, [mediaType, searchQuery, onSearch]);
 
     useEffect(() => {
         if (loading) {
@@ -708,19 +711,16 @@ export const CategoriesContent = memo(({
             setIsContentReady(false);
             setShowSkeleton(true);
         } else if (movies.length > 0 || series.length > 0) {
-            // Pequeño delay para evitar el salto visual
+            // Reducir delay para mejorar la experiencia
             const transitionTimer = setTimeout(() => {
                 setIsTransitioning(false);
                 setIsContentReady(true);
-                
-                // Fade out skeleton suavemente
-                setTimeout(() => {
-                    setShowSkeleton(false);
-                }, 150);
-            }, 200);
+                setShowSkeleton(false);
+            }, 100);
             
             return () => clearTimeout(transitionTimer);
-        } else {
+        } else if (!loading) {
+            // Solo cambiar estados si definitivamente no está cargando
             setIsContentReady(false);
             setShowSkeleton(false);
             setIsTransitioning(false);
@@ -781,7 +781,8 @@ export const CategoriesContent = memo(({
 
     const hasContent = movies.length > 0 || series.length > 0;
 
-    if (!hasContent && mediaType !== 'random') {
+    // Solo mostrar estado vacío si no está cargando Y no hay contenido
+    if (!hasContent && !loading && mediaType !== 'random') {
         return (
             <div className={STYLES.emptyState}>
                 {selectedCategory 

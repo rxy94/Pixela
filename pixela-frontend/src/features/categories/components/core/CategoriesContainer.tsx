@@ -93,14 +93,7 @@ export const CategoriesContainer = () => {
         setSelectedMediaType(type);
         setSelectedCategory(null);
         resetContent();
-        
-        if (type === 'random') {
-            // Para contenido aleatorio, cargamos tanto películas como series y las mezclamos
-            await loadContent(null, 1);
-        } else {
-            await loadContent(null, 1);
-        }
-    }, [setSelectedMediaType, resetContent, loadContent]);
+    }, [setSelectedMediaType, resetContent]); 
 
     /**
      * Maneja la búsqueda de contenido
@@ -135,10 +128,9 @@ export const CategoriesContainer = () => {
         console.log('[DEBUG] MediaType effect - isInitialized:', isInitialized, 'selectedMediaType:', selectedMediaType);
         if (isInitialized) {
             console.log('[DEBUG] Loading content for mediaType:', selectedMediaType);
-            resetContent();
             loadContent(null, 1);
         }
-    }, [selectedMediaType, isInitialized, resetContent, loadContent]);
+    }, [selectedMediaType, isInitialized, loadContent]);
 
     // Scroll automático al top cuando cambia la página (excepto la inicial)
     useEffect(() => {
