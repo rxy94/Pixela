@@ -65,7 +65,11 @@ export async function getFeaturedBackdrops(): Promise<string[]> {
       .filter(Boolean)
       .slice(0, 6); // Máximo 6 imágenes para el hero
 
-    console.timeEnd('[HERO] Carga de imágenes backdrop');
+    try {
+      console.timeEnd('[HERO] Carga de imágenes backdrop');
+    } catch (error) {
+      console.error('Error al finalizar el timer:', error);
+    }
     console.log(`[HERO] Se cargaron ${backdrops.length} imágenes backdrop`);
     
     return backdrops;

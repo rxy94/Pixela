@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { ImageCarousel, NavigationControls, ProgressIndicator, ContentSection } from "@/features/hero/components";
 import { useHeroStore } from "@/features/hero/store/heroStore";
 import { HeroSectionProps } from "@/features/hero/types/content";
@@ -32,7 +32,7 @@ export const HeroSection = ({
   useProgressBar();
   
   // Preload de la primera imagen para garantizar carga inmediata
-  useMemo(() => {
+  useEffect(() => {
     if (images.length > 0 && images[0]) {
       const link = document.createElement('link');
       link.rel = 'preload';

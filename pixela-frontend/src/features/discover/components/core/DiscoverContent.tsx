@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useCategoriesStore } from '@/features/categories/store/categoriesStore';
 import { useDiscoverAnimation } from '@/features/discover/hooks/useDiscoverAnimation';
@@ -62,7 +62,11 @@ const STYLES = {
 export const DiscoverContent = () => {
     const isMobile = useMediaQuery('(max-width: 1023px)');
     const [activeType, setActiveType] = useState<DiscoverMediaType>('serie');
-    const [heading] = useState(() => headings[Math.floor(Math.random() * headings.length)]);
+    const [heading, setHeading] = useState(headings[0]);
+    
+    useEffect(() => {
+        setHeading(headings[Math.floor(Math.random() * headings.length)]);
+    }, []);
     
     const setSelectedMediaType = useCategoriesStore((state) => state.setSelectedMediaType);
     
