@@ -6,7 +6,7 @@ import { FaStar } from 'react-icons/fa';
 import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
-import { useState, memo, useMemo, useEffect, useCallback } from 'react';
+import { useState, memo, useMemo, useEffect, useCallback, useRef } from 'react';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
 import { ContentSkeleton } from '@/app/components/skeletons';
 import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
@@ -693,17 +693,28 @@ export const CategoriesContent = memo(({
     const [showSkeleton, setShowSkeleton] = useState(true);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
+    // Referencias para evitar dependencias problemáticas en useEffect
+    const searchQueryRef = useRef(searchQuery);
+    const onSearchRef = useRef(onSearch);
+
+    // Actualizar referencias cuando cambien los props
+    useEffect(() => {
+        searchQueryRef.current = searchQuery;
+        onSearchRef.current = onSearch;
+    });
+
     useEffect(() => {
         setInputValue(searchQuery);
     }, [searchQuery]);
 
-    // Limpiar búsqueda solo cuando se cambia de tipo de media si hay una búsqueda activa
+    // Limpiar búsqueda cuando se cambia de tipo de media si hay una búsqueda activa
     useEffect(() => {
-        if (searchQuery.trim()) {
+        // Solo limpiar si hay una búsqueda activa en el momento del cambio
+        if (searchQueryRef.current.trim()) {
             setInputValue('');
-            onSearch('');
+            onSearchRef.current('');
         }
-    }, [mediaType, searchQuery, onSearch]);
+    }, [mediaType]); // Solo depende de mediaType para evitar bucles
 
     useEffect(() => {
         if (loading) {
