@@ -13,7 +13,6 @@ export const featuredMedia: MediaItem[] = [
   { id: "680",     type: "movie" },  // Pulp Fiction
   { id: "95396",   type: "serie" },  // Severance
   { id: "4607",    type: "serie" },  // Lost
-
 ];
 
 // ✅ Cache simple en memoria para evitar llamadas duplicadas
@@ -47,31 +46,29 @@ async function getMediaWithCache(item: MediaItem): Promise<MediaResponse | null>
 
 /**
  * ✅ Obtiene los fondos destacados para el hero con optimizaciones de rendimiento
+ * Prioriza velocidad de carga para mostrar las imágenes backdrop como primera impresión
  * @returns {Promise<string[]>} Array de URLs de imágenes
  */
 export async function getFeaturedBackdrops(): Promise<string[]> {
   try {
-    // ✅ Procesar en lotes de 3 para no sobrecargar el servidor
-    const batches = [];
-    for (let i = 0; i < featuredMedia.length; i += 3) {
-      batches.push(featuredMedia.slice(i, i + 3));
-    }
-
-    const allResults: (MediaResponse | null)[] = [];
-
-    // ✅ Procesar cada lote secuencialmente
-    for (const batch of batches) {
-      const batchPromises = batch.map(getMediaWithCache);
-      const batchResults = await Promise.all(batchPromises);
-      allResults.push(...batchResults);
-    }
+    console.time('[HERO] Carga de imágenes backdrop');
+    
+    // ✅ Procesar todos en paralelo para máxima velocidad (primera impresión)
+    // Aumentamos la concurrencia para que las imágenes se carguen inmediatamente
+    const allPromises = featuredMedia.map(getMediaWithCache);
+    const allResults = await Promise.all(allPromises);
 
     // ✅ Filtrar y procesar resultados
-    return allResults
+    const backdrops = allResults
       .filter((media): media is MediaResponse => media !== null && !!media.backdrop)
       .map(media => media.backdrop!)
       .filter(Boolean)
       .slice(0, 6); // Máximo 6 imágenes para el hero
+
+    console.timeEnd('[HERO] Carga de imágenes backdrop');
+    console.log(`[HERO] Se cargaron ${backdrops.length} imágenes backdrop`);
+    
+    return backdrops;
 
   } catch (error) {
     console.error("Error al obtener imágenes de fondo:", error);

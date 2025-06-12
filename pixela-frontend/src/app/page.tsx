@@ -7,42 +7,70 @@ import { getTrendingSeries, getTrendingMovies } from "@/features/trending/servic
 import { getDiscoveredSeries, getDiscoveredMovies } from "@/features/discover/service/discover";
 import AboutSection from "@/features/about/components/AboutSection";
 import { getRandomQuote } from "@/features/quotes/service";
-import { HeroSectionSkeleton } from "./components/skeletons/PageSkeletons";
+import { ConditionalSuspenseWrapper } from "@/app/components/ConditionalSuspenseWrapper";
 
+// Fuerza renderizado dinámico para contenido fresco
 export const dynamic = 'force-dynamic';
 
-const STYLES = {
-  main: "flex-grow 2k:max-w-[100vw] 2k:mx-auto",
-  section: "scroll-mt-24 2k:scroll-mt-16"
+// Constantes de configuración centralizadas
+const CONFIG = {
+  TRENDING_ITEMS_COUNT: 15,
+  STYLES: {
+    main: "flex-grow 2k:max-w-[100vw] 2k:mx-auto",
+    section: "scroll-mt-24 2k:scroll-mt-16"
+  }
 } as const;
 
+/**
+ * Carga y renderiza únicamente el Hero Section.
+ * Al estar separado, permite que el skeleton principal desaparezca mucho antes.
+ */
+async function HeroLoader() {
+  const heroData = await getHeroData();
+  return <HeroSection {...heroData} />;
+}
 
 /**
- * Componente async que maneja toda la página como una unidad
+ * Carga el resto del contenido de la página.
+ * Se renderizará cuando sus datos estén listos, sin bloquear el Hero.
  */
-async function HomePageContent() {
-  // Ejecutar todo en paralelo pero manejar como una sola unidad
-  const [heroData, [trendingSeries, trendingMovies], [discoveredSeries, discoveredMovies]] = await Promise.all([
-    getHeroData(),
-    Promise.all([getTrendingSeries(15), getTrendingMovies(15)]),
-    Promise.all([getDiscoveredSeries(), getDiscoveredMovies()])
+async function RestOfPageLoader() {
+  const [
+    trendingData, 
+    discoveredData
+  ] = await Promise.all([
+    Promise.all([
+      getTrendingSeries(CONFIG.TRENDING_ITEMS_COUNT), 
+      getTrendingMovies(CONFIG.TRENDING_ITEMS_COUNT)
+    ]),
+    Promise.all([
+      getDiscoveredSeries(), 
+      getDiscoveredMovies()
+    ])
   ]);
   
+  const [trendingSeries, trendingMovies] = trendingData;
+  const [discoveredSeries, discoveredMovies] = discoveredData;
   const randomQuote = getRandomQuote();
 
   return (
     <>
-      <HeroSection {...heroData} />
-      
-      <div id="trending" className={STYLES.section}>
-        <TrendingSection series={trendingSeries} movies={trendingMovies} quote={randomQuote} />
+      <div id="trending" className={CONFIG.STYLES.section}>
+        <TrendingSection 
+          series={trendingSeries} 
+          movies={trendingMovies} 
+          quote={randomQuote} 
+        />
       </div>
       
-      <div id="discover" className={STYLES.section}>
-        <DiscoverSection series={discoveredSeries} movies={discoveredMovies} />
+      <div id="discover" className={CONFIG.STYLES.section}>
+        <DiscoverSection 
+          series={discoveredSeries} 
+          movies={discoveredMovies} 
+        />
       </div>
       
-      <div id="about" className={STYLES.section}>
+      <div id="about" className={CONFIG.STYLES.section}>
         <AboutSection />
       </div>
     </>
@@ -50,21 +78,20 @@ async function HomePageContent() {
 }
 
 /**
- * Skeleton de página completa que muestra solo la pantalla inicial
- */
-const FullPageSkeleton = () => (
-  <HeroSectionSkeleton />
-);
-
-/**
- * Componente principal de la página de inicio optimizado
- * @returns {JSX.Element} Página de inicio optimizada
+ * Página principal con carga progresiva simplificada.
+ * El Hero carga primero, y el resto de la página aparece después sin skeletons intermedios.
  */
 export default function Home() {
   return (
-    <main className={STYLES.main}>
-      <Suspense fallback={<FullPageSkeleton />}>
-        <HomePageContent />
+    <main className={CONFIG.STYLES.main}>
+      {/* El skeleton principal solo espera a que HeroLoader termine */}
+      <ConditionalSuspenseWrapper>
+        <HeroLoader />
+      </ConditionalSuspenseWrapper>
+
+      {/* El resto del contenido carga en segundo plano y aparece cuando está listo */}
+      <Suspense fallback={null}>
+        <RestOfPageLoader />
       </Suspense>
     </main>
   );

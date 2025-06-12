@@ -14,7 +14,7 @@ const STYLES = {
   mediaHeroGradient: 'absolute inset-0 bg-gradient-to-br from-pixela-accent/10 via-pixela-dark/40 to-pink-400/10 animate-shimmer',
   mediaHeroOverlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark via-transparent to-transparent',
   mediaHeroContent: 'absolute bottom-8 left-8 right-8 space-y-4',
-  mediaTitle: 'h-12 w-2/3 bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 rounded-lg animate-shimmer',
+  mediaTitle: 'h-12 w-2/3 bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 rounded-lg animate-pulse',
   mediaInfo: 'flex gap-4',
   mediaRating: 'h-6 w-16 bg-pixela-accent/30 rounded animate-pulse',
   mediaYear: 'h-6 w-12 bg-pixela-light/20 rounded animate-pulse',
@@ -22,7 +22,7 @@ const STYLES = {
   
   // Content sections
   contentSection: 'mb-12 space-y-6',
-  sectionTitle: 'h-8 w-48 bg-gradient-to-r from-pixela-accent/15 to-pink-400/15 rounded-lg animate-shimmer',
+  sectionTitle: 'h-8 w-48 bg-gradient-to-r from-pixela-accent/15 to-pink-400/15 rounded-lg animate-pulse',
   descriptionLines: 'space-y-3',
   descriptionLine: 'h-4 bg-pixela-light/15 rounded animate-pulse',
   
@@ -35,8 +35,8 @@ const STYLES = {
   
   // Gallery section
   gallery: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4',
-  galleryItem: 'aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-lg animate-shimmer relative overflow-hidden',
-  galleryShimmer: 'absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-shimmer',
+  galleryItem: 'aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-lg animate-pulse relative overflow-hidden',
+  galleryShimmer: 'absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-pulse',
   
   // Reviews section
   reviewsGrid: 'space-y-4',
@@ -69,12 +69,12 @@ export const MediaPageSkeleton = () => (
         <div className="pb-8 lg:hidden pt-36 md:pt-44">
           <div className="flex flex-col items-center gap-6">
             {/* Poster skeleton */}
-            <div className="w-48 aspect-[2/3] bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 rounded-xl animate-shimmer"></div>
+            <div className="w-48 aspect-[2/3] bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 rounded-xl animate-pulse"></div>
             
             {/* Content skeleton */}
             <div className="w-full space-y-4 text-center">
               {/* Title */}
-              <div className="h-8 max-w-md mx-auto rounded bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 animate-shimmer"></div>
+              <div className="h-8 max-w-md mx-auto rounded bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 animate-pulse"></div>
               
               {/* Genres */}
               <div className="flex justify-center gap-2">
@@ -110,12 +110,12 @@ export const MediaPageSkeleton = () => (
         <div className="hidden lg:flex h-[80vh] items-end pb-20">
           <div className="flex flex-row gap-8">
             {/* Poster skeleton */}
-            <div className="w-72 aspect-[2/3] bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 rounded-xl animate-shimmer flex-shrink-0"></div>
+            <div className="w-72 aspect-[2/3] bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 rounded-xl animate-pulse flex-shrink-0"></div>
             
             {/* Content skeleton */}
             <div className="flex-grow space-y-6">
               {/* Title */}
-              <div className="h-12 max-w-2xl rounded bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 animate-shimmer"></div>
+              <div className="h-12 max-w-2xl rounded bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 animate-pulse"></div>
               
               {/* Genres */}
               <div className="flex gap-3">
@@ -185,10 +185,10 @@ export const MediaPageSkeleton = () => (
             {[...Array(2)].map((_, i) => (
               <div 
                 key={i} 
-                className="relative overflow-hidden aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-xl animate-shimmer"
+                className="relative overflow-hidden aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-xl animate-pulse"
                 style={{ animationDelay: `${i * 0.2}s` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-shimmer"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-pulse"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-16 h-16 rounded-full bg-pixela-accent/30 animate-pulse"></div>
                 </div>
