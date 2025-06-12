@@ -9,5 +9,5 @@ export { CategoriesList } from './navigation/CategoriesList';
 
 // ===== UI COMPONENTS =====
 export { CategoriesModal } from './ui/CategoriesModal';
-export { ContentSkeleton } from './ui/ContentSkeleton';
+// ContentSkeleton moved to @/app/components/skeletons
 export { Pagination } from './ui/Pagination'; 

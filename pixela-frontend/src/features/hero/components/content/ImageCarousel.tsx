@@ -48,6 +48,7 @@ const VisualOverlays = () => (
 
 /**
  * Componente que renderiza una imagen optimizada para el carrusel
+ * Configurado para máxima velocidad de carga como primera impresión
  */
 const OptimizedHeroImage = ({ 
   src, 
@@ -70,14 +71,13 @@ const OptimizedHeroImage = ({
         // Dimensiones más grandes para soportar pantallas de alta densidad
         width={3000}
         height={2000}
-        priority={true}
+        priority={index === 0} // Solo la primera imagen con priority
         // Calidad máxima, crucial para dispositivos de alta densidad
         quality={100}
         // Configuración precisa para cada dimensión específica
         sizes="(max-width: 393px) 393px, (max-width: 430px) 430px, (max-width: 478px) 478px, (max-width: 820px) 820px, (max-width: 1024px) 1024px, 1920px"
-        placeholder="blur"
-        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAEDQIHq4C7ygAAAABJRU5ErkJggg=="
-        loading="eager"
+        // Sin placeholder para carga inmediata
+        loading={index === 0 ? "eager" : "lazy"} // Primera imagen eager, resto lazy
         unoptimized={false}
       />
     </div>
@@ -91,12 +91,12 @@ const OptimizedHeroImage = ({
 export const ImageCarousel = ({ images }: ImageCarouselProps) => {
   const { currentImageIndex, fadeIn } = useHeroStore();
 
-  // En caso de que no haya imágenes
+  // En caso de que no haya imágenes, mostrar fondo mínimo
   if (!images || images.length === 0 || !images[currentImageIndex]) {
     return (
       <div className={STYLES.carousel.base}>
         <div className={clsx(STYLES.carousel.imageContainer.base, STYLES.carousel.imageContainer.fadeIn)}>
-          <div className="w-full h-full bg-pixela-dark" />
+          <div className="w-full h-full bg-gradient-to-br from-pixela-dark via-pixela-dark/95 to-pixela-dark" />
         </div>
         <VisualOverlays />
       </div>
@@ -111,7 +111,11 @@ export const ImageCarousel = ({ images }: ImageCarouselProps) => {
       <div
         className={clsx(
           STYLES.carousel.imageContainer.base,
-          fadeIn ? STYLES.carousel.imageContainer.fadeIn : STYLES.carousel.imageContainer.fadeOut
+          // Para la primera carga, mostrar siempre visible (sin fade)
+          // Solo aplicar fade después de la carga inicial
+          currentImageIndex === 0 && images.length > 0 
+            ? STYLES.carousel.imageContainer.fadeIn 
+            : fadeIn ? STYLES.carousel.imageContainer.fadeIn : STYLES.carousel.imageContainer.fadeOut
         )}
         aria-hidden="true"
         role="presentation"

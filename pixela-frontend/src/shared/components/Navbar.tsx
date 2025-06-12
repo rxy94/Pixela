@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { MdLogout } from 'react-icons/md';
 import { FiUser, FiX } from 'react-icons/fi';
 import { RxHamburgerMenu } from 'react-icons/rx';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { mainNavLinks } from '@/links/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
 
@@ -101,13 +101,23 @@ const MobileActionButton = ({
 );
 
 /**
- * Barra de navegación principal de la aplicación
+ * Barra de navegación principal de la aplicación optimizada
  */
 export const Navbar = () => {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuthStore();
   const logout = useAuthStore((s) => s.logout);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // ✅ Memoizar el estado del usuario para evitar re-renders innecesarios
+  const userDisplayName = useMemo(() => user?.name || '', [user?.name]);
+  
+  // ✅ Prefetch de rutas críticas al montar el componente
+  useEffect(() => {
+    router.prefetch('/');
+    router.prefetch('/profile');
+    router.prefetch('/categories');
+  }, [router]);
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -137,15 +147,13 @@ export const Navbar = () => {
     localStorage.setItem('forceLogout', 'true');
     setMobileMenuOpen(false);
     
-    // Redirección casi inmediata (100ms para suavidad)
+    // ✅ Usar router.push optimizado para navegación
+    router.push('/');
+    
+    // Limpiar forceLogout después de la navegación
     setTimeout(() => {
-      router.push('/');
-      
-      // Limpiar forceLogout después de la redirección
-      setTimeout(() => {
-        localStorage.removeItem('forceLogout');
-      }, 1000);
-    }, 100);
+      localStorage.removeItem('forceLogout');
+    }, 1000);
     
     // Hacer logout en background
     try {
@@ -170,7 +178,18 @@ export const Navbar = () => {
         const sectionId = href.replace('/#', '');
         
         if (window.location.pathname !== '/') {
-            window.location.href = href;
+            // ✅ Usar router.push para navegación optimizada
+            router.push('/');
+            // Usar setTimeout para scroll después del render
+            setTimeout(() => {
+              const section = document.getElementById(sectionId);
+              if (section) {
+                section.scrollIntoView({ 
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
+            }, 100);
         } else {
             const section = document.getElementById(sectionId);
             if (section) {
@@ -188,7 +207,8 @@ export const Navbar = () => {
     <>
       <nav className={STYLES.nav} role="navigation">
         <div className={STYLES.container}>
-          <Link href="/" className={STYLES.logo}>
+          {/* ✅ Prefetch en el logo para navegación al inicio */}
+          <Link href="/" className={STYLES.logo} prefetch={true}>
             <h1 className={STYLES.logoText}>Pixela</h1>
           </Link>
           
@@ -201,6 +221,7 @@ export const Navbar = () => {
                   className={STYLES.navLink}
                   aria-label={link.label}
                   onClick={(e) => handleNavClick(e, link.href)}
+                  prefetch={true} // ✅ Prefetch para todos los links
                 >
                   {link.label}
                   <span className={STYLES.navLinkUnderline} />
@@ -214,7 +235,7 @@ export const Navbar = () => {
               {isAuthenticated && user && (
                 <>
                   <span className={STYLES.userName}>
-                    {user.name}
+                    {userDisplayName}
                   </span>
                   <NavActionButton
                     onClick={handleProfile}
@@ -276,6 +297,7 @@ export const Navbar = () => {
               href={link.href} 
               className={STYLES.mobileNavLink}
               onClick={(e) => handleNavClick(e, link.href)}
+              prefetch={true} // ✅ Prefetch también en móvil
             >
               {link.label}
             </Link>
@@ -291,7 +313,7 @@ export const Navbar = () => {
                   onClick={handleProfile}
                   icon={FiUser}
                   label="Perfil"
-                  userName={user.name}
+                  userName={userDisplayName}
                 />
               </>
             )}

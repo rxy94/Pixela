@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // PRODUCTION: const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
@@ -29,17 +28,6 @@ const nextConfig = {
             'picsum.photos',
             'pixela.duckdns.org'
         ],
-    },
-    webpack: (config, { isServer }) => {
-        if (!isServer) {
-            config.plugins.push(
-                new MiniCssExtractPlugin({
-                    filename: 'static/css/[name].[contenthash].css',
-                    chunkFilename: 'static/css/[id].[contenthash].css',
-                })
-            );
-        }
-        return config;
     },
 };
 

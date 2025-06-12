@@ -16,6 +16,6 @@ export { TabNavigationButton } from './tabs/TabNavigationButton';
 
 // Exportaciones de componentes de layout
 export { ProfileInfo } from './layout/ProfileInfo';
-export { ProfileSkeleton } from './layout/ProfileSkeleton';
+// ProfileSkeleton moved to @/app/components/skeletons
 export { ProfileLoader } from './layout/ProfileLoader';
 export { ContentPanel } from './layout/ContentPanel'; 
