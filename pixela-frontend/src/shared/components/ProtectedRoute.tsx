@@ -23,10 +23,9 @@ export function ProtectedRoute({
   requireAuth = true, 
   requireAdmin = false 
 }: ProtectedRouteProps) {
-  const { isAuthenticated, user, checkAuth } = useAuthStore();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isChecked, setIsChecked] = useState(false);
+  const { isAuthenticated, user, checkAuth, isLoading } = useAuthStore();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [hasTriedAuth, setHasTriedAuth] = useState(false);
   const router = useRouter();
 
   // Verificación rápida inicial - si claramente no hay sesión, ir directo al 403
@@ -61,8 +60,7 @@ export function ProtectedRoute({
         
         // Si requiere auth y claramente no hay sesión, 403 inmediato
         if (requireAuth && !hasValidSession()) {
-          setIsLoading(false);
-          setIsChecked(true);
+          setHasTriedAuth(true);
           return;
         }
         
@@ -79,14 +77,11 @@ export function ProtectedRoute({
         
         // Si hay error y requiere autenticación, mostrar 403 inmediatamente
         if (requireAuth) {
-          setIsLoading(false);
-          setIsChecked(true);
+          setHasTriedAuth(true);
           return;
         }
       } finally {
-        // Sin delay - mostrar resultado inmediatamente
-        setIsLoading(false);
-        setIsChecked(true);
+        setHasTriedAuth(true);
       }
     };
 
@@ -117,8 +112,8 @@ export function ProtectedRoute({
     );
   }
 
-  // Mostrar loading mientras verificamos autenticación
-  if (isLoading || !isChecked) {
+  // Mientras no se haya intentado autenticar, no muestres nada (ni loader ni error)
+  if (!hasTriedAuth || isLoading) {
     return (
       <div className={STYLES.loadingContainer}>
         <div className={STYLES.loadingContent}>
@@ -129,12 +124,11 @@ export function ProtectedRoute({
     );
   }
 
-  // Verificar si requiere autenticación
+  // Solo aquí, después de la verificación, mostrar el 403 si corresponde
   if (requireAuth && !isAuthenticated) {
     return <Error403 />;
   }
 
-  // Verificar si requiere privilegios de administrador
   if (requireAdmin && (!isAuthenticated || !user?.is_admin)) {
     return <Error403 />;
   }

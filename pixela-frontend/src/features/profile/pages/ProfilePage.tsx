@@ -136,18 +136,21 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
 
   const handleSubmitProfile = async (data: ProfileFormData) => {
     try {
-      const userData = {
+      const userData: Partial<UserResponse> = {
         user_id: user.user_id,
         name: data.name,
         email: data.email,
-        password: data.password || '',
         photo_url: data.photo_url || user.photo_url,
         is_admin: user.is_admin,
         created_at: user.created_at,
-        updated_at: new Date().toISOString()
-      } as UserResponse;
+        updated_at: new Date().toISOString(),
+      };
+      // Solo añadir password si el usuario la ha escrito
+      if (data.password && data.password.trim()) {
+        userData.password = data.password;
+      }
 
-      const updatedUser = await usersAPI.update(userData);
+      const updatedUser = await usersAPI.update(userData as UserResponse);
       const userToSet = 'user' in updatedUser ? updatedUser.user : updatedUser;
 
       // Si se cambió la contraseña, redirigir al login por seguridad

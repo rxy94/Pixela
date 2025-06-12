@@ -6,11 +6,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\Rules;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Validation\Rule;
 
 /**
@@ -112,17 +108,19 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name'     => ['required', 'string', 'max:100'],
-            'email'    => ['required', 'string', 'email', 'max:100', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'is_admin' => ['required', 'boolean'],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'is_admin' => 'boolean',
+            'photo_url' => 'nullable|string'
         ]);
 
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_admin' => $request->is_admin,
+            'is_admin' => $request->is_admin ?? false,
+            'photo_url' => $request->photo_url
         ]);
 
         return response()->json([
@@ -180,24 +178,25 @@ class UserController extends Controller
             return response()->json(['message' => 'You are not authorized to update this user'], 403);
         }
 
-        $request->validate([
-            'name'     => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->user_id, 'user_id')],
-            'password' => ['nullable', Rules\Password::defaults()],
-            'is_admin' => ['nullable', 'boolean'],
-            'photo_url' => ['nullable', 'string'],
+        $validatedData = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
+            'password' => 'sometimes|string|min:8',
+            'photo_url' => 'sometimes|string|nullable',
+            'is_admin' => 'sometimes|boolean'
         ]);
 
-        $user->update([
-            'name'     => $request->name,
-            'email'    => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-            'is_admin' => $request->is_admin ?? $user->is_admin,
-            'photo_url' => $request->photo_url ?? $user->photo_url,
-        ]);
+        if (!$authUser->is_admin && isset($validatedData['is_admin'])) {
+            unset($validatedData['is_admin']);
+        }
+
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        }
+
+        $user->update($validatedData);
 
         return response()->json([
-            'success' => true,
             'message' => 'User updated successfully',
             'user' => $user
         ], 200);
