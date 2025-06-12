@@ -1,9 +1,9 @@
 /**
  * Componentes de skeleton para la sección de categorías
- * Mantiene la estética y colores de Pixela durante las cargas
+ * Solo incluye el skeleton que realmente se usa en la aplicación
  * 
  * @author Pixela
- * @version 1.0.0
+ * @version 2.0.0
  */
 
 interface ContentSkeletonProps {
@@ -91,32 +91,4 @@ export const ContentSkeleton = ({ count = 12 }: ContentSkeletonProps) => {
     );
 };
 
-/**
- * Componente skeleton para la lista de categorías
- */
-export const CategoriesListSkeleton = () => (
-  <div className="flex justify-center items-center p-4">
-    <div className="flex space-x-3">
-      {[...Array(6)].map((_, i) => (
-        <div 
-          key={i} 
-          className="h-8 w-20 bg-pixela-accent/20 rounded-full animate-pulse"
-          style={{ animationDelay: `${i * 0.1}s` }}
-        />
-      ))}
-    </div>
-  </div>
-);
-
-/**
- * Componente skeleton para la paginación
- */
-export const PaginationSkeleton = () => (
-  <div className="flex justify-center items-center space-x-2 mt-8">
-    <div className="h-10 w-20 bg-pixela-accent/20 rounded-lg animate-pulse"></div>
-    <div className="h-10 w-10 bg-pixela-light/10 rounded-lg animate-pulse" style={{ animationDelay: '0.1s' }}></div>
-    <div className="h-10 w-10 bg-pixela-light/10 rounded-lg animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-    <div className="h-10 w-10 bg-pixela-light/10 rounded-lg animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-    <div className="h-10 w-20 bg-pixela-accent/20 rounded-lg animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-  </div>
-); 
+ 
