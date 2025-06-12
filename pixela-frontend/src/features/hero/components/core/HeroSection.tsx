@@ -1,10 +1,11 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { ImageCarousel, NavigationControls, ProgressIndicator, ContentSection } from "@/features/hero/components";
 import { useHeroStore } from "@/features/hero/store/heroStore";
 import { HeroSectionProps } from "@/features/hero/types/content";
 import { useCarouselAutoPlay } from "@/features/hero/hooks/useCarouselAutoPlay";
 import { useProgressBar } from "@/features/hero/hooks/useProgressBar";
+import { preload } from "react-dom";
 
 const STYLES = {
   hero: {
@@ -31,22 +32,13 @@ export const HeroSection = ({
   useCarouselAutoPlay(imagesLength);
   useProgressBar();
   
-  // Preload de la primera imagen para garantizar carga inmediata
-  useMemo(() => {
-    if (images.length > 0 && images[0]) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'image';
-      link.href = images[0];
-      document.head.appendChild(link);
-      
-      // Cleanup
-      return () => {
-        if (document.head.contains(link)) {
-          document.head.removeChild(link);
-        }
-      };
-    }
+  /**
+   * Preload de la primera imagen para garantizar carga inmediata
+   */
+  useEffect(() => {
+    if (!images.length || !images[0]) return;
+
+    preload(images[0], { as: "image" });
   }, [images]);
   
   return (
