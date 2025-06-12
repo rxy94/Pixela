@@ -34,7 +34,7 @@ export const DiscoverGrid = ({ type }: DiscoverGridProps) => {
     const limitedContent = contentToDisplay.slice(0, limit);
 
     if (!limitedContent?.length) {
-        return <DiscoverGridSkeleton isMobile={isMobile} />;
+        return <DiscoverGridSkeleton/>;
     }
 
     if (isMobile) {
