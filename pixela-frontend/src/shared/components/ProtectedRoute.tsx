@@ -23,20 +23,12 @@ export function ProtectedRoute({
   requireAuth = true, 
   requireAdmin = false 
 }: ProtectedRouteProps) {
-  const { isAuthenticated, user, checkAuth, isLoading } = useAuthStore();
+  const { isAuthenticated, user, checkAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [hasTriedAuth, setHasTriedAuth] = useState(false);
+  const [authError, setAuthError] = useState(false);
   const router = useRouter();
-
-  // Verificación rápida inicial - si claramente no hay sesión, ir directo al 403
-  const hasValidSession = () => {
-    if (typeof window === 'undefined') return true; // SSR safety
-    
-    // Verificar si hay cookies de sesión básicas
-    const hasCookies = document.cookie.includes('pixela_session') || 
-                      document.cookie.includes('XSRF-TOKEN');
-    return hasCookies;
-  };
 
   useEffect(() => {
     const initAuth = async () => {
@@ -58,16 +50,10 @@ export function ProtectedRoute({
           return;
         }
         
-        // Si requiere auth y claramente no hay sesión, 403 inmediato
-        if (requireAuth && !hasValidSession()) {
-          setHasTriedAuth(true);
-          return;
-        }
-        
-        // Verificación rápida de auth (máximo 600ms)
+        // Dar tiempo suficiente para verificación de auth en producción (2.5 segundos)
         const authPromise = checkAuth();
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Timeout')), 600)
+          setTimeout(() => reject(new Error('Timeout de verificación')), 2500)
         );
         
         await Promise.race([authPromise, timeoutPromise]);
@@ -75,13 +61,14 @@ export function ProtectedRoute({
       } catch (error) {
         console.error('Error checking auth:', error);
         
-        // Si hay error y requiere autenticación, mostrar 403 inmediatamente
+        // Solo marcar error si realmente requiere autenticación
         if (requireAuth) {
-          setHasTriedAuth(true);
-          return;
+          setAuthError(true);
         }
       } finally {
-        setHasTriedAuth(true);
+        // Asegurar que el estado se actualice
+        setIsLoading(false);
+        setIsChecked(true);
       }
     };
 
@@ -112,8 +99,8 @@ export function ProtectedRoute({
     );
   }
 
-  // Mientras no se haya intentado autenticar, no muestres nada (ni loader ni error)
-  if (!hasTriedAuth || isLoading) {
+  // Mostrar loading mientras verificamos autenticación
+  if (isLoading || !isChecked) {
     return (
       <div className={STYLES.loadingContainer}>
         <div className={STYLES.loadingContent}>
@@ -124,11 +111,12 @@ export function ProtectedRoute({
     );
   }
 
-  // Solo aquí, después de la verificación, mostrar el 403 si corresponde
-  if (requireAuth && !isAuthenticated) {
+  // Verificar si requiere autenticación SOLO después de timeout o error real
+  if (requireAuth && (!isAuthenticated || authError)) {
     return <Error403 />;
   }
 
+  // Verificar si requiere privilegios de administrador
   if (requireAdmin && (!isAuthenticated || !user?.is_admin)) {
     return <Error403 />;
   }
