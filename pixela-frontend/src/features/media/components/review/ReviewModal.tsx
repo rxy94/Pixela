@@ -220,7 +220,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
                   );
                 })}
                 <span className={STYLES.content.rating.value}>
-                  {rating % 1 === 0 ? rating : rating.toFixed(1)}/10
+                  {(rating / 2) % 1 === 0 ? (rating / 2) : (rating / 2).toFixed(1)}/5
                 </span>
               </div>
             </div>

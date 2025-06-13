@@ -14,40 +14,40 @@ const STYLES = {
   mediaHeroGradient: 'absolute inset-0 bg-gradient-to-br from-pixela-accent/10 via-pixela-dark/40 to-pink-400/10 animate-shimmer',
   mediaHeroOverlay: 'absolute inset-0 bg-gradient-to-t from-pixela-dark via-transparent to-transparent',
   mediaHeroContent: 'absolute bottom-8 left-8 right-8 space-y-4',
-  mediaTitle: 'h-12 w-2/3 bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 rounded-lg animate-pulse',
+  mediaTitle: 'h-12 w-2/3 bg-gradient-to-r from-pixela-accent/20 to-pink-400/20 rounded-lg [animation:pulse_3s_ease-in-out_infinite]',
   mediaInfo: 'flex gap-4',
-  mediaRating: 'h-6 w-16 bg-pixela-accent/30 rounded animate-pulse',
-  mediaYear: 'h-6 w-12 bg-pixela-light/20 rounded animate-pulse',
-  mediaGenre: 'h-6 w-24 bg-pink-400/20 rounded animate-pulse',
+  mediaRating: 'h-6 w-16 bg-pixela-accent/30 rounded [animation:pulse_3s_ease-in-out_infinite]',
+  mediaYear: 'h-6 w-12 bg-pixela-light/20 rounded [animation:pulse_3s_ease-in-out_infinite]',
+  mediaGenre: 'h-6 w-24 bg-pink-400/20 rounded [animation:pulse_3s_ease-in-out_infinite]',
   
   // Content sections
   contentSection: 'mb-12 space-y-6',
-  sectionTitle: 'h-8 w-48 bg-gradient-to-r from-pixela-accent/15 to-pink-400/15 rounded-lg animate-pulse',
+  sectionTitle: 'h-8 w-48 bg-gradient-to-r from-pixela-accent/15 to-pink-400/15 rounded-lg [animation:pulse_3s_ease-in-out_infinite]',
   descriptionLines: 'space-y-3',
-  descriptionLine: 'h-4 bg-pixela-light/15 rounded animate-pulse',
+  descriptionLine: 'h-4 bg-pixela-light/15 rounded [animation:pulse_3s_ease-in-out_infinite]',
   
   // Cast section
   castGrid: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4',
   castCard: 'text-center space-y-2',
-  castAvatar: 'w-20 h-20 rounded-full bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 animate-pulse mx-auto',
-  castName: 'h-3 bg-pixela-light/15 rounded animate-pulse',
-  castRole: 'h-2 bg-pixela-light/10 rounded animate-pulse',
+  castAvatar: 'w-20 h-20 rounded-full bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 [animation:pulse_3s_ease-in-out_infinite] mx-auto',
+  castName: 'h-3 bg-pixela-light/15 rounded [animation:pulse_3s_ease-in-out_infinite]',
+  castRole: 'h-2 bg-pixela-light/10 rounded [animation:pulse_3s_ease-in-out_infinite]',
   
   // Gallery section
   gallery: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4',
-  galleryItem: 'aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-lg animate-pulse relative overflow-hidden',
-  galleryShimmer: 'absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent animate-pulse',
+  galleryItem: 'aspect-video bg-gradient-to-br from-pixela-accent/10 to-pink-400/10 rounded-lg [animation:pulse_3s_ease-in-out_infinite] relative overflow-hidden',
+  galleryShimmer: 'absolute inset-0 bg-gradient-to-r from-transparent via-pixela-accent/15 to-transparent [animation:pulse_3s_ease-in-out_infinite]',
   
   // Reviews section
   reviewsGrid: 'space-y-4',
-  reviewCard: 'bg-pixela-dark/50 border border-pixela-accent/10 rounded-xl p-6 space-y-4 animate-pulse',
+  reviewCard: 'bg-pixela-dark/50 border border-pixela-accent/10 rounded-xl p-6 space-y-4 [animation:pulse_3s_ease-in-out_infinite]',
   reviewHeader: 'flex items-center gap-4',
-  reviewAvatar: 'w-12 h-12 rounded-full bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 animate-pulse',
+  reviewAvatar: 'w-12 h-12 rounded-full bg-gradient-to-br from-pixela-accent/20 to-pink-400/20 [animation:pulse_3s_ease-in-out_infinite]',
   reviewUser: 'space-y-2 flex-1',
-  reviewUserName: 'h-4 w-32 bg-pixela-light/15 rounded animate-pulse',
-  reviewDate: 'h-3 w-20 bg-pixela-light/10 rounded animate-pulse',
+  reviewUserName: 'h-4 w-32 bg-pixela-light/15 rounded [animation:pulse_3s_ease-in-out_infinite]',
+  reviewDate: 'h-3 w-20 bg-pixela-light/10 rounded [animation:pulse_3s_ease-in-out_infinite]',
   reviewContent: 'space-y-3',
-  reviewText: 'h-4 bg-pixela-light/10 rounded animate-pulse'
+  reviewText: 'h-4 bg-pixela-light/10 rounded [animation:pulse_3s_ease-in-out_infinite]'
 } as const;
 
 /**

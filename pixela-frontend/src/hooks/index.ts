@@ -7,4 +7,5 @@ export { useScrollAnimation, type ScrollAnimationConfig, type AnimatedElement } 
 // ===== EXPORT ALL =====
 export * from './useScrollAnimation';
 export * from './useMediaQuery';
-export * from './useInteractiveBorder'; 
+export * from './useInteractiveBorder';
+export { useSectionNavigation } from './useSectionNavigation'; 

@@ -8,6 +8,7 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { useState, useEffect, useMemo } from 'react';
 import { mainNavLinks } from '@/links/navigation';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useSectionNavigation } from '@/hooks/useSectionNavigation';
 
 const STYLES = {
   nav: 'w-full fixed top-0 left-0 z-50 mt-5 px-4',
@@ -30,8 +31,8 @@ const STYLES = {
   mobileMenuVisible: 'translate-y-0',
   mobileMenuHidden: 'translate-y-full',
   mobileCloseButton: 'absolute top-6 right-6 text-pixela-light hover:text-pixela-accent p-2',
-  mobileNavLink: 'font-outfit font-black text-5xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
   mobileNavContainer: 'flex flex-col items-start w-full space-y-2 sm:space-y-8 pl-2 sm:pl-6',
+  mobileNavLink: 'font-outfit font-black text-5xl sm:text-4xl text-pixela-light hover:text-pixela-accent py-3 pl-4 sm:pl-8 transition-colors duration-300 text-left w-full',
   mobileWelcomeText: 'text-sm sm:text-base font-outfit text-pixela-light/60 pl-4 sm:pl-8 mb-1',
   mobileUserGreeting: 'flex flex-col items-start pl-4 sm:pl-8 mb-4',
   mobileHelloText: 'text-sm sm:text-base font-outfit text-pixela-light/70 mb-1',
@@ -43,47 +44,22 @@ const STYLES = {
 } as const;
 
 /**
- * Botón de acción con icono para la barra de navegación
+ * Componente de botón de acción para el menú móvil
  */
-const NavActionButton = ({
-  onClick,
-  icon: Icon,
-  label,
-  title,
-}: {
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  icon: React.ElementType;
-  label: string;
-  title: string;
+const MobileActionButton = ({ 
+  onClick, 
+  icon: Icon, 
+  label, 
+  userName = '' 
+}: { 
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void, 
+  icon: React.ElementType, 
+  label: string, 
+  userName?: string 
 }) => (
-  <button
-    onClick={onClick}
-    className={STYLES.button}
-    aria-label={label}
-    title={title}
-  >
-    <Icon className="w-6 h-6" />
-  </button>
-);
-
-/**
- * Versión móvil del botón de acción con texto e icono
- */
-const MobileActionButton = ({
-  onClick,
-  icon: Icon,
-  label,
-  userName,
-}: {
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  icon: React.ElementType;
-  label: string;
-  userName?: string;
-}) => (
-  <button
-    onClick={onClick}
+  <button 
+    onClick={onClick} 
     className={STYLES.mobileActionButton}
-    aria-label={label}
   >
     {userName ? (
       <>
@@ -101,24 +77,30 @@ const MobileActionButton = ({
 );
 
 /**
- * Barra de navegación principal de la aplicación optimizada
+ * Componente de barra de navegación principal
+ * @returns {JSX.Element} Componente de barra de navegación
  */
 export const Navbar = () => {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuthStore();
   const logout = useAuthStore((s) => s.logout);
+  const checkAuth = useAuthStore((s) => s.checkAuth);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { navigateToSection, navigateToTop } = useSectionNavigation();
 
-  // ✅ Memoizar el estado del usuario para evitar re-renders innecesarios
-  const userDisplayName = useMemo(() => user?.name || '', [user?.name]);
+  // Verificar estado de autenticación al cargar
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
   
-  // ✅ Prefetch de rutas críticas al montar el componente
+  // Prefetch de rutas críticas al montar el componente
   useEffect(() => {
     router.prefetch('/');
     router.prefetch('/profile');
     router.prefetch('/categories');
   }, [router]);
 
+  // Manejar overflow del body cuando el menú móvil está abierto
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -129,6 +111,12 @@ export const Navbar = () => {
       document.body.style.overflow = '';
     };
   }, [mobileMenuOpen]);
+
+  // Memoizar el nombre del usuario para evitar re-renders innecesarios
+  const userDisplayName = useMemo(() => {
+    if (!user) return '';
+    return user.name || user.email?.split('@')[0] || '';
+  }, [user]);
 
   const handleProfile = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -147,7 +135,7 @@ export const Navbar = () => {
     localStorage.setItem('forceLogout', 'true');
     setMobileMenuOpen(false);
     
-    // ✅ Usar router.push optimizado para navegación
+    // Usar router.push optimizado para navegación
     router.push('/');
     
     // Limpiar forceLogout después de la navegación
@@ -173,41 +161,28 @@ export const Navbar = () => {
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    if (href.startsWith('/#')) {
-        e.preventDefault();
-        const sectionId = href.replace('/#', '');
-        
-        if (window.location.pathname !== '/') {
-            // ✅ Usar router.push para navegación optimizada
-            router.push('/');
-            // Usar setTimeout para scroll después del render
-            setTimeout(() => {
-              const section = document.getElementById(sectionId);
-              if (section) {
-                section.scrollIntoView({ 
-                  behavior: 'smooth',
-                  block: 'start'
-                });
-              }
-            }, 100);
-        } else {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }
+    // Si estamos en la página principal y el enlace es a la página principal (inicio)
+    if (href === "/") {
+      e.preventDefault();
+      // Usar la función navigateToTop del hook
+      navigateToTop(closeMobileMenu);
+      return;
     }
-    closeMobileMenu();
+    
+    if (href.startsWith('/#')) {
+      e.preventDefault();
+      const sectionId = href.replace('/#', '');
+      navigateToSection(sectionId, closeMobileMenu);
+    } else {
+      closeMobileMenu();
+    }
   };
 
   return (
     <>
       <nav className={STYLES.nav} role="navigation">
         <div className={STYLES.container}>
-          {/* ✅ Prefetch en el logo para navegación al inicio */}
+          {/* Prefetch en el logo para navegación al inicio */}
           <Link href="/" className={STYLES.logo} prefetch={true}>
             <h1 className={STYLES.logoText}>Pixela</h1>
           </Link>
@@ -221,7 +196,7 @@ export const Navbar = () => {
                   className={STYLES.navLink}
                   aria-label={link.label}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  prefetch={true} // ✅ Prefetch para todos los links
+                  prefetch={true} // Prefetch para todos los links
                 >
                   {link.label}
                   <span className={STYLES.navLinkUnderline} />
@@ -229,57 +204,49 @@ export const Navbar = () => {
               ))}
             </div>
           </div>
-
+          
           <div className={STYLES.userSection}>
-            <div className={STYLES.userContainer}>
-              {isAuthenticated && user && (
-                <>
-                  <span className={STYLES.userName}>
-                    {userDisplayName}
-                  </span>
-                  <NavActionButton
-                    onClick={handleProfile}
-                    icon={FiUser}
-                    label="Perfil"
-                    title="Perfil"
-                  />
-                </>
-              )}
-              {!isAuthenticated && (
-                <NavActionButton
-                  onClick={handleProfile}
-                  icon={FiUser}
-                  label="Iniciar sesión"
-                  title="Iniciar sesión"
-                />
-              )}
-            </div>
-            
-            {isAuthenticated && !isLoading && (
-              <>
+            {isAuthenticated && user ? (
+              <div className={STYLES.userContainer}>
+                <span className={STYLES.userName}>{userDisplayName}</span>
                 <div className={STYLES.divider} />
-                <NavActionButton
+                <button 
+                  onClick={handleProfile}
+                  className={STYLES.button}
+                  aria-label="Ver perfil"
+                >
+                  <FiUser className="w-5 h-5" />
+                </button>
+                <button 
                   onClick={handleLogout}
-                  icon={MdLogout}
-                  label="Cerrar sesión"
-                  title="Cerrar sesión"
-                />
-              </>
+                  className={STYLES.button}
+                  aria-label="Cerrar sesión"
+                  disabled={isLoading}
+                >
+                  <MdLogout className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={handleProfile}
+                className={STYLES.button}
+                aria-label="Iniciar sesión"
+              >
+                <FiUser className="w-5 h-5" />
+              </button>
             )}
           </div>
-
-          {/* Botón de menú hamburguesa para móviles */}
+          
           <button 
             className={STYLES.mobileMenuButton} 
             onClick={toggleMobileMenu}
             aria-label="Abrir menú"
           >
-            <RxHamburgerMenu className="w-8 h-8" />
+            <RxHamburgerMenu className="w-6 h-6" />
           </button>
         </div>
       </nav>
-
-      {/* Menú móvil a pantalla completa */}
+      
       <div className={`${STYLES.mobileMenu} ${mobileMenuOpen ? STYLES.mobileMenuVisible : STYLES.mobileMenuHidden}`}>
         <button 
           className={STYLES.mobileCloseButton} 
@@ -297,7 +264,7 @@ export const Navbar = () => {
               href={link.href} 
               className={STYLES.mobileNavLink}
               onClick={(e) => handleNavClick(e, link.href)}
-              prefetch={true} // ✅ Prefetch también en móvil
+              prefetch={true} // Prefetch también en móvil
             >
               {link.label}
             </Link>

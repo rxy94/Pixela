@@ -118,7 +118,7 @@ const StarEdit = ({ value, onChange, disabled }: StarEditProps) => (
         </span>
       );
     })}
-    <span className="ml-2 text-xs text-yellow-400">{value % 1 === 0 ? value : value.toFixed(1)}/10</span>
+    <span className="ml-2 text-xs text-yellow-400">{(value / 2) % 1 === 0 ? (value / 2) : (value / 2).toFixed(1)}/5</span>
   </div>
 );
 
@@ -277,8 +277,8 @@ export const ProfileReviews = () => {
                       />
                     )
                     : Number(review.rating) % 1 === 0
-                      ? Number(review.rating)
-                      : Number(review.rating).toFixed(1)
+                      ? (Number(review.rating) / 2)
+                      : (Number(review.rating) / 2).toFixed(1)
                   }
                 </span>
               </div>

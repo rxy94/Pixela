@@ -41,13 +41,11 @@ export interface PosterImageProps {
  * @property {TrendingSerie | TrendingMovie} media - Datos del medio
  * @property {MediaType} type - Tipo de medio (series o películas)
  * @property {() => void} onFollowClick - Función a ejecutar al hacer clic en seguir
- * @property {() => void} onReviewsClick - Función a ejecutar al hacer clic en reseñas
  */
 export interface OverlayContentProps {
   media: TrendingSerie | TrendingMovie;
   type: MediaType;
   onFollowClick: () => void;
-  onReviewsClick: () => void;
 }
 
 /**

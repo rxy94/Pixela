@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Category } from '@/api/categories/categories';
 import { Pelicula, Serie } from '@/features/media/types/content';
 import { fetchFromAPI } from '@/api/shared/apiHelpers';
@@ -214,6 +214,15 @@ export const useContentLoader = (selectedMediaType: MediaType): UseContentLoader
         setError(null);
         isLoadingRef.current = false;
     }, []);
+
+    /**
+     * Limpia el estado de búsqueda cuando cambia el tipo de media
+     */
+    useEffect(() => {
+        if (searchQuery.trim()) {
+            setSearchQuery('');
+        }
+    }, [selectedMediaType]);
 
     /**
      * Actualiza el contenido y metadatos de paginación

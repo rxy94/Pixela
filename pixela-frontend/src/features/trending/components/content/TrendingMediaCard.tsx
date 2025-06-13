@@ -11,7 +11,7 @@ import type { TrendingMediaCardProps, PosterImageProps, OverlayContentProps } fr
  * Estilos constantes para el componente TrendingMediaCard
  */
 const STYLES = {
-  card: 'w-[280px] md:w-[375px] flex flex-col relative group',
+  card: 'w-[280px] md:w-[375px] flex flex-col relative group cursor-pointer',
   posterContainer: 'relative w-full h-[395px] md:h-[528px] overflow-hidden',
   noiseEffect: 'noise-effect opacity-5'
 } as const;
@@ -45,16 +45,14 @@ PosterImage.displayName = 'PosterImage';
  * @param {OverlayContentProps} props - Props del componente
  * @returns {JSX.Element} Contenido superpuesto
  */
-const OverlayContent = memo(({ media, type, onFollowClick, onReviewsClick }: OverlayContentProps) => (
-  <div className="absolute inset-0 flex flex-col justify-end p-5 transition-opacity duration-300 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent">
-    <MediaInfoDetails media={media} type={type} />
+const OverlayContent = memo(({ media, type, onFollowClick }: OverlayContentProps) => (
+  <div className="absolute inset-0 flex flex-col justify-end p-5 transition-all duration-500 ease-in-out bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent">
     <ActionButtons 
       tmdbId={Number(media.id)}
       itemType={type === 'series' ? 'series' : 'movie'}
       onFollowClick={onFollowClick}
-      onReviewsClick={onReviewsClick}
-      detailsHref={`/${type}/${media.id}`}
     />
+    <MediaInfoDetails media={media} type={type} />
   </div>
 ));
 
@@ -75,9 +73,12 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
   const handleFollowClick = () => {
     console.log("Seguir", type === 'series' ? 'serie' : 'película', media.title);
   };
-
-  const handleReviewsClick = () => {
-    router.prefetch(`/${type}/${media.id}`);
+  
+  /**
+   * Maneja el clic en la tarjeta de la película o serie.
+   * @returns {void}
+   */
+  const handleCardClick = () => {
     router.push(`/${type}/${media.id}`);
   };
   
@@ -86,6 +87,7 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
       className={STYLES.card}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
     >
       <div className={STYLES.posterContainer}>
         <PosterImage 
@@ -101,7 +103,6 @@ export const TrendingMediaCard = memo(({ media, type, index = 0 }: TrendingMedia
             media={media}
             type={type}
             onFollowClick={handleFollowClick}
-            onReviewsClick={handleReviewsClick}
           />
         )}
         
