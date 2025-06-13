@@ -35,4 +35,10 @@ export interface CategoriesContentProps {
  */
 export interface ContentSkeletonProps {
     count?: number;
+}
+
+export interface OverlayContentProps {
+  media: Pelicula | Serie;
+  type: 'movies' | 'series';
+  onFollowClick: () => void;
 } 

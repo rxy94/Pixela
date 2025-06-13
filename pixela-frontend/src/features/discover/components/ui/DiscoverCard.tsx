@@ -13,9 +13,9 @@ import { DiscoverCardProps } from "@/features/discover/types/components";
 import { MediaType } from "@/features/media/types";
 
 const STYLES = {
-  containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden",
+  containerBase: "relative aspect-[2/3] group rounded-2xl overflow-hidden cursor-pointer",
   image: "object-cover",
-  overlay: "absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-3 sm:p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100",
+  overlay: "absolute inset-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent flex flex-col justify-end p-3 sm:p-4 transition-all duration-500 ease-in-out opacity-0 group-hover:opacity-100",
   overlayContent: "mb-3 sm:mb-4",
   title: "text-pixela-light font-bold text-lg sm:text-xl mb-2 font-outfit",
   infoContainer: "flex items-center gap-2 sm:gap-3 mb-3",
@@ -41,11 +41,10 @@ const isTrendingSerie = (media: MediaContent): media is TrendingSerie => {
 /**
  * Componente que renderiza el contenido superpuesto al hacer hover
  */
-const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
+const OverlayContent = ({ media, type, onFollowClick }: {
   media: MediaContent;
   type: MediaType;
   onFollowClick: () => void;
-  onReviewsClick: () => void;
 }) => {
   const releaseYear = isTrendingSerie(media)
     ? media.first_air_date?.split('-')[0]
@@ -53,6 +52,12 @@ const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
 
   return (
     <div className={STYLES.overlay}>
+      <ActionButtons 
+        tmdbId={Number(media.id)}
+        itemType={type === 'serie' ? 'series' : 'movie'}
+        onFollowClick={onFollowClick}
+        followLabel="Favoritos"
+      />
       <div className={STYLES.overlayContent}>
         <h3 className={STYLES.title}>
           {media.title}
@@ -77,17 +82,6 @@ const OverlayContent = ({ media, type, onFollowClick, onReviewsClick }: {
           </span>
         </div>
       </div>
-
-      <ActionButtons 
-        tmdbId={Number(media.id)}
-        itemType={type === 'serie' ? 'series' : 'movie'}
-        onFollowClick={onFollowClick}
-        onReviewsClick={onReviewsClick}
-        detailsHref={type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`}
-        infoLabel="Más información"
-        followLabel="Favoritos"
-        reviewsLabel="Reseñas"
-      />
     </div>
   );
 };
@@ -110,13 +104,20 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
     isMobile ? "w-full" : "w-[200px]"
   );
 
+  /**
+   * Maneja el clic en el botón de seguir.
+   * @returns {void}
+   */
   const handleFollowClick = () => {
     console.log("Seguir", type === 'serie' ? 'serie' : 'película', media.title);
   };
 
-  const handleReviewsClick = () => {
+  /**
+   * Maneja el clic en la tarjeta de la película o serie.
+   * @returns {void}
+   */
+  const handleCardClick = () => {
     const route = type === 'serie' ? `/series/${media.id}` : `/movies/${media.id}`;
-    router.prefetch(route);
     router.push(route);
   };
 
@@ -125,6 +126,7 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
       className={containerClasses}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleCardClick}
     >
       <Image
         src={`https://image.tmdb.org/t/p/w500${imagePath}`}
@@ -144,7 +146,6 @@ export const DiscoverCard = ({ media, type, index, isMobile }: DiscoverCardProps
           media={media}
           type={type}
           onFollowClick={handleFollowClick}
-          onReviewsClick={handleReviewsClick}
         />
       )}
       
