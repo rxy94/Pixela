@@ -7,7 +7,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { favoritesAPI } from '@/api/favorites/favorites';
 
 const STYLES = {
-  container: 'absolute top-4 right-4 z-50',
+  container: 'absolute top-3 right-3 z-50',
   button: {
     primary: {
       hero: 'flex items-center gap-2 bg-pixela-accent hover:bg-pixela-accent/90 text-white px-4 py-2 rounded-md transition-all duration-300 text-sm font-medium',
@@ -15,17 +15,17 @@ const STYLES = {
     },
     secondary: {
       hero: 'flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-md backdrop-blur-sm transition-all duration-300 text-sm font-medium',
-      default: 'w-12 h-12 flex items-center justify-center bg-pixela-dark hover:bg-pixela-dark/80 rounded text-pixela-light transition-colors border border-pixela-accent/40'
+      default: 'w-10 h-10 flex items-center justify-center bg-pixela-dark hover:bg-pixela-dark/80 rounded text-pixela-light transition-colors border border-pixela-accent/40'
     },
     favorite: {
-      active: 'p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-pixela-accent text-white hover:bg-pixela-accent/90',
-      inactive: 'p-3 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-black/40 backdrop-blur-sm text-white hover:bg-black/50'
+      active: 'p-2.5 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-pixela-accent text-white hover:bg-pixela-accent/90',
+      inactive: 'p-2.5 rounded-lg font-medium transition duration-300 flex items-center gap-2 shadow-lg bg-black/40 backdrop-blur-sm text-white hover:bg-black/50'
     }
   },
   icon: {
     hero: 'h-3 w-3',
-    default: 'w-4 h-4',
-    favorite: 'w-5 h-5 transition-all duration-300'
+    default: 'w-3.5 h-3.5',
+    favorite: 'w-4 h-4 transition-all duration-300'
   }
 } as const;
 
