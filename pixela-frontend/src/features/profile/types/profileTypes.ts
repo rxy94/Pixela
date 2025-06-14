@@ -5,6 +5,7 @@ import { UserResponse } from "@/api/auth/types";
  * @property {string} name - Nombre del usuario
  * @property {string} email - Email del usuario
  * @property {string} password - Contraseña del usuario
+ * @property {string} password_confirmation - Confirmación de la contraseña del usuario
  * @property {string} created_at - Fecha de creación del usuario
  * @property {boolean} is_admin - Si es administrador
  * @property {string} photo_url - URL de la imagen del usuario
@@ -13,6 +14,7 @@ export interface ProfileFormData {
   name: string;
   email: string;
   password?: string;
+  password_confirmation?: string;
   created_at: string;
   is_admin: boolean;
   photo_url?: string;

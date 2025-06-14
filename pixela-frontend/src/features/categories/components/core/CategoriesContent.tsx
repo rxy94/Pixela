@@ -646,7 +646,7 @@ const CategoriesContent = memo(({
     currentPage,
     totalPages
 }: CategoriesContentProps) => {
-    const { register, handleSubmit, reset, watch } = useForm<SearchFormData>({
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<SearchFormData>({
         defaultValues: { searchTerm: searchQuery || '' }
     });
     const currentSearchValue = watch('searchTerm');
@@ -713,7 +713,9 @@ const CategoriesContent = memo(({
                     </div>
                     <input
                         type="text"
-                        {...register('searchTerm')}
+                        {...register('searchTerm', {
+                            minLength: { value: 2, message: 'La búsqueda debe tener al menos 2 caracteres' }
+                        })}
                         placeholder={getSearchPlaceholder()}
                         className={STYLES.searchInput}
                     />
@@ -727,6 +729,7 @@ const CategoriesContent = memo(({
                             <FiX className="w-5 h-5" />
                         </button>
                     )}
+                    {errors.searchTerm && <p className="mt-2 ml-2 text-xs text-red-500">{errors.searchTerm.message}</p>}
                 </form>
             )}
 

@@ -54,15 +54,17 @@ export const UpdateProfileForm = ({
   onCancel,
   onSubmit
 }: UpdateProfileFormProps) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormData>({
+  const { register, handleSubmit, formState: { errors }, watch } = useForm<ProfileFormData>({
     defaultValues: {
       name: initialData.name,
       email: initialData.email,
       photo_url: initialData.photo_url,
-      password: ''
+      password: '',
+      password_confirmation: ''
     }
   });
 
+  const password = watch('password');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileImage, setProfileImage] = useState<string | undefined>(initialData.photo_url);
   const [imageError, setImageError] = useState<string | null>(null);
@@ -221,7 +223,11 @@ export const UpdateProfileForm = ({
               type="text"
               name="name"
               placeholder="Username"
-              register={register('name', { required: true })}
+              register={register('name', { 
+                required: 'El nombre es requerido',
+                minLength: { value: 3, message: 'El nombre debe tener al menos 3 caracteres' },
+                maxLength: { value: 50, message: 'El nombre no puede exceder los 50 caracteres' }
+              })}
               icon={<FiUser className={STYLES.inputIcon} />}
               error={errors.name}
             />
@@ -251,9 +257,31 @@ export const UpdateProfileForm = ({
               type="password"
               name="password"
               placeholder="Contraseña"
-              register={register('password')}
+              register={register('password', {
+                minLength: {
+                  value: 8,
+                  message: 'La contraseña debe tener al menos 8 caracteres'
+                }
+              })}
               icon={<IoKeyOutline className={STYLES.inputIcon} />}
               helperText="Deja este campo vacío si no deseas cambiar tu contraseña actual"
+              error={errors.password}
+            />
+          </div>
+
+          <div className={STYLES.fieldGroup}>
+            <label className={STYLES.inputLabel}>Confirmar Contraseña</label>
+            <InputField
+              type="password"
+              name="password_confirmation"
+              placeholder="Confirmar nueva contraseña"
+              register={register('password_confirmation', {
+                validate: (value) =>
+                  value === password || 'Las contraseñas no coinciden'
+              })}
+              icon={<IoKeyOutline className={STYLES.inputIcon} />}
+              error={errors.password_confirmation}
+              helperText="Confirma tu nueva contraseña si la has cambiado."
             />
           </div>
 

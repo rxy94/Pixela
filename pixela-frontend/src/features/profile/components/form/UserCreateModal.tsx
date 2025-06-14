@@ -7,6 +7,7 @@ import type { User } from '@/api/users/types';
 import { CreateUserData, ApiError, UserCreateModalProps, UserForm } from '@/features/profile/types/form';
 
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 /**
  * Valores iniciales del formulario
@@ -204,7 +205,11 @@ export const UserCreateModal = ({
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Nombre</label>
                 <input
-                  {...register('name', { required: 'El nombre es requerido' })}
+                  {...register('name', { 
+                    required: 'El nombre es requerido',
+                    minLength: { value: 3, message: 'El nombre debe tener al menos 3 caracteres' },
+                    maxLength: { value: 50, message: 'El nombre no puede exceder los 50 caracteres' }
+                  })}
                   className={STYLES.input}
                   placeholder="Nombre del usuario"
                 />
@@ -239,6 +244,10 @@ export const UserCreateModal = ({
                       minLength: {
                         value: 8,
                         message: 'La contraseña debe tener al menos 8 caracteres'
+                      },
+                      pattern: {
+                        value: STRONG_PASSWORD_REGEX,
+                        message: 'Debe incluir mayúscula, minúscula, número y símbolo.'
                       }
                     })}
                     className={STYLES.input}

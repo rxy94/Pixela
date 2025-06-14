@@ -232,10 +232,17 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
                 Reseña (opcional)
               </label>
               <textarea
-                {...register('review')}
+                {...register('review', {
+                  maxLength: { value: 5000, message: 'La reseña no puede exceder los 5000 caracteres' }
+                })}
                 className={STYLES.content.review.textarea}
                 placeholder="Escribe tu opinión sobre esta película o serie..."
               />
+              {errors.review && (
+                <div className="mt-2 text-sm italic text-pixela-accent">
+                  {errors.review.message}
+                </div>
+              )}
             </div>
 
             {apiError && (
