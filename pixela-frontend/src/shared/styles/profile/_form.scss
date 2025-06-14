@@ -380,4 +380,14 @@
     user-select: none;
     pointer-events: none;
   }
+}
+
+// Espaciado extra para el campo de confirmar contraseña
+.profile-edit__field-group:nth-child(4) {
+  padding-top: 1.5rem;
+}
+
+// Espaciado extra solo para los botones/acciones después de confirmar contraseña
+.profile-edit__actions {
+  margin-top: 1.5rem;
 } 

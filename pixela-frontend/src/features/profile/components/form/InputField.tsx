@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import clsx from 'clsx';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
@@ -8,7 +7,7 @@ import { InputFieldProps } from '@/features/profile/types/form';
  * Estilos constantes para el componente InputField
  */
 const STYLES = {
-  container: 'input-field mb-1',
+  container: 'input-field mb-2',
   label: 'input-field__label mb-0.5',
   iconContainer: 'input-field__icon-container',
   input: (hasError: boolean) => clsx(
@@ -18,9 +17,10 @@ const STYLES = {
   errorMessage: 'input-field__error-message mt-0.5 text-xs',
   helperText: clsx(
     'input-field__helper-text',
-    'mt-0.5 text-[0.7rem] italic font-light',
+    'mt-1.5 mb-1 text-[0.75rem] italic font-light',
     'text-gray-400/70 pl-0.5',
-    'bg-transparent border-none shadow-none'
+    'bg-transparent border-none shadow-none',
+    'leading-relaxed'
   ),
   // Nuevos estilos para el botón del ojo
   passwordContainer: 'relative',
