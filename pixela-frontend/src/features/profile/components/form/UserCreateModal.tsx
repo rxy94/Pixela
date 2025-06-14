@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { FiX, FiEye, FiEyeOff } from 'react-icons/fi';
 import clsx from 'clsx';
 import { usersAPI } from '@/api/users/users';
 import type { User } from '@/api/users/types';
 import { CreateUserData, ApiError, UserCreateModalProps, UserForm } from '@/features/profile/types/form';
+
+const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 /**
  * Valores iniciales del formulario
@@ -100,73 +103,64 @@ export const UserCreateModal = ({
   onClose, 
   onUserCreated 
 }: UserCreateModalProps) => {
-  const [form, setForm] = useState<UserForm>(INITIAL_FORM_STATE);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
-  /**
-   * Maneja el cambio en los campos del formulario
-   * @param {React.ChangeEvent<HTMLInputElement | HTMLSelectElement>} e - Evento de cambio
-   */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    watch,
+  } = useForm<UserForm>({
+    defaultValues: INITIAL_FORM_STATE
+  });
+
+  const password = watch('password');
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset(INITIAL_FORM_STATE);
+      setApiError(null);
+    }
+  }, [isOpen, reset]);
 
   /**
    * Maneja el envío del formulario
-   * @param {React.FormEvent} e - Evento de envío
+   * @param {UserForm} data - Datos del formulario
    */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: UserForm) => {
     setLoading(true);
-    setError(null);
-
-    if (form.password !== form.password_confirmation) {
-      setError('Las contraseñas no coinciden.');
-      setLoading(false);
-      return;
-    }
+    setApiError(null);
 
     try {
       const userData: CreateUserData = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        password_confirmation: form.password_confirmation,
-        is_admin: form.is_admin === 'true',
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        password_confirmation: data.password_confirmation,
+        is_admin: data.is_admin === 'true',
         photo_url: '', // Valor por defecto para nuevo usuario
       };
       
       await usersAPI.create(userData as unknown as User);
       onUserCreated();
-      onClose();
-      setForm(INITIAL_FORM_STATE);
+      onClose(); // Cierra el modal y dispara el useEffect para resetear
     } catch (err) {
-      const apiError = err as ApiError;
-      const emailError = apiError?.response?.data?.errors?.email?.[0] ||
-                        apiError?.data?.errors?.email?.[0] ||
-                        apiError?.message ||
+      const error = err as ApiError;
+      const emailError = error?.response?.data?.errors?.email?.[0] ||
+                        error?.data?.errors?.email?.[0] ||
+                        error?.message ||
                         '';
       
-      setError(emailError.toLowerCase().includes('email') 
+      setApiError(emailError.toLowerCase().includes('email') 
         ? 'Ya existe un usuario con ese email.'
         : 'No se pudo crear el usuario.');
     } finally {
       setLoading(false);
     }
-  };
-
-  /**
-   * Reinicia el formulario a su estado inicial
-   */
-  const resetForm = () => {
-    setForm(INITIAL_FORM_STATE);
-    setError(null);
-    setShowPassword(false);
-    setShowPasswordConfirmation(false);
   };
 
   /**
@@ -196,7 +190,7 @@ export const UserCreateModal = ({
             </p>
           </div>
           <button
-            onClick={() => { resetForm(); onClose(); }}
+            onClick={onClose}
             className={STYLES.closeButton}
             title="Cerrar"
           >
@@ -204,31 +198,33 @@ export const UserCreateModal = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={STYLES.form}>
+        <form onSubmit={handleSubmit(onSubmit)} className={STYLES.form}>
           <div className={STYLES.formContainer}>
             <div className={STYLES.grid}>
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Nombre</label>
                 <input
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
+                  {...register('name', { required: 'El nombre es requerido' })}
                   className={STYLES.input}
                   placeholder="Nombre del usuario"
-                  required
                 />
+                {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>}
               </div>
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Email</label>
                 <input
-                  name="email"
                   type="email"
-                  value={form.email}
-                  onChange={handleChange}
+                  {...register('email', {
+                    required: 'El email es requerido',
+                    pattern: {
+                      value: EMAIL_REGEX,
+                      message: 'Formato de email inválido'
+                    }
+                  })}
                   className={STYLES.input}
                   placeholder="correo@ejemplo.com"
-                  required
                 />
+                {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
               </div>
             </div>
 
@@ -237,14 +233,16 @@ export const UserCreateModal = ({
                 <label className={STYLES.label}>Contraseña</label>
                 <div className={STYLES.passwordContainer}>
                   <input
-                    name="password"
                     type={showPassword ? 'text' : 'password'}
-                    value={form.password}
-                    onChange={handleChange}
+                    {...register('password', {
+                      required: 'La contraseña es requerida',
+                      minLength: {
+                        value: 8,
+                        message: 'La contraseña debe tener al menos 8 caracteres'
+                      }
+                    })}
                     className={STYLES.input}
                     placeholder="••••••••"
-                    required
-                    minLength={8}
                   />
                   <button
                     type="button"
@@ -259,19 +257,20 @@ export const UserCreateModal = ({
                     )}
                   </button>
                 </div>
+                {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
               </div>
               <div className={STYLES.fieldGroup}>
                 <label className={STYLES.label}>Confirmar contraseña</label>
                 <div className={STYLES.passwordContainer}>
                   <input
-                    name="password_confirmation"
                     type={showPasswordConfirmation ? 'text' : 'password'}
-                    value={form.password_confirmation}
-                    onChange={handleChange}
+                    {...register('password_confirmation', {
+                      required: 'Debes confirmar la contraseña',
+                      validate: value =>
+                        value === password || 'Las contraseñas no coinciden'
+                    })}
                     className={STYLES.input}
                     placeholder="••••••••"
-                    required
-                    minLength={8}
                   />
                   <button
                     type="button"
@@ -286,15 +285,14 @@ export const UserCreateModal = ({
                     )}
                   </button>
                 </div>
+                {errors.password_confirmation && <p className="mt-1 text-xs text-red-500">{errors.password_confirmation.message}</p>}
               </div>
             </div>
 
             <div className={STYLES.fieldGroup}>
               <label className={STYLES.label}>Rol del usuario</label>
               <select
-                name="is_admin"
-                value={form.is_admin}
-                onChange={handleChange}
+                {...register('is_admin')}
                 className={STYLES.select}
               >
                 <option value="false">Usuario</option>
@@ -302,27 +300,26 @@ export const UserCreateModal = ({
               </select>
             </div>
 
-            {error && (
+            {apiError && (
               <div className={STYLES.error}>
-                <span className="flex-1">{error}</span>
+                <span className="flex-1">{apiError}</span>
               </div>
             )}
 
             <div className={STYLES.actions}>
               <button
-                type="submit"
-                disabled={loading}
-                className={STYLES.submitButton}
-              >
-                {loading ? 'Registrando...' : 'Registrar usuario'}
-              </button>
-              <button
                 type="button"
-                onClick={() => { resetForm(); onClose(); }}
+                onClick={onClose}
                 className={STYLES.cancelButton}
-                disabled={loading}
               >
                 Cancelar
+              </button>
+              <button
+                type="submit"
+                className={STYLES.submitButton}
+                disabled={isSubmitting || loading}
+              >
+                {isSubmitting || loading ? 'Creando...' : 'Crear Usuario'}
               </button>
             </div>
           </div>

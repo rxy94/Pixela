@@ -5,7 +5,8 @@ import { Pelicula, Serie } from '@/features/media/types/content';
 import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
-import { useState, memo, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, memo, useMemo, useEffect, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
 import { ContentSkeleton } from '@/app/components/skeletons';
 import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
@@ -16,6 +17,10 @@ const INITIAL_VISIBLE_ITEMS = 6;
 const HIGH_RATING_THRESHOLD = 8.0;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BATCH_SIZE = 12;
+
+interface SearchFormData {
+    searchTerm: string;
+}
 
 const STYLES = {
     // Layout y Contenedores Principales
@@ -629,7 +634,7 @@ RandomRecommendations.displayName = 'RandomRecommendations';
  * @param {CategoriesContentProps} props - Propiedades del componente
  * @returns {JSX.Element} El contenido renderizado
  */
-export const CategoriesContent = memo(({
+const CategoriesContent = memo(({
     selectedCategory,
     movies,
     series,
@@ -641,67 +646,21 @@ export const CategoriesContent = memo(({
     currentPage,
     totalPages
 }: CategoriesContentProps) => {
-    const [isContentReady, setIsContentReady] = useState(false);
-    const [inputValue, setInputValue] = useState(searchQuery);
-    const [showSkeleton, setShowSkeleton] = useState(true);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-
-    // Referencias para evitar dependencias problemáticas en useEffect
-    const searchQueryRef = useRef(searchQuery);
-    const onSearchRef = useRef(onSearch);
-
-    // Actualizar referencias cuando cambien los props
-    useEffect(() => {
-        searchQueryRef.current = searchQuery;
-        onSearchRef.current = onSearch;
+    const { register, handleSubmit, reset, watch } = useForm<SearchFormData>({
+        defaultValues: { searchTerm: searchQuery || '' }
     });
+    const currentSearchValue = watch('searchTerm');
 
     useEffect(() => {
-        setInputValue(searchQuery);
-    }, [searchQuery]);
-
-    // Limpiar búsqueda cuando se cambia de tipo de media si hay una búsqueda activa
-    useEffect(() => {
-        // Solo limpiar si hay una búsqueda activa en el momento del cambio
-        if (searchQueryRef.current.trim()) {
-            setInputValue('');
-            onSearchRef.current('');
-        }
-    }, [mediaType]); // Solo depende de mediaType para evitar bucles
-
-    useEffect(() => {
-        if (loading) {
-            setIsTransitioning(true);
-            setIsContentReady(false);
-            setShowSkeleton(true);
-        } else if (movies.length > 0 || series.length > 0) {
-            // Reducir delay para mejorar la experiencia
-            const transitionTimer = setTimeout(() => {
-                setIsTransitioning(false);
-                setIsContentReady(true);
-                setShowSkeleton(false);
-            }, 100);
-            
-            return () => clearTimeout(transitionTimer);
-        } else if (!loading) {
-            // Solo cambiar estados si definitivamente no está cargando
-            setIsContentReady(false);
-            setShowSkeleton(false);
-            setIsTransitioning(false);
-        }
-    }, [loading, movies, series]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSearch(inputValue);
+        reset({ searchTerm: searchQuery || '' });
+    }, [searchQuery, reset]);
+    
+    const onFormSubmit = (data: SearchFormData) => {
+        onSearch(data.searchTerm);
     };
 
     const handleClearSearch = () => {
-        setInputValue('');
+        reset({ searchTerm: '' });
         onSearch('');
     };
 
@@ -724,21 +683,10 @@ export const CategoriesContent = memo(({
         );
     }
 
-    // Para mediaType random, renderizar inmediatamente sin depender de isContentReady
-    if (mediaType !== 'random' && (showSkeleton || isTransitioning)) {
+    if (mediaType !== 'random' && loading) {
         return (
             <div className="relative">
-                <ContentSkeleton count={12} />
-                {isContentReady && (
-                    <div 
-                        className="absolute inset-0 opacity-0 animate-content-reveal"
-                        style={{
-                            animationDelay: '100ms',
-                        }}
-                    >
-                        <ContentGrid movies={movies} series={series} searchTerm={''} />
-                    </div>
-                )}
+                <ContentSkeleton />
             </div>
         );
     }
@@ -757,21 +705,19 @@ export const CategoriesContent = memo(({
     }
 
     return (
-        <div className={`${STYLES.mainContainer} ${isContentReady && mediaType !== 'random' ? 'animate-fade-in-up' : ''}`}>
-            {/* Solo mostrar búsqueda si no es modo random */}
+        <div className={`${STYLES.mainContainer}`}>
             {mediaType !== 'random' && (
-                <form onSubmit={handleFormSubmit} className={STYLES.searchContainer}>
+                <form onSubmit={handleSubmit(onFormSubmit)} className={STYLES.searchContainer}>
                     <div className={STYLES.searchIcon}>
                         <FiSearch className={STYLES.searchIconInner} />
                     </div>
                     <input
                         type="text"
-                        value={inputValue}
-                        onChange={handleInputChange}
+                        {...register('searchTerm')}
                         placeholder={getSearchPlaceholder()}
                         className={STYLES.searchInput}
                     />
-                    {inputValue && (
+                    {currentSearchValue && (
                         <button
                             type="button"
                             onClick={handleClearSearch}
@@ -784,7 +730,6 @@ export const CategoriesContent = memo(({
                 </form>
             )}
 
-            {/* Contador de elementos - Solo mostrar si no es modo random y hay contenido */}
             {mediaType !== 'random' && hasContent && (
                 <ItemCounter
                     moviesCount={movies.length}
@@ -808,4 +753,6 @@ export const CategoriesContent = memo(({
     );
 });
 
-CategoriesContent.displayName = 'CategoriesContent'; 
+CategoriesContent.displayName = 'CategoriesContent';
+
+export { CategoriesContent }; 

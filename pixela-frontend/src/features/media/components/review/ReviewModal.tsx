@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { FiX, FiStar } from 'react-icons/fi';
 import { reviewsAPI } from '@/api/reviews/reviews';
 import { CreateReview } from '@/api/reviews/types';
@@ -42,6 +43,11 @@ const STYLES = {
   }
 } as const;
 
+interface ReviewFormData {
+  rating: number;
+  review: string;
+}
+
 /**
  * Componente que muestra la estrella de la reseña
  * @param {boolean} filled - Indica si la estrella está llena
@@ -72,92 +78,75 @@ const Star = ({ filled, half }: { filled: boolean; half?: boolean }) => (
  * @returns {JSX.Element} Componente de modal de reseña
  */
 export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshReviews }: ReviewModalProps) => {
-  // Default: 3 estrellas (6/10)
-  const [rating, setRating] = useState(6);
-  const [review, setReview] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [simpleError, setSimpleError] = useState<string | null>(null);
+  const { 
+    handleSubmit, 
+    control, 
+    register, 
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm<ReviewFormData>({
+    defaultValues: {
+      rating: 6, // Default: 3 estrellas (6/10)
+      review: ''
+    }
+  });
+
+  const [apiError, setApiError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) {
+      // Retrasar el reseteo para que no se vea el cambio antes de que se cierre el modal
+      setTimeout(() => {
+        reset({ rating: 6, review: '' });
+        setApiError(null);
+        setSuccess(null);
+      }, 300);
+    }
+  }, [isOpen, reset]);
 
   /**
-   * Función que resetea el estado del modal
-   */
-  const resetModalState = () => {
-    setRating(6);
-    setReview('');
-    setError(null);
-    setSimpleError(null);
-    setSuccess(null);
-    setIsSubmitting(false);
-  };
-
-  /**
-   * Función que cierra el modal y resetea el estado
+   * Función que cierra el modal
    */
   const handleClose = () => {
-    resetModalState();
     onClose();
   };
 
   /**
-   * Función que se ejecuta al hacer clic en una estrella
-   * @param {number} starIndex - Índice de la estrella
-   * @param {boolean} isHalf - Indica si la estrella está media llena
-   * @returns {void}
-   */
-  const handleStarClick = (starIndex: number, isHalf: boolean) => {
-    const value = isHalf ? starIndex * 2 - 1 : starIndex * 2;
-    setRating(value);
-  };
-
-  /**
    * Función que se ejecuta al hacer clic en el botón de enviar
-   * @param {React.FormEvent} e - Evento de formulario
+   * @param {ReviewFormData} data - Datos del formulario
    * @returns {Promise<void>}
    */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-    setSimpleError(null);
+  const onSubmit = async (data: ReviewFormData) => {
+    setApiError(null);
     setSuccess(null);
 
     try {
       const reviewData: CreateReview = {
         tmdb_id: tmdbId,
         item_type: itemType,
-        rating,
-        review
+        rating: data.rating,
+        review: data.review
       };
       await reviewsAPI.add(reviewData);
       
-      // Mostrar mensaje de éxito y limpiar el campo
       setSuccess('¡Reseña creada correctamente!');
-      setReview(''); // Limpiar el campo de reseña
       
-      // Esperar un poco para que el usuario vea el mensaje antes de cerrar
       setTimeout(() => {
-        resetModalState(); // Resetear estado completo del modal
-        onClose();
+        handleClose();
         if (refreshReviews) refreshReviews();
       }, 1500);
 
     } catch (error: unknown) {
-      console.log(error);
-
       if (error instanceof Error && error.message.includes('Review already exists')) {
-        setSimpleError('El usuario ya tiene una reseña para esta ficha.');
+        setApiError('Ya tienes una reseña para esta ficha.');
       } else {
-        setError('No se pudo guardar la reseña. Por favor, inténtalo de nuevo.');
+        setApiError('No se pudo guardar la reseña. Por favor, inténtalo de nuevo.');
       }
-
-    } finally {
-      setIsSubmitting(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div 
@@ -183,7 +172,7 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
         </div>
 
         {/* Content */}
-        <form onSubmit={handleSubmit} className={STYLES.content.container}>
+        <form onSubmit={handleSubmit(onSubmit)} className={STYLES.content.container}>
           <div className="mb-6">
             <h3 className={STYLES.content.title}>{title}</h3>
             
@@ -192,62 +181,66 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
               <label className={STYLES.content.rating.label}>
                 Puntuación
               </label>
-              <div className={STYLES.content.rating.container}>
-                {[1, 2, 3, 4, 5].map((star) => {
-                  const starValue = star * 2;
-                  const isFull = rating >= starValue;
-                  const isHalf = rating === starValue - 1;
-                  return (
-                    <span key={star} className="relative group">
-                      {/* Media estrella (izquierda) */}
-                      <button
-                        type="button"
-                        aria-label={`Puntuar con ${star - 0.5} estrellas`}
-                        className="absolute top-0 left-0 z-10 w-1/2 h-full"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleStarClick(star, true)}
-                      />
-                      {/* Estrella completa (derecha) */}
-                      <button
-                        type="button"
-                        aria-label={`Puntuar con ${star} estrellas`}
-                        className="absolute top-0 right-0 z-10 w-1/2 h-full"
-                        style={{ cursor: 'pointer' }}
-                        onClick={() => handleStarClick(star, false)}
-                      />
-                      <Star filled={isFull} half={isHalf} />
+              <Controller
+                name="rating"
+                control={control}
+                rules={{ min: { value: 1, message: "La puntuación es obligatoria." } }}
+                render={({ field: { onChange, value } }) => (
+                  <div className={STYLES.content.rating.container}>
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const starValue = star * 2;
+                      const isFull = value >= starValue;
+                      const isHalf = value === starValue - 1;
+                      return (
+                        <span key={star} className="relative group">
+                          {/* Media estrella (izquierda) */}
+                          <button
+                            type="button"
+                            aria-label={`Puntuar con ${star - 0.5} estrellas`}
+                            className="absolute top-0 left-0 z-10 w-1/2 h-full"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => onChange(star * 2 - 1)}
+                          />
+                          {/* Estrella completa (derecha) */}
+                          <button
+                            type="button"
+                            aria-label={`Puntuar con ${star} estrellas`}
+                            className="absolute top-0 right-0 z-10 w-1/2 h-full"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => onChange(star * 2)}
+                          />
+                          <Star filled={isFull} half={isHalf} />
+                        </span>
+                      );
+                    })}
+                    <span className={STYLES.content.rating.value}>
+                      {(value / 2) % 1 === 0 ? (value / 2) : (value / 2).toFixed(1)}/5
                     </span>
-                  );
-                })}
-                <span className={STYLES.content.rating.value}>
-                  {(rating / 2) % 1 === 0 ? (rating / 2) : (rating / 2).toFixed(1)}/5
-                </span>
-              </div>
+                  </div>
+                )}
+              />
+               {errors.rating && (
+                <div className="mt-2 text-sm italic text-pixela-accent">
+                  {errors.rating.message}
+                </div>
+              )}
             </div>
 
             {/* Review Text */} 
             <div className="mb-2">
               <label className={STYLES.content.review.label}>
-                Reseña
+                Reseña (opcional)
               </label>
               <textarea
-                value={review}
-                onChange={(e) => setReview(e.target.value)}
+                {...register('review')}
                 className={STYLES.content.review.textarea}
                 placeholder="Escribe tu opinión sobre esta película o serie..."
-                required
               />
             </div>
 
-            {error && (
-              <div className={STYLES.content.error}>
-                {error}
-              </div>
-            )}
-
-            {simpleError && (
+            {apiError && (
               <div className={STYLES.content.errorSimple}>
-                {simpleError}
+                {apiError}
               </div>
             )}
 
@@ -257,20 +250,17 @@ export const ReviewModal = ({ isOpen, onClose, tmdbId, itemType, title, refreshR
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Submit */}
             <div className={STYLES.content.submit.container}>
-              <button
-                type="submit"
-                disabled={isSubmitting}
+              <button 
+                type="submit" 
                 className={STYLES.content.submit.button}
+                disabled={isSubmitting}
               >
                 {isSubmitting ? (
-                  <>
-                    <div className={STYLES.content.submit.spinner} />
-                    Guardando...
-                  </>
+                  <div className={STYLES.content.submit.spinner} />
                 ) : (
-                  'Publicar Reseña'
+                  'Guardar Reseña'
                 )}
               </button>
             </div>
