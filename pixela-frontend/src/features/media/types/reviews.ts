@@ -44,11 +44,7 @@ export interface ReviewSectionProps {
  * @property {Review} review - Reseña a mostrar
  * @property {boolean} isUserReview - Indica si la reseña pertenece al usuario actual
  * @property {boolean} isEditing - Indica si la reseña está en modo edición
- * @property {string} editText - Texto de la reseña en edición
- * @property {number} editRating - Puntuación de la reseña en edición
  * @property {() => void} onEditClick - Función que se ejecuta al hacer clic en editar
- * @property {() => void} onTextChange - Función que se ejecuta al cambiar el texto
- * @property {() => void} onRatingChange - Función que se ejecuta al cambiar la puntuación
  * @property {() => void} onSave - Función que se ejecuta al guardar los cambios
  * @property {() => void} onCancel - Función que se ejecuta al cancelar la edición
  */
@@ -56,12 +52,8 @@ export interface ReviewCardProps {
   review: Review;
   isUserReview: boolean;
   isEditing: boolean;
-  editText: string;
-  editRating: number;
   onEditClick: (review: Review) => void;
-  onTextChange: (text: string) => void;
-  onRatingChange: (rating: number) => void;
-  onSave: () => void;
+  onSave: (text: string, rating: number) => void;
   onCancel: () => void;
 }
 
@@ -70,17 +62,13 @@ export interface ReviewCardProps {
  * @interface ReviewEditFormProps
  * @property {string} editText - Texto de la reseña en edición
  * @property {number} editRating - Puntuación de la reseña en edición
- * @property {() => void} onTextChange - Función que se ejecuta al cambiar el texto
- * @property {() => void} onRatingChange - Función que se ejecuta al cambiar la puntuación
- * @property {() => void} onSave - Función que se ejecuta al guardar los cambios
+ * @property {(text: string, rating: number) => void} onSave - Función que se ejecuta al guardar los cambios
  * @property {() => void} onCancel - Función que se ejecuta al cancelar la edición
  */
 export interface ReviewEditFormProps {
   editText: string;
   editRating: number;
-  onTextChange: (text: string) => void;
-  onRatingChange: (rating: number) => void;
-  onSave: () => void;
+  onSave: (text: string, rating: number) => void;
   onCancel: () => void;
 }
 
@@ -91,31 +79,4 @@ export interface ReviewEditFormProps {
  */
 export interface StarDisplayProps {
   value: number;
-}
-
-/**
- * Propiedades del componente ReviewCard
- * @interface ReviewCardProps
- * @property {Review} review - Reseña a mostrar
- * @property {boolean} isUserReview - Indica si la reseña pertenece al usuario actual
- * @property {boolean} isEditing - Indica si la reseña está en modo edición
- * @property {string} editText - Texto de la reseña en edición
- * @property {number} editRating - Puntuación de la reseña en edición
- * @property {() => void} onEditClick - Función que se ejecuta al hacer clic en editar
- * @property {() => void} onTextChange - Función que se ejecuta al cambiar el texto
- * @property {() => void} onRatingChange - Función que se ejecuta al cambiar la puntuación
- * @property {() => void} onSave - Función que se ejecuta al guardar los cambios
- * @property {() => void} onCancel - Función que se ejecuta al cancelar la edición
-  */
-export interface ReviewCardProps {
-  review: Review;
-  isUserReview: boolean;
-  isEditing: boolean;
-  editText: string;
-  editRating: number;
-  onEditClick: (review: Review) => void;
-  onTextChange: (text: string) => void;
-  onRatingChange: (rating: number) => void;
-  onSave: () => void;
-  onCancel: () => void;
 } 

@@ -37,33 +37,27 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userId = useAuthStore((state) => state.user?.user_id);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
-  const [editText, setEditText] = useState('');
-  const [editRating, setEditRating] = useState(0);
 
   const handleEditClick = (review: Review) => {
     setEditingReview(review);
-    setEditText(review.review);
-    setEditRating(Number(review.rating));
   };
 
   const handleCancelEdit = () => {
     setEditingReview(null);
-    setEditText('');
-    setEditRating(0);
   };
 
   /**
    * Función para guardar la reseña editada
    * @returns {Promise<void>}
    */
-  const handleSaveEdit = async () => {
+  const handleSaveEdit = async (text: string, rating: number) => {
     if (!editingReview) return;
 
     try {
       await reviewsAPI.update({
         ...editingReview,
-        review: editText,
-        rating: editRating
+        review: text,
+        rating: rating,
       });
       
       if (refreshReviews) {
@@ -121,11 +115,7 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
                 review={review}
                 isUserReview={isUserReview}
                 isEditing={isEditing}
-                editText={editText}
-                editRating={editRating}
                 onEditClick={handleEditClick}
-                onTextChange={setEditText}
-                onRatingChange={setEditRating}
                 onSave={handleSaveEdit}
                 onCancel={handleCancelEdit}
               />
