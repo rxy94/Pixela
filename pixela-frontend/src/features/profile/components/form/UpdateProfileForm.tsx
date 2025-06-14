@@ -40,9 +40,10 @@ const STYLES = {
 } as const;
 
 /**
- * Validación de email usando regex
+ * Regex para validar el email y la contraseña
  */
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+const STRONG_PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 /**
  * Componente de formulario para actualizar el perfil de usuario
@@ -240,7 +241,7 @@ export const UpdateProfileForm = ({
               name="email"
               placeholder="Email"
               register={register('email', { 
-                required: true,
+                required: 'El email es requerido',
                 pattern: {
                   value: EMAIL_REGEX,
                   message: "Formato de email inválido"
@@ -261,6 +262,10 @@ export const UpdateProfileForm = ({
                 minLength: {
                   value: 8,
                   message: 'La contraseña debe tener al menos 8 caracteres'
+                },
+                pattern: {
+                  value: STRONG_PASSWORD_REGEX,
+                  message: 'Debe incluir mayúscula, minúscula, número y símbolo.'
                 }
               })}
               icon={<IoKeyOutline className={STYLES.inputIcon} />}
@@ -276,8 +281,15 @@ export const UpdateProfileForm = ({
               name="password_confirmation"
               placeholder="Confirmar nueva contraseña"
               register={register('password_confirmation', {
-                validate: (value) =>
-                  value === password || 'Las contraseñas no coinciden'
+                validate: (value) => {
+                  if (password && password.trim() && (!value || !value.trim())) {
+                    return 'Debes confirmar la contraseña';
+                  }
+                  if (value && value !== password) {
+                    return 'Las contraseñas no coinciden';
+                  }
+                  return true;
+                }
               })}
               icon={<IoKeyOutline className={STYLES.inputIcon} />}
               error={errors.password_confirmation}
