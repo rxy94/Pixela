@@ -136,11 +136,20 @@ export const UpdateProfileForm = ({
    * @param {ProfileFormData} data - Datos del formulario
    */
   const onFormSubmit = (data: ProfileFormData) => {
-    // Asegurarse de que la imagen se envíe solo si ha cambiado
-    const formData = {
-      ...data,
-      photo_url: profileImage !== initialData.photo_url ? profileImage : undefined
+    // Construir el objeto solo con los campos necesarios
+    const formData: ProfileFormData = {
+      name: data.name,
+      email: data.email,
+      photo_url: profileImage !== initialData.photo_url ? profileImage : undefined,
+      created_at: data.created_at,
+      is_admin: data.is_admin,
     };
+
+    // Solo añadir password si el usuario la ha escrito
+    if (data.password && data.password.trim()) {
+      formData.password = data.password;
+    }
+
     onSubmit(formData);
   };
 

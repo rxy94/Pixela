@@ -18,7 +18,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // Users routes
     Route::get('/users', [UserController::class, 'list'])->middleware('isAdmin');
     Route::post('/users', [UserController::class, 'create'])->middleware('isAdmin');
-    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::put('/users/{user}', [UserController::class, 'update'])->middleware('can:update,user');
     Route::delete('/users/{user}', [UserController::class, 'delete']);
 
     // Favorites routes
