@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import { Pelicula, Serie } from '@/features/media/types/content';
 import { Badge } from '@/shared/components/Badge';
@@ -8,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useState, memo, useMemo, useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
+import { FaStar } from 'react-icons/fa';
 import { ContentSkeleton } from '@/app/components/skeletons';
 import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
 import { CategoriesContentProps } from '@/features/categories/types/content';
@@ -98,7 +100,7 @@ const STYLES = {
     recommendationCardBorder: 'absolute inset-0 rounded-2xl bg-[radial-gradient(250px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300',
     recommendationCardContent: 'relative z-10 w-full h-full overflow-hidden rounded-[15px] bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5 transition-all duration-300',
     recommendationOverlay: 'absolute inset-0 flex flex-col justify-end p-4 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent group-hover:opacity-100',
-    recommendationTitle: 'mb-2 text-base font-bold leading-tight text-pixela-light md:text-lg font-outfit line-clamp-2',
+    recommendationTitle: 'mb-2 text-base font-bold leading-tight text-pixela-light md:text-lg font-outfit line-clamp-2 text-left',
     recommendationInfo: 'flex flex-wrap items-center gap-2 mb-2',
     recommendationRating: 'flex items-center',
     recommendationRatingIcon: 'mr-1 text-xs text-yellow-400',
@@ -187,6 +189,16 @@ const OverlayContent = ({
     type: 'series' | 'movies',
     onFollowClick: () => void
 }) => {
+    // Obtener el título según el tipo de media
+    const title = type === 'movies' 
+        ? ((media as Pelicula).title || (media as Pelicula).titulo || 'Sin título')
+        : ((media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título');
+
+    // Obtener el año de lanzamiento
+    const releaseYear = type === 'movies' 
+        ? (media as Pelicula).release_date?.split('-')[0]
+        : (media as Serie).first_air_date?.split('-')[0];
+
     return (
         <div className={STYLES.overlay}>
             <ActionButtons 
@@ -194,6 +206,30 @@ const OverlayContent = ({
                 itemType={type === 'series' ? 'series' : 'movie'}
                 onFollowClick={onFollowClick}
             />
+            <div className={STYLES.overlayContent}>
+                <h3 className={STYLES.title}>
+                    {title}
+                </h3>
+                
+                <div className={STYLES.mediaInfo}>
+                    <div className={STYLES.rating}>
+                        <FaStar className={STYLES.ratingIcon} />
+                        <span className={STYLES.ratingText}>
+                            {media.vote_average?.toFixed(1) || "N/A"}
+                        </span>
+                    </div>
+                    
+                    {releaseYear && (
+                        <span className={STYLES.year}>
+                            {releaseYear}
+                        </span>
+                    )}
+                    
+                    <span className={STYLES.mediaType}>
+                        {type === 'series' ? 'Serie' : 'Película'}
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
@@ -455,6 +491,11 @@ const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula
     const title = recommendation.mediaType === 'movie' 
         ? (recommendation as Pelicula).title || (recommendation as Pelicula).titulo || 'Sin título'
         : (recommendation as Serie).name || (recommendation as Serie).titulo || (recommendation as Serie).title || 'Sin título';
+
+    // Obtener el año de lanzamiento
+    const releaseYear = recommendation.mediaType === 'movie' 
+        ? (recommendation as Pelicula).release_date?.split('-')[0]
+        : (recommendation as Serie).first_air_date?.split('-')[0];
     
     return (
         <div 
@@ -474,11 +515,37 @@ const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula
                     
                     <div className={STYLES.noiseEffect} />
                     
-                    <ActionButtons 
-                        tmdbId={Number(recommendation.id)}
-                        itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
-                        onFollowClick={handleFollowClick}
-                    />
+                    <div className={STYLES.recommendationOverlay}>
+                        <ActionButtons 
+                            tmdbId={Number(recommendation.id)}
+                            itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
+                            onFollowClick={handleFollowClick}
+                        />
+                        <div className="mb-2 md:mb-3">
+                            <h3 className={STYLES.recommendationTitle}>
+                                {title}
+                            </h3>
+                            
+                            <div className={STYLES.recommendationInfo}>
+                                <div className={STYLES.recommendationRating}>
+                                    <FaStar className={STYLES.recommendationRatingIcon} />
+                                    <span className={STYLES.recommendationRatingText}>
+                                        {recommendation.vote_average?.toFixed(1) || "N/A"}
+                                    </span>
+                                </div>
+                                
+                                {releaseYear && (
+                                    <span className={STYLES.recommendationYear}>
+                                        {releaseYear}
+                                    </span>
+                                )}
+                                
+                                <span className={STYLES.recommendationMediaType}>
+                                    {recommendation.mediaType === 'series' ? 'Serie' : 'Película'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     
                     {isHighRated && (
                         <Badge 
