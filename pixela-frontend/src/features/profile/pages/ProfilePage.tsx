@@ -173,12 +173,13 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
       
-      // Manejo de errores específico
+      // Solo mostrar notificaciones para errores del servidor, no de validación del formulario
       if (error instanceof Error) {
         if (error.message.includes('email')) {
           setSuccessMessage('Error: El email ya está en uso o es inválido.');
-        } else if (error.message.includes('password')) {
-          setSuccessMessage('Error: La contraseña debe tener al menos 8 caracteres.');
+        } else if (error.message.includes('validation') || error.message.includes('password')) {
+          // Los errores de validación se muestran directamente en los inputs del formulario
+          console.log('Error de validación manejado por el formulario');
         } else {
           setSuccessMessage(`Error: ${error.message}`);
         }
