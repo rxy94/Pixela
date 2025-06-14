@@ -16,13 +16,32 @@ const STYLES = {
     save: "px-4 py-2 text-sm bg-pixela-accent text-white rounded-lg hover:bg-pixela-accent/80 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
     cancel: "px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors duration-200"
   },
-  error: "text-sm italic text-pixela-accent"
+  error: "text-sm italic text-pixela-accent",
+  ratingValue: "ml-2 text-xs text-yellow-400"
 } as const;
 
 interface EditFormData {
   text: string;
   rating: number;
 }
+
+/**
+ * Componente que muestra la estrella de la reseña
+ * @param {boolean} filled - Indica si la estrella está llena
+ * @param {boolean} half - Indica si la estrella está media llena
+ * @returns {JSX.Element} Componente de estrella de la reseña
+ */
+const Star = ({ filled, half }: { filled: boolean; half?: boolean }) => (
+  <span className="relative inline-block w-6 h-6">
+    <FiStar className={`w-6 h-6 absolute top-0 left-0 ${filled ? 'text-yellow-400' : 'text-gray-400'}`} />
+    {half && (
+      <FiStar
+        className="absolute top-0 left-0 w-6 h-6 text-yellow-400"
+        style={{ clipPath: 'inset(0 50% 0 0)' }}
+      />
+    )}
+  </span>
+);
 
 /**
  * Componente que muestra el formulario de edición de una reseña
@@ -54,20 +73,35 @@ export const ReviewEditForm = ({
         control={control}
         render={({ field: { onChange, value } }) => (
           <div className={STYLES.stars.container}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => onChange(star * 2)}
-                className={STYLES.stars.button}
-              >
-                <FiStar
-                  className={`w-6 h-6 ${
-                    value >= star * 2 ? 'text-yellow-400' : 'text-gray-400'
-                  }`}
-                />
-              </button>
-            ))}
+            {[1, 2, 3, 4, 5].map((star) => {
+              const starValue = star * 2;
+              const isFull = value >= starValue;
+              const isHalf = value === starValue - 1;
+              return (
+                <span key={star} className="relative group">
+                  {/* Media estrella (izquierda) */}
+                  <button
+                    type="button"
+                    aria-label={`Puntuar con ${star - 0.5} estrellas`}
+                    className="absolute top-0 left-0 z-10 w-1/2 h-full"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => onChange(star * 2 - 1)}
+                  />
+                  {/* Estrella completa (derecha) */}
+                  <button
+                    type="button"
+                    aria-label={`Puntuar con ${star} estrellas`}
+                    className="absolute top-0 right-0 z-10 w-1/2 h-full"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => onChange(star * 2)}
+                  />
+                  <Star filled={isFull} half={isHalf} />
+                </span>
+              );
+            })}
+            <span className={STYLES.ratingValue}>
+              {(value / 2) % 1 === 0 ? (value / 2) : (value / 2).toFixed(1)}/5
+            </span>
           </div>
         )}
       />
