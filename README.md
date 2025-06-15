@@ -21,6 +21,9 @@ Dado el avance del proyecto, el vídeo necesitaba superar los 5 minutos para cub
 **Video dia 30/04/2025 - CheckIn:** [Video](https://vimeo.com/1080303986/9f50bbfb83?share=copy) <br/>
 **Video dia 15/06/2025 - Entrega final:** [Video](https://vimeo.com/1093512042?share=copy](https://vimeo.com/1093512042))
 
+# Diseño y átomos
+
+Diseño de figma - [Figma](https://www.figma.com/design/CPQe3LpPHQXKW1AWTYJhOG/PROYECTO-PIXELA.IO?m=auto&t=XRjSeFZfbLBWJ1JM-6)
 
 # Documentación Técnica del Proyecto: Pixela
 
