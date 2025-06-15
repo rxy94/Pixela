@@ -18,11 +18,13 @@ Historial de ramas de pixela [Ramas pixela](https://github.com/envyx10/Pixela/br
 Dado el avance del proyecto, el vídeo necesitaba superar los 5 minutos para cubrir adecuadamente el contenido. Aun así, hemos hecho un gran esfuerzo por resumir al máximo los conceptos y todo lo que hemos desarrollado.
 <br>
 <br>
-**Video dia 30/04/2025 | checkIn:** [Video](https://vimeo.com/1080303986/9f50bbfb83?share=copy)
-
+**Video dia 30/04/2025 - CheckIn:** [Video](https://vimeo.com/1080303986/9f50bbfb83?share=copy) <br/>
+**Video dia 15/06/2025 - Entrega final:** [Video](https://vimeo.com/1093512042?share=copy](https://vimeo.com/1093512042))
 
 
 # Documentación Técnica del Proyecto: Pixela
+
+Documentación Pixela | [Documento drive - pixela ](https://docs.google.com/document/d/1xqrrvgyTaQhrhDkg3hRDdx-euwUsP8KDyauRK608kks/edit?usp=sharing)
 
 ## 1. Resumen General del Proyecto
 
