@@ -1,6 +1,7 @@
 "use client";
 
-import { FiEdit2 } from 'react-icons/fi';
+import { FiEdit2, FiLoader } from 'react-icons/fi';
+import { FaTrash } from 'react-icons/fa';
 import Image from 'next/image';
 import { StarDisplay } from './StarDisplay';
 import { ReviewEditForm } from './ReviewEditForm';
@@ -24,10 +25,20 @@ const STYLES = {
       icon: "w-5 h-5"
     },
     name: "font-semibold text-white text-base group-hover:text-pixela-accent transition-colors duration-300",
-    date: "text-xs text-gray-400 font-mono"
+    date: "text-xs text-gray-400 font-mono min-w-20"
+  },
+  rightSection: {
+    container: "flex items-center gap-2 justify-end min-w-32"
   },
   edit: {
     button: "p-2 text-gray-400 hover:text-white transition-colors duration-200",
+    icon: "w-4 h-4"
+  },
+  actions: {
+    container: "flex items-center gap-1"
+  },
+  delete: {
+    button: "p-2 text-gray-400 hover:text-red-400 transition-colors duration-200",
     icon: "w-4 h-4"
   },
   content: {
@@ -47,7 +58,9 @@ export const ReviewCard = ({
   isEditing,
   onEditClick,
   onSave,
-  onCancel
+  onCancel,
+  onDelete,
+  isDeleting
 }: ReviewCardProps) => {
   const cardRef = useInteractiveBorder<HTMLDivElement>();
 
@@ -80,19 +93,36 @@ export const ReviewCard = ({
                 <StarDisplay value={Number(review.rating)} />
               </span>
             )}
-            {isUserReview && !isEditing && (
-              <button
-                onClick={() => onEditClick(review)}
-                className={STYLES.edit.button}
-                title="Editar reseña"
-              >
-                <FiEdit2 className={STYLES.edit.icon} />
-              </button>
-            )}
           </div>
-          <span className={STYLES.user.date}>
-            {review.created_at && new Date(review.created_at).toLocaleDateString()}
-          </span>
+          <div className={STYLES.rightSection.container}>
+            {isUserReview && !isEditing && (
+              <div className={STYLES.actions.container}>
+                <button
+                  onClick={() => onEditClick(review)}
+                  className={STYLES.edit.button}
+                  title="Editar reseña"
+                  disabled={isDeleting}
+                >
+                  <FiEdit2 className={STYLES.edit.icon} />
+                </button>
+                <button
+                  onClick={() => onDelete(review)}
+                  className={STYLES.delete.button}
+                  title="Eliminar reseña"
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? (
+                    <FiLoader className={STYLES.delete.icon} />
+                  ) : (
+                    <FaTrash className={STYLES.delete.icon} />
+                  )}
+                </button>
+              </div>
+            )}
+            <span className={STYLES.user.date}>
+              {review.created_at && new Date(review.created_at).toLocaleDateString()}
+            </span>
+          </div>
         </div>
         {isEditing ? (
           <ReviewEditForm

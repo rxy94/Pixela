@@ -36,7 +36,9 @@ const STYLES = {
 export function ReviewSection({ reviews, loading, error, refreshReviews }: ReviewSectionProps) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userId = useAuthStore((state) => state.user?.user_id);
+  const isAdmin = useAuthStore((state) => state.user?.is_admin);
   const [editingReview, setEditingReview] = useState<Review | null>(null);
+  const [deletingReview, setDeletingReview] = useState<number | null>(null);
 
   const handleEditClick = (review: Review) => {
     setEditingReview(review);
@@ -67,6 +69,26 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
       handleCancelEdit();
     } catch (error) {
       console.error('Error al actualizar la reseña:', error);
+    }
+  };
+
+  /**
+   * Función para eliminar una reseña
+   * @param {Review} review - Reseña a eliminar
+   * @returns {Promise<void>}
+   */
+  const handleDeleteReview = async (review: Review) => {
+    setDeletingReview(review.id);
+    try {
+      await reviewsAPI.delete(review.id);
+      
+      if (refreshReviews) {
+        refreshReviews();
+      }
+    } catch (error) {
+      console.error('Error al eliminar la reseña:', error);
+    } finally {
+      setDeletingReview(null);
     }
   };
 
@@ -107,17 +129,20 @@ export function ReviewSection({ reviews, loading, error, refreshReviews }: Revie
         <div className={STYLES.reviews.container}>
           {reviews.map((review) => {
             const isUserReview = review.user_id === userId;
+            const canEditReview = isUserReview || (isAdmin ?? false);
             const isEditing = editingReview?.id === review.id;
 
             return (
               <ReviewCard
                 key={review.id}
                 review={review}
-                isUserReview={isUserReview}
+                isUserReview={canEditReview}
                 isEditing={isEditing}
                 onEditClick={handleEditClick}
                 onSave={handleSaveEdit}
                 onCancel={handleCancelEdit}
+                onDelete={handleDeleteReview}
+                isDeleting={deletingReview === review.id}
               />
             );
           })}

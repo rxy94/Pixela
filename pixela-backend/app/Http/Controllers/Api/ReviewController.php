@@ -120,7 +120,7 @@ class ReviewController extends Controller
     {
         $user = $request->user();
 
-        if ($review->user_id !== $user->user_id) {
+        if ($review->user_id !== $user->user_id && !$user->is_admin) {
             return response()->json([
                 'success' => false,
                 'message' => 'You are not authorized to update this review.'
@@ -359,7 +359,7 @@ class ReviewController extends Controller
     {
         $user = $request->user();
 
-        if ($review->user_id !== $user->user_id) {
+        if ($review->user_id !== $user->user_id && !$user->is_admin) {
             return response()->json([
                 'success' => false,
                 'message' => 'You are not authorized to delete this review.'

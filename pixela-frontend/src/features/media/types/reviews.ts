@@ -47,6 +47,8 @@ export interface ReviewSectionProps {
  * @property {() => void} onEditClick - Función que se ejecuta al hacer clic en editar
  * @property {() => void} onSave - Función que se ejecuta al guardar los cambios
  * @property {() => void} onCancel - Función que se ejecuta al cancelar la edición
+ * @property {() => void} onDelete - Función que se ejecuta al eliminar la reseña
+ * @property {boolean} isDeleting - Indica si se está eliminando la reseña
  */
 export interface ReviewCardProps {
   review: Review;
@@ -55,6 +57,8 @@ export interface ReviewCardProps {
   onEditClick: (review: Review) => void;
   onSave: (text: string, rating: number) => void;
   onCancel: () => void;
+  onDelete: (review: Review) => void;
+  isDeleting: boolean;
 }
 
 /**
