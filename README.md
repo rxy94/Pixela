@@ -29,6 +29,10 @@ Diseño de figma - [Figma](https://www.figma.com/design/CPQe3LpPHQXKW1AWTYJhOG/P
 
 Documentación Pixela | [Documento drive - pixela ](https://docs.google.com/document/d/1xqrrvgyTaQhrhDkg3hRDdx-euwUsP8KDyauRK608kks/edit?usp=sharing)
 
+# Enlace a web
+
+https://pixela.duckdns.org/ - ( Solo activo cuando encendemos el servidor )
+
 ## 1. Resumen General del Proyecto
 
 **Propósito**: `Pixela` es una aplicación web moderna diseñada para que los usuarios puedan descubrir, explorar, guardar como favoritos y escribir reseñas de películas y series. Actúa como una interfaz de usuario sofisticada que consume datos de una fuente externa (probablemente The Movie Database - TMDB) y gestiona los datos propios de los usuarios (perfiles, favoritos, etc.).
