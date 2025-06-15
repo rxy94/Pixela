@@ -1,12 +1,15 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import { Pelicula, Serie } from '@/features/media/types/content';
 import { Badge } from '@/shared/components/Badge';
 import { ActionButtons } from '@/shared/components/ActionButtons';
 import { useRouter } from 'next/navigation';
-import { useState, memo, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, memo, useMemo, useEffect, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { FiSearch, FiX, FiRefreshCw } from 'react-icons/fi';
+import { FaStar } from 'react-icons/fa';
 import { ContentSkeleton } from '@/app/components/skeletons';
 import { ItemCounter } from '@/features/categories/components/ui/ItemCounter';
 import { CategoriesContentProps } from '@/features/categories/types/content';
@@ -16,6 +19,10 @@ const INITIAL_VISIBLE_ITEMS = 6;
 const HIGH_RATING_THRESHOLD = 8.0;
 const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const BATCH_SIZE = 12;
+
+interface SearchFormData {
+    searchTerm: string;
+}
 
 const STYLES = {
     // Layout y Contenedores Principales
@@ -93,7 +100,7 @@ const STYLES = {
     recommendationCardBorder: 'absolute inset-0 rounded-2xl bg-[radial-gradient(250px_at_var(--mouse-x)_var(--mouse-y),_rgba(236,27,105,0.8),_transparent_75%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300',
     recommendationCardContent: 'relative z-10 w-full h-full overflow-hidden rounded-[15px] bg-gradient-to-br from-[#181818]/95 to-[#1a1a1a]/95 shadow-2xl shadow-pixela-accent/5 transition-all duration-300',
     recommendationOverlay: 'absolute inset-0 flex flex-col justify-end p-4 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-pixela-dark via-pixela-dark/70 to-transparent group-hover:opacity-100',
-    recommendationTitle: 'mb-2 text-base font-bold leading-tight text-pixela-light md:text-lg font-outfit line-clamp-2',
+    recommendationTitle: 'mb-2 text-base font-bold leading-tight text-pixela-light md:text-lg font-outfit line-clamp-2 text-left',
     recommendationInfo: 'flex flex-wrap items-center gap-2 mb-2',
     recommendationRating: 'flex items-center',
     recommendationRatingIcon: 'mr-1 text-xs text-yellow-400',
@@ -182,6 +189,16 @@ const OverlayContent = ({
     type: 'series' | 'movies',
     onFollowClick: () => void
 }) => {
+    // Obtener el título según el tipo de media
+    const title = type === 'movies' 
+        ? ((media as Pelicula).title || (media as Pelicula).titulo || 'Sin título')
+        : ((media as Serie).name || (media as Serie).titulo || (media as Serie).title || 'Sin título');
+
+    // Obtener el año de lanzamiento
+    const releaseYear = type === 'movies' 
+        ? (media as Pelicula).release_date?.split('-')[0]
+        : (media as Serie).first_air_date?.split('-')[0];
+
     return (
         <div className={STYLES.overlay}>
             <ActionButtons 
@@ -189,6 +206,30 @@ const OverlayContent = ({
                 itemType={type === 'series' ? 'series' : 'movie'}
                 onFollowClick={onFollowClick}
             />
+            <div className={STYLES.overlayContent}>
+                <h3 className={STYLES.title}>
+                    {title}
+                </h3>
+                
+                <div className={STYLES.mediaInfo}>
+                    <div className={STYLES.rating}>
+                        <FaStar className={STYLES.ratingIcon} />
+                        <span className={STYLES.ratingText}>
+                            {media.vote_average?.toFixed(1) || "N/A"}
+                        </span>
+                    </div>
+                    
+                    {releaseYear && (
+                        <span className={STYLES.year}>
+                            {releaseYear}
+                        </span>
+                    )}
+                    
+                    <span className={STYLES.mediaType}>
+                        {type === 'series' ? 'Serie' : 'Película'}
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };
@@ -450,6 +491,11 @@ const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula
     const title = recommendation.mediaType === 'movie' 
         ? (recommendation as Pelicula).title || (recommendation as Pelicula).titulo || 'Sin título'
         : (recommendation as Serie).name || (recommendation as Serie).titulo || (recommendation as Serie).title || 'Sin título';
+
+    // Obtener el año de lanzamiento
+    const releaseYear = recommendation.mediaType === 'movie' 
+        ? (recommendation as Pelicula).release_date?.split('-')[0]
+        : (recommendation as Serie).first_air_date?.split('-')[0];
     
     return (
         <div 
@@ -469,11 +515,37 @@ const RecommendationCard = memo(({ recommendation }: { recommendation: (Pelicula
                     
                     <div className={STYLES.noiseEffect} />
                     
-                    <ActionButtons 
-                        tmdbId={Number(recommendation.id)}
-                        itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
-                        onFollowClick={handleFollowClick}
-                    />
+                    <div className={STYLES.recommendationOverlay}>
+                        <ActionButtons 
+                            tmdbId={Number(recommendation.id)}
+                            itemType={recommendation.mediaType === 'series' ? 'series' : 'movie'}
+                            onFollowClick={handleFollowClick}
+                        />
+                        <div className="mb-2 md:mb-3">
+                            <h3 className={STYLES.recommendationTitle}>
+                                {title}
+                            </h3>
+                            
+                            <div className={STYLES.recommendationInfo}>
+                                <div className={STYLES.recommendationRating}>
+                                    <FaStar className={STYLES.recommendationRatingIcon} />
+                                    <span className={STYLES.recommendationRatingText}>
+                                        {recommendation.vote_average?.toFixed(1) || "N/A"}
+                                    </span>
+                                </div>
+                                
+                                {releaseYear && (
+                                    <span className={STYLES.recommendationYear}>
+                                        {releaseYear}
+                                    </span>
+                                )}
+                                
+                                <span className={STYLES.recommendationMediaType}>
+                                    {recommendation.mediaType === 'series' ? 'Serie' : 'Película'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     
                     {isHighRated && (
                         <Badge 
@@ -629,7 +701,7 @@ RandomRecommendations.displayName = 'RandomRecommendations';
  * @param {CategoriesContentProps} props - Propiedades del componente
  * @returns {JSX.Element} El contenido renderizado
  */
-export const CategoriesContent = memo(({
+const CategoriesContent = memo(({
     selectedCategory,
     movies,
     series,
@@ -641,67 +713,21 @@ export const CategoriesContent = memo(({
     currentPage,
     totalPages
 }: CategoriesContentProps) => {
-    const [isContentReady, setIsContentReady] = useState(false);
-    const [inputValue, setInputValue] = useState(searchQuery);
-    const [showSkeleton, setShowSkeleton] = useState(true);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-
-    // Referencias para evitar dependencias problemáticas en useEffect
-    const searchQueryRef = useRef(searchQuery);
-    const onSearchRef = useRef(onSearch);
-
-    // Actualizar referencias cuando cambien los props
-    useEffect(() => {
-        searchQueryRef.current = searchQuery;
-        onSearchRef.current = onSearch;
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<SearchFormData>({
+        defaultValues: { searchTerm: searchQuery || '' }
     });
+    const currentSearchValue = watch('searchTerm');
 
     useEffect(() => {
-        setInputValue(searchQuery);
-    }, [searchQuery]);
-
-    // Limpiar búsqueda cuando se cambia de tipo de media si hay una búsqueda activa
-    useEffect(() => {
-        // Solo limpiar si hay una búsqueda activa en el momento del cambio
-        if (searchQueryRef.current.trim()) {
-            setInputValue('');
-            onSearchRef.current('');
-        }
-    }, [mediaType]); // Solo depende de mediaType para evitar bucles
-
-    useEffect(() => {
-        if (loading) {
-            setIsTransitioning(true);
-            setIsContentReady(false);
-            setShowSkeleton(true);
-        } else if (movies.length > 0 || series.length > 0) {
-            // Reducir delay para mejorar la experiencia
-            const transitionTimer = setTimeout(() => {
-                setIsTransitioning(false);
-                setIsContentReady(true);
-                setShowSkeleton(false);
-            }, 100);
-            
-            return () => clearTimeout(transitionTimer);
-        } else if (!loading) {
-            // Solo cambiar estados si definitivamente no está cargando
-            setIsContentReady(false);
-            setShowSkeleton(false);
-            setIsTransitioning(false);
-        }
-    }, [loading, movies, series]);
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSearch(inputValue);
+        reset({ searchTerm: searchQuery || '' });
+    }, [searchQuery, reset]);
+    
+    const onFormSubmit = (data: SearchFormData) => {
+        onSearch(data.searchTerm);
     };
 
     const handleClearSearch = () => {
-        setInputValue('');
+        reset({ searchTerm: '' });
         onSearch('');
     };
 
@@ -724,21 +750,10 @@ export const CategoriesContent = memo(({
         );
     }
 
-    // Para mediaType random, renderizar inmediatamente sin depender de isContentReady
-    if (mediaType !== 'random' && (showSkeleton || isTransitioning)) {
+    if (mediaType !== 'random' && loading) {
         return (
             <div className="relative">
-                <ContentSkeleton count={12} />
-                {isContentReady && (
-                    <div 
-                        className="absolute inset-0 opacity-0 animate-content-reveal"
-                        style={{
-                            animationDelay: '100ms',
-                        }}
-                    >
-                        <ContentGrid movies={movies} series={series} searchTerm={''} />
-                    </div>
-                )}
+                <ContentSkeleton />
             </div>
         );
     }
@@ -757,21 +772,21 @@ export const CategoriesContent = memo(({
     }
 
     return (
-        <div className={`${STYLES.mainContainer} ${isContentReady && mediaType !== 'random' ? 'animate-fade-in-up' : ''}`}>
-            {/* Solo mostrar búsqueda si no es modo random */}
+        <div className={`${STYLES.mainContainer}`}>
             {mediaType !== 'random' && (
-                <form onSubmit={handleFormSubmit} className={STYLES.searchContainer}>
+                <form onSubmit={handleSubmit(onFormSubmit)} className={STYLES.searchContainer}>
                     <div className={STYLES.searchIcon}>
                         <FiSearch className={STYLES.searchIconInner} />
                     </div>
                     <input
                         type="text"
-                        value={inputValue}
-                        onChange={handleInputChange}
+                        {...register('searchTerm', {
+                            minLength: { value: 2, message: 'La búsqueda debe tener al menos 2 caracteres' }
+                        })}
                         placeholder={getSearchPlaceholder()}
                         className={STYLES.searchInput}
                     />
-                    {inputValue && (
+                    {currentSearchValue && (
                         <button
                             type="button"
                             onClick={handleClearSearch}
@@ -781,10 +796,10 @@ export const CategoriesContent = memo(({
                             <FiX className="w-5 h-5" />
                         </button>
                     )}
+                    {errors.searchTerm && <p className="mt-2 ml-2 text-xs text-red-500">{errors.searchTerm.message}</p>}
                 </form>
             )}
 
-            {/* Contador de elementos - Solo mostrar si no es modo random y hay contenido */}
             {mediaType !== 'random' && hasContent && (
                 <ItemCounter
                     moviesCount={movies.length}
@@ -808,4 +823,6 @@ export const CategoriesContent = memo(({
     );
 });
 
-CategoriesContent.displayName = 'CategoriesContent'; 
+CategoriesContent.displayName = 'CategoriesContent';
+
+export { CategoriesContent }; 

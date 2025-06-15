@@ -6,6 +6,7 @@ import { User } from '@/api/users/types';
 import { ProfileFormData } from '@/features/profile/types/profileTypes';
 import { authAPI } from '@/api/auth/auth';
 import { usersAPI } from '@/api/users/users';
+import { useAuthStore } from '@/stores/useAuthStore';
 import { ProfileFavorites } from '../components/layout/ProfileFavorites';
 import { ProfileReviews } from '../components/layout/ProfileReviews';
 import { ProfileUsers } from '../components/layout/ProfileUsers';
@@ -93,6 +94,7 @@ const STYLES = {
  * @returns {JSX.Element} Componente ProfileClient
  */
 const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
+  const updateUser = useAuthStore((state) => state.updateUser);
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -161,6 +163,8 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
 
       // Para cambios que no incluyen contraseña, actualizar normalmente
       setUser(userToSet as UserResponse);
+      // Actualizar también el store global para que el navbar se actualice
+      updateUser(userToSet as UserResponse);
       setIsEditing(false);
 
       // Mostrar notificación de éxito para cambios sin contraseña
@@ -169,12 +173,13 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
     } catch (error) {
       console.error('Error al actualizar el perfil:', error);
       
-      // Manejo de errores específico
+      // Solo mostrar notificaciones para errores del servidor, no de validación del formulario
       if (error instanceof Error) {
         if (error.message.includes('email')) {
           setSuccessMessage('Error: El email ya está en uso o es inválido.');
-        } else if (error.message.includes('password')) {
-          setSuccessMessage('Error: La contraseña debe tener al menos 8 caracteres.');
+        } else if (error.message.includes('validation') || error.message.includes('password')) {
+          // Los errores de validación se muestran directamente en los inputs del formulario
+          console.log('Error de validación manejado por el formulario');
         } else {
           setSuccessMessage(`Error: ${error.message}`);
         }
@@ -192,6 +197,8 @@ const ProfileClient = ({ user: initialUser }: ProfileClientProps) => {
         password: updatedUser.password || ''
       };
       setUser(userResponse);
+      // Actualizar también el store global para que el navbar se actualice
+      updateUser(userResponse);
     }
     setRefreshUsers(r => !r);
   };

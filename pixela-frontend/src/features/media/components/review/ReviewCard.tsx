@@ -45,11 +45,7 @@ export const ReviewCard = ({
   review,
   isUserReview,
   isEditing,
-  editText,
-  editRating,
   onEditClick,
-  onTextChange,
-  onRatingChange,
   onSave,
   onCancel
 }: ReviewCardProps) => {
@@ -100,10 +96,8 @@ export const ReviewCard = ({
         </div>
         {isEditing ? (
           <ReviewEditForm
-            editText={editText}
-            editRating={editRating}
-            onTextChange={onTextChange}
-            onRatingChange={onRatingChange}
+            editText={review.review}
+            editRating={Number(review.rating)}
             onSave={onSave}
             onCancel={onCancel}
           />

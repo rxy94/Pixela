@@ -11,6 +11,7 @@ interface AuthState {
   error: string | null;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
+  updateUser: (user: UserResponse) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -18,6 +19,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   isLoading: false,
   error: null,
+
+  updateUser: (user: UserResponse) => {
+    set({ user, isAuthenticated: true });
+  },
 
   checkAuth: async () => {
     try {
