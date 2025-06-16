@@ -1,4 +1,4 @@
-# Pixela.io
+# Pixela
 
 Repositorio para proyecto fin de grado. </br>
 
