@@ -22,6 +22,10 @@ setup_laravel() {
         php artisan key:generate --force
     fi
     
+    # Ejecutar migraciones
+    echo "Ejecutando migraciones..."
+    php artisan migrate --force
+    
     # Cachear configuración, rutas y vistas para producción
     echo "Cacheando configuración de Laravel..."
     php artisan config:cache
