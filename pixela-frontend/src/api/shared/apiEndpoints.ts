@@ -1,9 +1,8 @@
 /**
  * URL de la API
- * @namespace API_BASE_URL
+ * @namespace API_URL
  * @description URL de la API
  */
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_INTERNAL_URL || 'http://laravel.test/api'; // QUITAR EN PRODUCTION
 export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost'; //Se usa en apiHelpers.ts
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
@@ -19,12 +18,12 @@ export const API_ENDPOINTS = {
      * @description Series
      */
     SERIES: {
-        GET_BY_ID: (id: string) => `${API_BASE_URL}/series/${id}`,
-        LIST: `${API_BASE_URL}/series`,
-        GET_CAST: (id: string) => `${API_BASE_URL}/series/${id}/cast`,
-        GET_VIDEOS: (id: string) => `${API_BASE_URL}/series/${id}/videos`,
+        GET_BY_ID: (id: string) => `${API_URL}/series/${id}`,
+        LIST: `${API_URL}/series`,
+        GET_CAST: (id: string) => `${API_URL}/series/${id}/cast`,
+        GET_VIDEOS: (id: string) => `${API_URL}/series/${id}/videos`,
         GET_IMAGES: (id: string) => `${API_URL}/series/${id}/images`,
-        GET_WATCH_PROVIDERS: (id: string) => `${API_BASE_URL}/series/${id}/watch-providers`,
+        GET_WATCH_PROVIDERS: (id: string) => `${API_URL}/series/${id}/watch-providers`,
     },
 
     /**
@@ -33,12 +32,12 @@ export const API_ENDPOINTS = {
      * @description Películas
      */
     PELICULAS: {
-        GET_BY_ID: (id: string) => `${API_BASE_URL}/movies/${id}`,
-        LIST: `${API_BASE_URL}/movies`,
-        GET_CAST: (id: string) => `${API_BASE_URL}/movies/${id}/cast`,
-        GET_VIDEOS: (id: string) => `${API_BASE_URL}/movies/${id}/videos`,
+        GET_BY_ID: (id: string) => `${API_URL}/movies/${id}`,
+        LIST: `${API_URL}/movies`,
+        GET_CAST: (id: string) => `${API_URL}/movies/${id}/cast`,
+        GET_VIDEOS: (id: string) => `${API_URL}/movies/${id}/videos`,
         GET_IMAGES: (id: string) => `${API_URL}/movies/${id}/images`,
-        GET_WATCH_PROVIDERS: (id: string) => `${API_BASE_URL}/movies/${id}/watch-providers`,
+        GET_WATCH_PROVIDERS: (id: string) => `${API_URL}/movies/${id}/watch-providers`,
     },
 
     /**

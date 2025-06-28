@@ -1,20 +1,44 @@
-# Usa una imagen base de Node.js
-FROM node:20.11.1
+# Etapa 1: Build de la aplicación
+FROM node:20-alpine AS builder
 
-# Establece el directorio de trabajo en el contenedor
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copia el package.json y el package-lock.json
+# Copia archivos de dependencias
 COPY package*.json ./
+RUN npm ci
 
-# Instala las dependencias de Next.js
-RUN npm install
-
-# Copia el resto de los archivos de la aplicación
+# Copia el código fuente
 COPY . .
 
-# Expone el puerto donde Next.js escuchará
+# Construye la aplicación para producción
+RUN npm run build
+
+# Etapa 2: Imagen de producción
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Copia la aplicación construida y archivos necesarios
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/tsconfig.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Crea usuario no-root para seguridad
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Cambia la propiedad de los archivos
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+# Expone el puerto 3000 (estándar de Next.js)
 EXPOSE 3000
 
-# Comando por defecto para iniciar la aplicación
-CMD ["npm", "run", "dev"] 
+# Variable de entorno para el puerto (Render puede cambiarla a 8080)
+ENV PORT=3000
+
+# Comando de inicio para producción
+CMD ["npm", "start"] 

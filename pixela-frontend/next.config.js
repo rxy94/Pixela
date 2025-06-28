@@ -1,19 +1,19 @@
 /** @type {import('next').NextConfig} */
 
-// PRODUCTION: const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
+const backendApiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost/api';
 
 const nextConfig = {
     async rewrites() {
         return [
             {
                 source: '/api/series/:path*',
-                destination: 'http://localhost/api/series/:path*',
-                // PRODUCTION: destination: `${backendApiUrl}/series/:path*`,
+                //destination: 'http://localhost/api/series/:path*',
+                destination: `${backendApiUrl}/series/:path*`,
             },
             {
                 source: '/api/movies/:path*',
-                destination: 'http://localhost/api/movies/:path*',
-                // PRODUCTION: destination: `${backendApiUrl}/movies/:path*`,
+                //destination: 'http://localhost/api/movies/:path*',
+                destination: `${backendApiUrl}/movies/:path*`,
             },
         ];
     },
