@@ -30,8 +30,8 @@ return [
 
     'allowed_methods'   => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 
-    'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test'],
-    // PRODUCTION: 'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test', 'https://pixela.duckdns.org'],
+    //'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test'],
+    'allowed_origins'   => ['http://localhost', 'http://localhost:3000', 'http://laravel.test', 'https://pixela.duckdns.org', 'https://pixela-frontend.onrender.com', 'https://pixela.onrender.com'],
 
     'allowed_headers'   => ['*'],
 
