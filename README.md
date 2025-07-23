@@ -1,16 +1,24 @@
 # Pixela
 
-Repositorio para proyecto fin de grado. </br>
+**Autores:** Ruyi & Pablo | 2ºDAW </br>
 
-**Autores:** Ruyi & Pablo | 2ºDAW
+**Copyright © 2025 Pablo Gil Díaz y Ruyi Xia Ye**
 
 Pixela es una plataforma interactiva diseñada para que los usuarios puedan descubrir y explorar sus series y películas favoritas. Permite agregar reseñas, calificar contenidos y gestionar una experiencia completamente personalizada.
 El proyecto será desarrollado utilizando NextJS y react por debajo para la interfaz de usuario (frontend) y Laravel para la lógica del servidor (backend), asegurando una experiencia moderna, dinámica y eficiente.
 
 Ante proyecto: [www.notion.es](https://sphenoid-stone-975.notion.site/ANTEPROYECTO-PIXELA-1c2bccfbf6a4800c8945f8c8dfb77095) <br/>
 
+Repositorio para proyecto fin de grado. </br>
+
+# LinkedIn </br>
+
+[Pablo](https://www.linkedin.com/in/envyx10/)  </br>
+[Ruyi](https://www.linkedin.com/in/ruyi-xia-ye-b19853189/)
+
+
+
 # Historial Pixela <br/>
-Historial de commits y pull requests, cuaderno de bitácoras: [Bitácoras Ruyi y Pablo](https://docs.google.com/document/d/1tCagftMIyK-YbXul7YxGf_HXpOOPHqtqO7swChsxbao/edit?tab=t.0) <br/>
 Historial del repositorio de commits: [Historial github](https://github.com/envyx10/Pixela/commits/main/) <br/>
 Historial de ramas de pixela [Ramas pixela](https://github.com/envyx10/Pixela/branches/active) <br/>
 
@@ -31,7 +39,7 @@ Documentación Pixela | [Documento drive - pixela ](https://docs.google.com/docu
 
 # Enlace a web
 
-https://pixela.duckdns.org/ - ( Solo activo cuando encendemos el servidor )
+Próximamente
 
 ## 1. Resumen General del Proyecto
 
